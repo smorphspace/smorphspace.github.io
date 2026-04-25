@@ -1,0 +1,31 @@
+{
+  "points": 11,
+  "prompt_a": "drum beat",
+  "prompt_b": "bubbles popping",
+  "alphas": [
+    0.0,
+    0.1,
+    0.2,
+    0.3,
+    0.4,
+    0.5,
+    0.6,
+    0.7,
+    0.8,
+    0.9,
+    1.0
+  ],
+  "files": [
+    "audio_00.wav",
+    "audio_01.wav",
+    "audio_02.wav",
+    "audio_03.wav",
+    "audio_04.wav",
+    "audio_05.wav",
+    "audio_06.wav",
+    "audio_07.wav",
+    "audio_08.wav",
+    "audio_09.wav",
+    "audio_10.wav"
+  ]
+}

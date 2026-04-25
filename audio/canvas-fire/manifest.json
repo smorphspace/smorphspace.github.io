@@ -1,0 +1,47 @@
+{
+  "grid_x": 4,
+  "grid_y": 4,
+  "seed_prompt": "fire crackling",
+  "prompts": {
+    "a": "Sharp flame burst with close-up crackle and pop",
+    "b": "Sustained hiss with ambient fire bed",
+    "c": "Close-up crackle with minimal burst",
+    "d": "Ambient fire bed with soft hiss"
+  },
+  "corner_labels": [
+    [
+      "sharp burst, close-up",
+      "sustained hiss, ambient"
+    ],
+    [
+      "close-up crackle, soft burst",
+      "ambient bed, soft hiss"
+    ]
+  ],
+  "side_labels": {
+    "left": "sharp burst",
+    "right": "sustained hiss",
+    "top": "close-up detail",
+    "bottom": "ambient bed"
+  },
+  "axis_name_x": "Ignition vs Sustain",
+  "axis_name_y": "Detail vs Bed",
+  "files": [
+    "audio_00.wav",
+    "audio_01.wav",
+    "audio_02.wav",
+    "audio_03.wav",
+    "audio_04.wav",
+    "audio_05.wav",
+    "audio_06.wav",
+    "audio_07.wav",
+    "audio_08.wav",
+    "audio_09.wav",
+    "audio_10.wav",
+    "audio_11.wav",
+    "audio_12.wav",
+    "audio_13.wav",
+    "audio_14.wav",
+    "audio_15.wav"
+  ]
+}
