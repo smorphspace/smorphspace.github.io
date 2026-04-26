@@ -432,8 +432,29 @@ footer em { font-style: normal; color: var(--text); }
 }
 .pair-prompt.src { color: var(--lime); }
 .pair-prompt.tgt { color: var(--orange); }
-.pair-slider-wrap { margin-bottom: .5rem; padding: .15rem 0 .5rem; }
+.pair-slider-wrap { margin-bottom: .4rem; padding: .15rem 0 .4rem; }
+.pair-alpha-row { margin-bottom: .65rem; }
 .pair-transport { gap: .6rem; }
+
+/* per-method rows inside a pair card */
+.pair-methods-list { display: flex; flex-direction: column; gap: .45rem; }
+.pair-method-row {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  padding: .4rem .6rem;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  background: var(--bg3);
+}
+.pair-method-label {
+  flex: 1;
+  font-size: .75rem;
+  font-weight: 500;
+  color: var(--text);
+  min-width: 0;
+}
+.pair-method-row .play-btn { flex-shrink: 0; padding: .3rem .7rem; font-size: .75rem; }
 </style>
 </head>
 <body>
@@ -447,10 +468,6 @@ footer em { font-style: normal; color: var(--text); }
     <a href="#" class="badge link" title="Paper link (coming soon)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
       Paper (coming soon)
-    </a>
-    <a href="#" class="badge link" title="Code (coming soon)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-      Code (coming soon)
     </a>
     <span class="badge">Anonymous Authors</span>
   </div>
@@ -492,18 +509,18 @@ footer em { font-style: normal; color: var(--text); }
   <div class="demo-divider"></div>
   <p class="section-sub">
     Drag the slider to hear a structure-preserving timbral morph between two text-defined endpoints.
-    Temporal structure (RMS envelope) is held fixed while only sonic identity transforms.
+    The RMS envelope of the source is held fixed while only sonic identity transforms.
   </p>
 
   <div class="card" id="morph-card">
     <div class="morph-endpoint-row">
       <div class="morph-ep src">
         <span class="ep-label">Source &alpha;=0</span>
-        drum beat
+        snare drum pattern
       </div>
       <div class="morph-ep tgt">
         <span class="ep-label">Target &alpha;=1</span>
-        bubbles popping
+        heavy rainfall
       </div>
     </div>
 
@@ -547,14 +564,8 @@ footer em { font-style: normal; color: var(--text); }
     </div>
 
     <div id="canvas-stage" style="display:none">
-      <div class="canvas-stage-wrap">
-        <div class="axis-label x-top" id="canvas-top-label"></div>
-        <div class="axis-label y-left" id="canvas-left-label"></div>
-        <div class="kaoss-cell">
-          <canvas id="kaoss-pad"></canvas>
-        </div>
-        <div class="axis-label y-right" id="canvas-right-label"></div>
-        <div class="axis-label x-bottom" id="canvas-bottom-label"></div>
+      <div class="canvas-stage-wrap" style="display:block;text-align:center">
+        <canvas id="kaoss-pad"></canvas>
       </div>
 
       <div class="transport-row">
@@ -1002,13 +1013,7 @@ function showPlayIcon(btn, iconEl, textNode, playing) {
    ══════════════════════════════════════════════════════════════ */
 (async function initCanvasDemo() {
   const manifest = await fetch('audio/canvas-fire/manifest.json').then(r => r.json());
-  const { grid_x, grid_y, files, side_labels, axis_name_x, axis_name_y } = manifest;
-
-  // populate axis labels in HTML
-  document.getElementById('canvas-top-label').textContent    = side_labels.top    || '';
-  document.getElementById('canvas-bottom-label').textContent = side_labels.bottom || '';
-  document.getElementById('canvas-left-label').textContent   = side_labels.left   || '';
-  document.getElementById('canvas-right-label').textContent  = side_labels.right  || '';
+  const { grid_x, grid_y, files, prompts, corner_labels } = manifest;
 
   const progressBar = document.getElementById('canvas-progress');
   const statusEl = document.getElementById('canvas-status');
@@ -1035,11 +1040,10 @@ function showPlayIcon(btn, iconEl, textNode, playing) {
     }
   });
 
-  pad.setPadLabels({
-    sides: side_labels,
-    axisNameX: axis_name_x,
-    axisNameY: axis_name_y,
-  });
+  // Use corner labels (TL, TR, BL, BR) — no axis titles
+  const tl = corner_labels[0][0], tr = corner_labels[0][1];
+  const bl = corner_labels[1][0], br = corner_labels[1][1];
+  pad.setLabels(tl, tr, bl, br);
   pad.setGrid(grid_x, grid_y);
   pad.setPosition(0.5, 0.5);
   player.setPosition(0.5, 0.5);
@@ -1070,12 +1074,97 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
 
 /* ══════════════════════════════════════════════════════════════
    PAPER EXPERIMENTS TAB
+   Layout: per example → all methods side-by-side with shared slider
    ══════════════════════════════════════════════════════════════ */
 function escHtml(s) {
   return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-function buildPairPlayer(pair) {
+const SVG_PLAY  = `<svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><polygon points="5 3 19 12 5 21 5 3"/></svg>`;
+const SVG_PAUSE = `<svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>`;
+
+/**
+ * CrossfadePlayer: dual-audio crossfade for seamless alpha switching.
+ * Uses two <audio> elements; while one plays, the other preloads the new
+ * file and fades in. No CORS required — <audio> loads cross-origin freely.
+ */
+class CrossfadePlayer {
+  constructor(files) {
+    this.files = files;
+    this.idx = 0;
+    this._a = Object.assign(document.createElement('audio'), { loop: true, preload: 'auto', volume: 1 });
+    this._b = Object.assign(document.createElement('audio'), { loop: true, preload: 'auto', volume: 0 });
+    this._active   = this._a;
+    this._inactive = this._b;
+    this._a.src = files[0];
+    this.playing = false;
+    this._fadeTimer = null;
+  }
+
+  play() {
+    this.playing = true;
+    this._active.volume = 1;
+    return this._active.play().catch(() => {});
+  }
+
+  pause() {
+    this.playing = false;
+    clearInterval(this._fadeTimer);
+    this._active.pause();
+    this._inactive.pause();
+    this._inactive.volume = 0;
+  }
+
+  setIdx(idx) {
+    if (idx === this.idx) return;
+    this.idx = idx;
+
+    if (!this.playing) {
+      // Not playing — just update src so next play() starts at new position
+      this._active.src = this.files[idx];
+      this._active.volume = 1;
+      this._inactive.volume = 0;
+      return;
+    }
+
+    // Crossfade: fade out _active, fade in _inactive (with new file)
+    clearInterval(this._fadeTimer);
+    const out = this._active;
+    const inn = this._inactive;
+    inn.src = this.files[idx];
+    inn.volume = 0;
+    inn.play().catch(() => {});
+
+    const STEPS = 10, MS = 6;  // ~60 ms total fade
+    let step = 0;
+    this._fadeTimer = setInterval(() => {
+      step++;
+      const t = step / STEPS;
+      out.volume = Math.max(0, 1 - t);
+      inn.volume = Math.min(1, t);
+      if (step >= STEPS) {
+        clearInterval(this._fadeTimer);
+        out.pause();
+        this._active   = inn;
+        this._inactive = out;
+      }
+    }, MS);
+  }
+
+  destroy() {
+    clearInterval(this._fadeTimer);
+    [this._a, this._b].forEach(a => { a.pause(); a.src = ''; });
+  }
+}
+
+/**
+ * Build a pair card: prompts + shared slider, then one method row per method.
+ * Each method has its own CrossfadePlayer; slider controls all simultaneously.
+ */
+function buildPairCard(pair, methods, methodDisplay) {
+  const alphas = pair.methods[methods[0]].alphas;
+  const nAlpha = alphas.length;
+
   const card = document.createElement('div');
   card.className = 'pair-player';
 
@@ -1085,50 +1174,62 @@ function buildPairPlayer(pair) {
       <div class="pair-prompt tgt"><span class="ep-label">Target &alpha;=1</span>${escHtml(pair.tgt_prompt)}</div>
     </div>
     <div class="morph-slider-wrap pair-slider-wrap">
-      <input type="range" class="morph-slider pair-slider"
-             min="0" max="${pair.alphas.length - 1}" step="1" value="0">
+      <input type="range" class="morph-slider pair-slider" min="0" max="${nAlpha - 1}" step="1" value="0">
     </div>
-    <div class="transport-row pair-transport">
-      <button class="play-btn pair-play-btn">
-        <svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        Play
-      </button>
-      <span class="status-text pair-alpha">&#945; = ${pair.alphas[0].toFixed(2)}</span>
+    <div class="pair-alpha-row">
+      <span class="status-text pair-alpha">&#945; = ${alphas[0].toFixed(2)}</span>
     </div>
+    <div class="pair-methods-list"></div>
   `;
 
   const slider   = card.querySelector('.pair-slider');
-  const playBtn  = card.querySelector('.pair-play-btn');
   const alphaEl  = card.querySelector('.pair-alpha');
+  const methList = card.querySelector('.pair-methods-list');
 
-  const audio = document.createElement('audio');
-  audio.preload = 'none';
-  audio.src = pair.files[0];
-  card.appendChild(audio);
+  const players = {};  // method → { cfp, btn, setPlaying }
 
-  let playing = false;
+  methods.forEach(method => {
+    const mData = pair.methods[method];
+    if (!mData) return;
 
-  function setPlaying(v) {
-    playing = v;
-    playBtn.classList.toggle('playing', playing);
-    playBtn.innerHTML = playing
-      ? `<svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg> Pause`
-      : `<svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><polygon points="5 3 19 12 5 21 5 3"/></svg> Play`;
-  }
+    const cfp = new CrossfadePlayer(mData.files);
 
-  playBtn.addEventListener('click', () => {
-    if (playing) { audio.pause(); setPlaying(false); }
-    else { audio.play(); setPlaying(true); }
+    const row = document.createElement('div');
+    row.className = 'pair-method-row';
+    const label = methodDisplay[method] || method;
+    const badge = method === 'ours' ? ` <span class="ours-badge">&#9733;</span>` : '';
+    row.innerHTML = `
+      <span class="pair-method-label">${escHtml(label)}${badge}</span>
+      <button class="play-btn pair-play-btn">${SVG_PLAY} Play</button>
+    `;
+    methList.appendChild(row);
+
+    const btn = row.querySelector('.pair-play-btn');
+
+    function setPlaying(v) {
+      cfp.playing = v;
+      btn.classList.toggle('playing', v);
+      btn.innerHTML = v ? `${SVG_PAUSE} Pause` : `${SVG_PLAY} Play`;
+    }
+
+    btn.addEventListener('click', () => {
+      if (cfp.playing) {
+        cfp.pause(); setPlaying(false);
+      } else {
+        // Pause any other method in this card that's playing
+        Object.values(players).forEach(p => { if (p.cfp.playing) { p.cfp.pause(); p.setPlaying(false); } });
+        cfp.play(); setPlaying(true);
+      }
+    });
+
+    players[method] = { cfp, btn, setPlaying };
   });
 
-  audio.addEventListener('ended', () => setPlaying(false));
-
+  // Shared slider — moves all CrossfadePlayers to same idx
   slider.addEventListener('input', () => {
     const idx = parseInt(slider.value, 10);
-    alphaEl.textContent = `α = ${pair.alphas[idx].toFixed(2)}`;
-    const wasPlaying = playing && !audio.paused;
-    audio.src = pair.files[idx];
-    if (wasPlaying) audio.play();
+    alphaEl.textContent = `α = ${alphas[idx].toFixed(2)}`;
+    Object.values(players).forEach(({ cfp }) => cfp.setIdx(idx));
   });
 
   return card;
@@ -1148,7 +1249,6 @@ function buildPairPlayer(pair) {
     const btn = document.createElement('button');
     btn.className = 'rq-btn' + (ri === 0 ? ' active' : '');
     btn.textContent = rq_display[rq] || rq.toUpperCase();
-    btn.dataset.rq = rq;
     btn.addEventListener('click', () => {
       document.querySelectorAll('.rq-btn').forEach(b => b.classList.remove('active'));
       document.querySelectorAll('.rq-panel').forEach(p => p.style.display = 'none');
@@ -1167,6 +1267,9 @@ function buildPairPlayer(pair) {
     rqPanel.style.display = ri === 0 ? 'block' : 'none';
 
     Object.keys(data[rq]).forEach(dataset => {
+      const dsData = data[rq][dataset];  // { methods, pairs }
+      const methods = dsData.methods;    // already ours-first, then alpha
+
       const dsSection = document.createElement('div');
       dsSection.className = 'dataset-section';
 
@@ -1175,27 +1278,15 @@ function buildPairPlayer(pair) {
       dsHeader.textContent = dataset_display[dataset] || dataset;
       dsSection.appendChild(dsHeader);
 
-      // Sort methods: ours first, rest alphabetical
-      const methods = Object.keys(data[rq][dataset]).sort((a, b) =>
-        a === 'ours' ? -1 : b === 'ours' ? 1 : a.localeCompare(b));
+      // One card per pair, each showing all methods
+      dsData.pairs.forEach((pair, pi) => {
+        const exHeader = document.createElement('h4');
+        exHeader.className = 'method-header';
+        exHeader.textContent = `Example ${pi + 1}`;
+        dsSection.appendChild(exHeader);
 
-      methods.forEach(method => {
-        const methSection = document.createElement('div');
-        methSection.className = 'method-section';
-
-        const methHeader = document.createElement('h4');
-        methHeader.className = 'method-header';
-        const label = method_display[method] || method;
-        methHeader.innerHTML = method === 'ours'
-          ? `${label} <span class="ours-badge">&#9733; ours</span>`
-          : label;
-        methSection.appendChild(methHeader);
-
-        const grid = document.createElement('div');
-        grid.className = 'pairs-grid';
-        data[rq][dataset][method].forEach(pair => grid.appendChild(buildPairPlayer(pair)));
-        methSection.appendChild(grid);
-        dsSection.appendChild(methSection);
+        const card = buildPairCard(pair, methods, method_display);
+        dsSection.appendChild(card);
       });
 
       rqPanel.appendChild(dsSection);
