@@ -1,31 +1,31 @@
 {
-  "grid_x": 4,
-  "grid_y": 4,
+  "grid_x": 5,
+  "grid_y": 5,
   "seed_prompt": "fire crackling",
   "prompts": {
-    "a": "Sharp flame burst with close-up crackle and pop",
-    "b": "Sustained hiss with ambient fire bed",
-    "c": "Close-up crackle with minimal burst",
-    "d": "Ambient fire bed with soft hiss"
+    "a": "Dry wood crackling with sharp, brittle pops recorded close to the flames",
+    "b": "Wet wood sizzling with hissing steam and damp pops in close-up",
+    "c": "Dry wood crackle fading into ambient room air with distant warmth",
+    "d": "Wet wood sizzle blending into a spacious, echoing fire pit environment"
   },
   "corner_labels": [
     [
-      "sharp burst, close-up",
-      "sustained hiss, ambient"
+      "dry close",
+      "wet close"
     ],
     [
-      "close-up crackle, soft burst",
-      "ambient bed, soft hiss"
+      "dry ambient",
+      "wet ambient"
     ]
   ],
   "side_labels": {
-    "left": "sharp burst",
-    "right": "sustained hiss",
-    "top": "close-up detail",
-    "bottom": "ambient bed"
+    "left": "dry crackle",
+    "right": "wet sizzle",
+    "top": "close-up",
+    "bottom": "ambient"
   },
-  "axis_name_x": "Ignition vs Sustain",
-  "axis_name_y": "Detail vs Bed",
+  "axis_name_x": "Fuel Moisture",
+  "axis_name_y": "Perspective",
   "files": [
     "audio_00.wav",
     "audio_01.wav",
@@ -42,6 +42,15 @@
     "audio_12.wav",
     "audio_13.wav",
     "audio_14.wav",
-    "audio_15.wav"
+    "audio_15.wav",
+    "audio_16.wav",
+    "audio_17.wav",
+    "audio_18.wav",
+    "audio_19.wav",
+    "audio_20.wav",
+    "audio_21.wav",
+    "audio_22.wav",
+    "audio_23.wav",
+    "audio_24.wav"
   ]
 }
