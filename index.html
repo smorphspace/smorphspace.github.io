@@ -324,6 +324,116 @@ footer {
   color: var(--muted);
 }
 footer em { font-style: normal; color: var(--text); }
+
+/* ── tab navigation ────────────────────────────────── */
+.tab-nav {
+  display: flex;
+  gap: 0;
+  margin-bottom: 2.5rem;
+  border-bottom: 1px solid var(--border);
+}
+.tab-btn {
+  padding: .6rem 1.25rem;
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: var(--muted);
+  font-family: inherit;
+  font-size: .88rem;
+  font-weight: 500;
+  cursor: pointer;
+  margin-bottom: -1px;
+  transition: color .12s, border-color .12s;
+}
+.tab-btn:hover { color: var(--text); }
+.tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+/* ── rq sub-navigation ─────────────────────────────── */
+.rq-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .4rem;
+  margin-bottom: 2rem;
+}
+.rq-btn {
+  padding: .35rem .9rem;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--bg3);
+  color: var(--muted);
+  font-family: inherit;
+  font-size: .8rem;
+  cursor: pointer;
+  transition: background .12s, color .12s, border-color .12s;
+}
+.rq-btn:hover, .rq-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+/* ── dataset / method sections ─────────────────────── */
+.dataset-section { margin-bottom: 3rem; }
+.dataset-header {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  padding-bottom: .5rem;
+  margin-bottom: 1.25rem;
+  border-bottom: 1px solid var(--border);
+}
+.method-section { margin-bottom: 2rem; }
+.method-header {
+  font-size: .82rem;
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: .04em;
+  margin-bottom: .85rem;
+  text-transform: uppercase;
+}
+.ours-badge {
+  display: inline-block;
+  font-size: .6rem;
+  padding: .1rem .35rem;
+  border-radius: 3px;
+  background: rgba(61,255,160,.12);
+  color: var(--lime);
+  margin-left: .4rem;
+  vertical-align: middle;
+  font-weight: 700;
+  letter-spacing: .05em;
+}
+
+/* ── pair player grid ──────────────────────────────── */
+.pairs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: .9rem;
+}
+.pair-player {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--card-r);
+  padding: 1rem 1.1rem;
+}
+.pair-prompts {
+  display: flex;
+  flex-direction: column;
+  gap: .35rem;
+  margin-bottom: .8rem;
+}
+.pair-prompt {
+  font-size: .78rem;
+  line-height: 1.45;
+}
+.pair-prompt .ep-label {
+  display: block;
+  font-size: .58rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: .1rem;
+}
+.pair-prompt.src { color: var(--lime); }
+.pair-prompt.tgt { color: var(--orange); }
+.pair-slider-wrap { margin-bottom: .5rem; padding: .15rem 0 .5rem; }
+.pair-transport { gap: .6rem; }
 </style>
 </head>
 <body>
@@ -367,6 +477,14 @@ footer em { font-style: normal; color: var(--text); }
     exploration and performance.
   </p>
 </section>
+
+<!-- ── tab nav ── -->
+<nav class="tab-nav" id="main-tab-nav">
+  <button class="tab-btn active" data-tab="demos">Demos</button>
+  <button class="tab-btn" data-tab="experiments">Paper Experiments</button>
+</nav>
+
+<div class="tab-panel" id="tab-demos">
 
 <!-- ── demo 1: 1D morph ── -->
 <section class="demo-section">
@@ -449,6 +567,12 @@ footer em { font-style: normal; color: var(--text); }
     </div>
   </div>
 </section>
+
+</div><!-- #tab-demos -->
+
+<div class="tab-panel" id="tab-experiments" style="display:none">
+  <!-- built by initExperimentsTab() -->
+</div>
 
 </div><!-- .page -->
 
@@ -931,6 +1055,155 @@ function showPlayIcon(btn, iconEl, textNode, playing) {
 })().catch(err => {
   document.getElementById('canvas-status').textContent = `Error: ${err.message}`;
 });
+
+/* ══════════════════════════════════════════════════════════════
+   TAB SWITCHING
+   ══════════════════════════════════════════════════════════════ */
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.style.display = 'none');
+    btn.classList.add('active');
+    document.getElementById('tab-' + btn.dataset.tab).style.display = 'block';
+  });
+});
+
+/* ══════════════════════════════════════════════════════════════
+   PAPER EXPERIMENTS TAB
+   ══════════════════════════════════════════════════════════════ */
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function buildPairPlayer(pair) {
+  const card = document.createElement('div');
+  card.className = 'pair-player';
+
+  card.innerHTML = `
+    <div class="pair-prompts">
+      <div class="pair-prompt src"><span class="ep-label">Source &alpha;=0</span>${escHtml(pair.src_prompt)}</div>
+      <div class="pair-prompt tgt"><span class="ep-label">Target &alpha;=1</span>${escHtml(pair.tgt_prompt)}</div>
+    </div>
+    <div class="morph-slider-wrap pair-slider-wrap">
+      <input type="range" class="morph-slider pair-slider"
+             min="0" max="${pair.alphas.length - 1}" step="1" value="0">
+    </div>
+    <div class="transport-row pair-transport">
+      <button class="play-btn pair-play-btn">
+        <svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        Play
+      </button>
+      <span class="status-text pair-alpha">&#945; = ${pair.alphas[0].toFixed(2)}</span>
+    </div>
+  `;
+
+  const slider   = card.querySelector('.pair-slider');
+  const playBtn  = card.querySelector('.pair-play-btn');
+  const alphaEl  = card.querySelector('.pair-alpha');
+
+  const audio = document.createElement('audio');
+  audio.preload = 'none';
+  audio.src = pair.files[0];
+  card.appendChild(audio);
+
+  let playing = false;
+
+  function setPlaying(v) {
+    playing = v;
+    playBtn.classList.toggle('playing', playing);
+    playBtn.innerHTML = playing
+      ? `<svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg> Pause`
+      : `<svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><polygon points="5 3 19 12 5 21 5 3"/></svg> Play`;
+  }
+
+  playBtn.addEventListener('click', () => {
+    if (playing) { audio.pause(); setPlaying(false); }
+    else { audio.play(); setPlaying(true); }
+  });
+
+  audio.addEventListener('ended', () => setPlaying(false));
+
+  slider.addEventListener('input', () => {
+    const idx = parseInt(slider.value, 10);
+    alphaEl.textContent = `α = ${pair.alphas[idx].toFixed(2)}`;
+    const wasPlaying = playing && !audio.paused;
+    audio.src = pair.files[idx];
+    if (wasPlaying) audio.play();
+  });
+
+  return card;
+}
+
+(async function initExperimentsTab() {
+  const samples = await fetch('audio/samples.json').then(r => r.json());
+  const { rq_display, dataset_display, method_display, data } = samples;
+  const expPanel = document.getElementById('tab-experiments');
+
+  // RQ sub-nav
+  const rqs = Object.keys(data);
+  const rqNav = document.createElement('nav');
+  rqNav.className = 'rq-nav';
+
+  rqs.forEach((rq, ri) => {
+    const btn = document.createElement('button');
+    btn.className = 'rq-btn' + (ri === 0 ? ' active' : '');
+    btn.textContent = rq_display[rq] || rq.toUpperCase();
+    btn.dataset.rq = rq;
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.rq-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.rq-panel').forEach(p => p.style.display = 'none');
+      btn.classList.add('active');
+      document.getElementById('rq-panel-' + rq).style.display = 'block';
+    });
+    rqNav.appendChild(btn);
+  });
+  expPanel.appendChild(rqNav);
+
+  // Build each RQ panel
+  rqs.forEach((rq, ri) => {
+    const rqPanel = document.createElement('div');
+    rqPanel.className = 'rq-panel';
+    rqPanel.id = 'rq-panel-' + rq;
+    rqPanel.style.display = ri === 0 ? 'block' : 'none';
+
+    Object.keys(data[rq]).forEach(dataset => {
+      const dsSection = document.createElement('div');
+      dsSection.className = 'dataset-section';
+
+      const dsHeader = document.createElement('h3');
+      dsHeader.className = 'dataset-header';
+      dsHeader.textContent = dataset_display[dataset] || dataset;
+      dsSection.appendChild(dsHeader);
+
+      // Sort methods: ours first, rest alphabetical
+      const methods = Object.keys(data[rq][dataset]).sort((a, b) =>
+        a === 'ours' ? -1 : b === 'ours' ? 1 : a.localeCompare(b));
+
+      methods.forEach(method => {
+        const methSection = document.createElement('div');
+        methSection.className = 'method-section';
+
+        const methHeader = document.createElement('h4');
+        methHeader.className = 'method-header';
+        const label = method_display[method] || method;
+        methHeader.innerHTML = method === 'ours'
+          ? `${label} <span class="ours-badge">&#9733; ours</span>`
+          : label;
+        methSection.appendChild(methHeader);
+
+        const grid = document.createElement('div');
+        grid.className = 'pairs-grid';
+        data[rq][dataset][method].forEach(pair => grid.appendChild(buildPairPlayer(pair)));
+        methSection.appendChild(grid);
+        dsSection.appendChild(methSection);
+      });
+
+      rqPanel.appendChild(dsSection);
+    });
+
+    expPanel.appendChild(rqPanel);
+  });
+})().catch(err => console.error('Experiments tab error:', err));
 </script>
 </body>
 </html>
