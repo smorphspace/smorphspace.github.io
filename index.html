@@ -540,11 +540,11 @@ footer em { font-style: normal; color: var(--text); }
     <div class="morph-endpoint-row">
       <div class="morph-ep src">
         <span class="ep-label">Source &alpha;=0</span>
-        snare drum pattern
+        drum beat
       </div>
       <div class="morph-ep tgt">
         <span class="ep-label">Target &alpha;=1</span>
-        heavy rainfall
+        bubbles popping
       </div>
     </div>
 
@@ -1043,7 +1043,7 @@ function showPlayIcon(btn, iconEl, textNode, playing) {
    ══════════════════════════════════════════════════════════════ */
 (async function initCanvasDemo() {
   const manifest = await fetch('audio/canvas-fire/manifest.json').then(r => r.json());
-  const { grid_x, grid_y, files, prompts, corner_labels } = manifest;
+  const { grid_x, grid_y, files, prompts } = manifest;
 
   const progressBar = document.getElementById('canvas-progress');
   const statusEl = document.getElementById('canvas-status');
@@ -1070,13 +1070,11 @@ function showPlayIcon(btn, iconEl, textNode, playing) {
     }
   });
 
-  // Populate external corner labels (outside the canvas)
-  const tl = corner_labels[0][0], tr = corner_labels[0][1];
-  const bl = corner_labels[1][0], br = corner_labels[1][1];
-  document.getElementById('corner-tl').textContent = tl;
-  document.getElementById('corner-tr').textContent = tr;
-  document.getElementById('corner-bl').textContent = bl;
-  document.getElementById('corner-br').textContent = br;
+  // Populate external corner labels using full prompt text
+  document.getElementById('corner-tl').textContent = prompts.a;
+  document.getElementById('corner-tr').textContent = prompts.b;
+  document.getElementById('corner-bl').textContent = prompts.c;
+  document.getElementById('corner-br').textContent = prompts.d;
   // Plain pad — no in-canvas labels at all
   pad.setPadLabels({ sides: {}, axisNameX: '', axisNameY: '' });
   pad.setGrid(grid_x, grid_y);

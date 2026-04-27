@@ -1,7 +1,7 @@
 {
   "points": 11,
-  "prompt_a": "snare drum pattern",
-  "prompt_b": "heavy rainfall",
+  "prompt_a": "drum beat",
+  "prompt_b": "bubbles popping",
   "alphas": [
     0.0,
     0.1,
