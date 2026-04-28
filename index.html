@@ -464,12 +464,16 @@ footer em { font-style: normal; color: var(--text); }
 .pair-methods-list { display: flex; flex-direction: column; gap: .45rem; }
 .pair-method-row {
   display: flex;
-  align-items: center;
-  gap: .6rem;
+  flex-direction: column;
   padding: .4rem .6rem;
   border: 1px solid var(--border);
   border-radius: 5px;
   background: var(--bg3);
+}
+.pair-method-top {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
 }
 .pair-method-label {
   flex: 1;
@@ -479,6 +483,34 @@ footer em { font-style: normal; color: var(--text); }
   min-width: 0;
 }
 .pair-method-row .play-btn { flex-shrink: 0; padding: .3rem .7rem; font-size: .75rem; }
+
+/* ── Spectrogram ─────────────────────────────────────────────── */
+.spectro-wrap { margin-top: 10px; }
+.spectro-canvas {
+  width: 100%;
+  height: 72px;
+  display: block;
+  border-radius: 6px;
+  image-rendering: pixelated;
+  background: #06060f;
+}
+.spectro-label {
+  font-size: 0.6rem;
+  color: var(--muted);
+  text-align: center;
+  margin-top: 3px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.method-spectro {
+  width: 100%;
+  height: 40px;
+  display: block;
+  border-radius: 3px;
+  image-rendering: pixelated;
+  background: #06060f;
+  margin-top: 5px;
+}
 </style>
 </head>
 <body>
@@ -553,6 +585,10 @@ footer em { font-style: normal; color: var(--text); }
              min="0" max="10" step="1" value="0" disabled>
     </div>
     <div class="morph-ticks" id="morph-ticks"></div>
+    <div class="spectro-wrap">
+      <canvas id="morph-spectro" class="spectro-canvas"></canvas>
+      <div class="spectro-label">Spectrogram (blended)</div>
+    </div>
 
     <div id="morph-loading" class="loading-overlay">
       <div class="spinner"></div>
@@ -604,6 +640,10 @@ footer em { font-style: normal; color: var(--text); }
           Play
         </button>
         <span class="status-text" id="canvas-pos-display">position (0.00, 0.00)</span>
+      </div>
+      <div class="spectro-wrap">
+        <canvas id="canvas-spectro" class="spectro-canvas"></canvas>
+        <div class="spectro-label">Spectrogram (2D blend)</div>
       </div>
     </div>
   </div>
@@ -981,6 +1021,148 @@ function showPlayIcon(btn, iconEl, textNode, playing) {
 }
 
 /* ══════════════════════════════════════════════════════════════
+   SPECTRO-MORPH — client-side STFT + equal-power blending
+   (adapted verbatim from audit/sodaweb/static/js/morph-madness/spectro-morph.js)
+   ══════════════════════════════════════════════════════════════ */
+function _smFft(re, im) {
+  const n = re.length;
+  for (let i = 1, j = 0; i < n; i++) {
+    let bit = n >> 1;
+    for (; j & bit; bit >>= 1) j ^= bit;
+    j ^= bit;
+    if (i < j) { [re[i], re[j]] = [re[j], re[i]]; [im[i], im[j]] = [im[j], im[i]]; }
+  }
+  for (let len = 2; len <= n; len <<= 1) {
+    const half = len >> 1, angle = -2 * Math.PI / len;
+    const wRe = Math.cos(angle), wIm = Math.sin(angle);
+    for (let i = 0; i < n; i += len) {
+      let cRe = 1, cIm = 0;
+      for (let j = 0; j < half; j++) {
+        const a = i + j, b = a + half;
+        const tRe = cRe * re[b] - cIm * im[b], tIm = cRe * im[b] + cIm * re[b];
+        re[b] = re[a] - tRe; im[b] = im[a] - tIm; re[a] += tRe; im[a] += tIm;
+        const nRe = cRe * wRe - cIm * wIm; cIm = cRe * wIm + cIm * wRe; cRe = nRe;
+      }
+    }
+  }
+}
+function _smHann(n) {
+  const w = new Float32Array(n);
+  for (let i = 0; i < n; i++) w[i] = 0.5 * (1 - Math.cos(2 * Math.PI * i / (n - 1)));
+  return w;
+}
+function _smComputeSTFT(audioBuffer, fftSize, hopSize) {
+  const data = audioBuffer.getChannelData(0);
+  const numBins = fftSize >> 1;
+  const numFrames = Math.max(1, Math.floor((data.length - fftSize) / hopSize) + 1);
+  const win = _smHann(fftSize);
+  const magnitudes = new Float32Array(numFrames * numBins);
+  const re = new Float32Array(fftSize), im = new Float32Array(fftSize);
+  for (let f = 0; f < numFrames; f++) {
+    const off = f * hopSize;
+    for (let i = 0; i < fftSize; i++) { re[i] = (off + i < data.length ? data[off + i] : 0) * win[i]; im[i] = 0; }
+    _smFft(re, im);
+    for (let b = 0; b < numBins; b++) magnitudes[f * numBins + b] = Math.sqrt(re[b]*re[b] + im[b]*im[b]);
+  }
+  return { magnitudes, numBins, numFrames };
+}
+function _smBlend1D(spectros, morphPos) {
+  const N = spectros.length;
+  const pos = morphPos * Math.max(N - 1, 0);
+  const idxA = Math.min(Math.floor(pos), N - 1), idxB = Math.min(idxA + 1, N - 1);
+  const blend = pos - idxA;
+  const gainA = Math.cos(blend * Math.PI / 2), gainB = Math.sin(blend * Math.PI / 2);
+  const a = spectros[idxA], b = spectros[idxB], len = a.magnitudes.length;
+  const out = new Float32Array(len);
+  for (let i = 0; i < len; i++) out[i] = gainA * a.magnitudes[i] + gainB * b.magnitudes[i];
+  return { magnitudes: out, numBins: a.numBins, numFrames: a.numFrames };
+}
+function _smBlend2D(spectros, cols, rows, x, y) {
+  const gx = x * (cols - 1), gy = y * (rows - 1);
+  const ix = Math.min(Math.floor(gx), cols - 2), iy = Math.min(Math.floor(gy), rows - 2);
+  const fx = gx - ix, fy = gy - iy;
+  const gTL = Math.cos(fx*Math.PI/2)*Math.cos(fy*Math.PI/2), gTR = Math.sin(fx*Math.PI/2)*Math.cos(fy*Math.PI/2);
+  const gBL = Math.cos(fx*Math.PI/2)*Math.sin(fy*Math.PI/2), gBR = Math.sin(fx*Math.PI/2)*Math.sin(fy*Math.PI/2);
+  const tl = spectros[iy*cols+ix], tr = spectros[iy*cols+ix+1];
+  const bl = spectros[(iy+1)*cols+ix], br = spectros[(iy+1)*cols+ix+1];
+  const len = tl.magnitudes.length, out = new Float32Array(len);
+  for (let i = 0; i < len; i++) out[i] = gTL*tl.magnitudes[i] + gTR*tr.magnitudes[i] + gBL*bl.magnitudes[i] + gBR*br.magnitudes[i];
+  return { magnitudes: out, numBins: tl.numBins, numFrames: tl.numFrames };
+}
+const _SM_CMAP = [[0.00,13,8,35],[0.18,44,18,100],[0.36,95,52,135],[0.52,160,80,100],[0.68,231,111,81],[0.84,244,162,97],[1.00,241,241,241]];
+function _smColor(v) {
+  v = Math.max(0, Math.min(1, v));
+  for (let i = 1; i < _SM_CMAP.length; i++) {
+    if (v <= _SM_CMAP[i][0]) {
+      const [t0,r0,g0,b0]=_SM_CMAP[i-1], [t1,r1,g1,b1]=_SM_CMAP[i], t=(v-t0)/(t1-t0);
+      return [r0+(r1-r0)*t|0, g0+(g1-g0)*t|0, b0+(b1-b0)*t|0];
+    }
+  }
+  return [241,241,241];
+}
+function _smRender(canvas, magnitudes, numBins, numFrames, maxWidth) {
+  const ctx2d = canvas.getContext('2d');
+  const displayW = (maxWidth && maxWidth > 32 && maxWidth < numFrames) ? maxWidth : numFrames;
+  canvas.width = displayW; canvas.height = numBins;
+  const stride = Math.max(1, Math.ceil(numFrames / displayW));
+  let globalMax = 0;
+  for (let i = 0; i < magnitudes.length; i++) if (magnitudes[i] > globalMax) globalMax = magnitudes[i];
+  const norm = globalMax > 0 ? 1 / Math.log1p(globalMax) : 1;
+  const img = ctx2d.createImageData(displayW, numBins);
+  const px = img.data;
+  for (let x = 0; x < displayW; x++) {
+    const frame = Math.min(x * stride, numFrames - 1), fOff = frame * numBins;
+    for (let y = 0; y < numBins; y++) {
+      const bin = numBins - 1 - y, mag = magnitudes[fOff + bin];
+      const [r,g,b] = _smColor(Math.log1p(mag) * norm);
+      const idx = (y * displayW + x) << 2;
+      px[idx]=r; px[idx+1]=g; px[idx+2]=b; px[idx+3]=255;
+    }
+  }
+  ctx2d.putImageData(img, 0, 0);
+}
+class SpectroMorph {
+  constructor(canvas, opts = {}) {
+    this.canvas = canvas;
+    this.fftSize = opts.fftSize ?? 512;
+    this.hopSize = opts.hopSize ?? 128;
+    this.maxWidth = opts.maxWidth ?? 800;
+    this.spectrograms = [];
+    this._morphPos = 0; this._pending = false;
+    this._gridCols = 0; this._gridRows = 0;
+    this._morphX = 0; this._morphY = 0;
+  }
+  loadPatches(audioBuffers) {
+    this._gridCols = 0; this._gridRows = 0;
+    this.spectrograms = audioBuffers.map(buf => _smComputeSTFT(buf, this.fftSize, this.hopSize));
+    this.render(0);
+  }
+  loadPatchGrid(audioBuffers, cols, rows) {
+    this._gridCols = cols; this._gridRows = rows;
+    this.spectrograms = audioBuffers.map(buf => _smComputeSTFT(buf, this.fftSize, this.hopSize));
+    this.render2D(0, 0);
+  }
+  setMorphPosition(pos) {
+    this._morphPos = pos;
+    if (!this._pending) { this._pending = true; requestAnimationFrame(() => { this._pending = false; this.render(this._morphPos); }); }
+  }
+  setMorphPosition2D(x, y) {
+    this._morphX = x; this._morphY = y;
+    if (!this._pending) { this._pending = true; requestAnimationFrame(() => { this._pending = false; this.render2D(this._morphX, this._morphY); }); }
+  }
+  render(morphPos) {
+    if (this.spectrograms.length === 0) return;
+    const b = _smBlend1D(this.spectrograms, morphPos);
+    _smRender(this.canvas, b.magnitudes, b.numBins, b.numFrames, this.maxWidth);
+  }
+  render2D(x, y) {
+    if (this.spectrograms.length === 0 || this._gridCols < 2 || this._gridRows < 2) return;
+    const b = _smBlend2D(this.spectrograms, this._gridCols, this._gridRows, x, y);
+    _smRender(this.canvas, b.magnitudes, b.numBins, b.numFrames, this.maxWidth);
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
    MORPH SLIDER DEMO
    ══════════════════════════════════════════════════════════════ */
 (async function initMorphDemo() {
@@ -1013,6 +1195,9 @@ function showPlayIcon(btn, iconEl, textNode, playing) {
     statusEl.textContent = `Loading… ${done}/${total}`;
   });
 
+  const morphSpectro = new SpectroMorph(document.getElementById('morph-spectro'), { maxWidth: 600 });
+  morphSpectro.loadPatches(player._buffers);
+
   // hide loading, show controls
   document.getElementById('morph-loading').style.display = 'none';
   document.getElementById('morph-transport').style.display = 'flex';
@@ -1032,6 +1217,7 @@ function showPlayIcon(btn, iconEl, textNode, playing) {
     const idx = parseInt(slider.value, 10);
     const alpha = alphas[idx];
     player.setPosition(alpha);
+    morphSpectro.setMorphPosition(alpha);
     alphaDisplay.textContent = `α = ${alpha.toFixed(2)}`;
   });
 })().catch(err => {
@@ -1061,10 +1247,14 @@ function showPlayIcon(btn, iconEl, textNode, playing) {
   document.getElementById('canvas-loading').style.display = 'none';
   document.getElementById('canvas-stage').style.display = 'block';
 
+  const canvasSpectro = new SpectroMorph(document.getElementById('canvas-spectro'), { maxWidth: 600 });
+  canvasSpectro.loadPatchGrid(player._buffers, grid_x, grid_y);
+
   const padEl = document.getElementById('kaoss-pad');
   const pad = new KaossPad(padEl, {
     onMove(x, y) {
       player.setPosition(x, y);
+      canvasSpectro.setMorphPosition2D(x, y);
       document.getElementById('canvas-pos-display').textContent =
         `position (${x.toFixed(2)}, ${y.toFixed(2)})`;
     }
@@ -1115,6 +1305,52 @@ function escHtml(s) {
 
 const SVG_PLAY  = `<svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><polygon points="5 3 19 12 5 21 5 3"/></svg>`;
 const SVG_PAUSE = `<svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>`;
+
+/**
+ * MethodSpectroLoader: lazy-loads 5 representative audio buffers for a
+ * method row's spectrogram. On first setPos() call the fetch begins;
+ * the canvas hides silently if CORS is not yet configured on the S3 bucket.
+ */
+let _spectroCtx = null;
+function _getSpectroCtx() {
+  if (!_spectroCtx) _spectroCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return _spectroCtx;
+}
+class MethodSpectroLoader {
+  constructor(canvas, spectroFiles) {
+    this.canvas = canvas;
+    this.spectroFiles = spectroFiles;
+    this._spectro = null;
+    this._promise = null;
+  }
+  async _load() {
+    if (this._promise) return this._promise;
+    this._promise = (async () => {
+      try {
+        const ctx = _getSpectroCtx();
+        const buffers = await Promise.all(
+          this.spectroFiles.map(url =>
+            fetch(url, { mode: 'cors' })
+              .then(r => r.arrayBuffer())
+              .then(ab => ctx.decodeAudioData(ab))
+              .catch(() => null)
+          )
+        );
+        const valid = buffers.filter(Boolean);
+        if (valid.length < 2) { this.canvas.style.display = 'none'; return; }
+        this._spectro = new SpectroMorph(this.canvas, { fftSize: 512, hopSize: 128, maxWidth: 400 });
+        this._spectro.loadPatches(valid);
+      } catch (_) {
+        this.canvas.style.display = 'none';
+      }
+    })();
+    return this._promise;
+  }
+  setPos(alpha) {
+    if (this._spectro) { this._spectro.setMorphPosition(alpha); return; }
+    this._load().then(() => this._spectro && this._spectro.setMorphPosition(alpha));
+  }
+}
 
 /**
  * CrossfadePlayer: dual-audio crossfade for seamless alpha switching.
@@ -1219,7 +1455,10 @@ function buildPairCard(pair, methods, methodDisplay) {
   const alphaEl  = card.querySelector('.pair-alpha');
   const methList = card.querySelector('.pair-methods-list');
 
-  const players = {};  // method → { cfp, btn, setPlaying }
+  const players = {};  // method → { cfp, btn, setPlaying, spectro }
+
+  // Indices into the 21-file array for spectrogram (evenly spaced: 0, 0.25, 0.5, 0.75, 1.0)
+  const SPECTRO_IDXS = [0, 5, 10, 15, 20];
 
   methods.forEach(method => {
     const mData = pair.methods[method];
@@ -1230,12 +1469,22 @@ function buildPairCard(pair, methods, methodDisplay) {
     const row = document.createElement('div');
     row.className = 'pair-method-row';
     const label = methodDisplay[method] || method;
-    const badge = method === 'ours' ? ` <span class="ours-badge">&#9733;</span>` : '';
+    const isOurs = method === 'ours' || method === 'ours_ss0';
+    const badge = isOurs ? ` <span class="ours-badge">&#9733;</span>` : '';
     row.innerHTML = `
-      <span class="pair-method-label">${escHtml(label)}${badge}</span>
-      <button class="play-btn pair-play-btn">${SVG_PLAY} Play</button>
+      <div class="pair-method-top">
+        <span class="pair-method-label">${label}${badge}</span>
+        <button class="play-btn pair-play-btn">${SVG_PLAY} Play</button>
+      </div>
     `;
+    // Spectrogram canvas — lazy-loaded on first slider drag
+    const spectroCanvas = document.createElement('canvas');
+    spectroCanvas.className = 'method-spectro';
+    row.appendChild(spectroCanvas);
     methList.appendChild(row);
+
+    const spectroFiles = SPECTRO_IDXS.map(i => mData.files[Math.min(i, mData.files.length - 1)]);
+    const spectro = new MethodSpectroLoader(spectroCanvas, spectroFiles);
 
     const btn = row.querySelector('.pair-play-btn');
 
@@ -1255,14 +1504,18 @@ function buildPairCard(pair, methods, methodDisplay) {
       }
     });
 
-    players[method] = { cfp, btn, setPlaying };
+    players[method] = { cfp, btn, setPlaying, spectro };
   });
 
-  // Shared slider — moves all CrossfadePlayers to same idx
+  // Shared slider — moves all CrossfadePlayers and spectrograms to same position
   slider.addEventListener('input', () => {
     const idx = parseInt(slider.value, 10);
     alphaEl.textContent = `α = ${alphas[idx].toFixed(2)}`;
-    Object.values(players).forEach(({ cfp }) => cfp.setIdx(idx));
+    const normPos = idx / Math.max(nAlpha - 1, 1);
+    Object.values(players).forEach(({ cfp, spectro }) => {
+      cfp.setIdx(idx);
+      spectro.setPos(normPos);
+    });
   });
 
   return card;
