@@ -81,7 +81,17 @@
                   "audio/paper/rq1/nsynth/p00/ours/spectro_10.png"
                 ],
                 "ctrl_curves": [
-                  "audio/paper/rq1/nsynth/p00/pitch_ctrl.png"
+                  "audio/paper/rq1/nsynth/p00/ours/ctrl_00.png",
+                  "audio/paper/rq1/nsynth/p00/ours/ctrl_01.png",
+                  "audio/paper/rq1/nsynth/p00/ours/ctrl_02.png",
+                  "audio/paper/rq1/nsynth/p00/ours/ctrl_03.png",
+                  "audio/paper/rq1/nsynth/p00/ours/ctrl_04.png",
+                  "audio/paper/rq1/nsynth/p00/ours/ctrl_05.png",
+                  "audio/paper/rq1/nsynth/p00/ours/ctrl_06.png",
+                  "audio/paper/rq1/nsynth/p00/ours/ctrl_07.png",
+                  "audio/paper/rq1/nsynth/p00/ours/ctrl_08.png",
+                  "audio/paper/rq1/nsynth/p00/ours/ctrl_09.png",
+                  "audio/paper/rq1/nsynth/p00/ours/ctrl_10.png"
                 ]
               },
               "ours_ss0": {
@@ -125,7 +135,17 @@
                   "audio/paper/rq1/nsynth/p00/ours_ss0/spectro_10.png"
                 ],
                 "ctrl_curves": [
-                  "audio/paper/rq1/nsynth/p00/pitch_ctrl.png"
+                  "audio/paper/rq1/nsynth/p00/ours_ss0/ctrl_00.png",
+                  "audio/paper/rq1/nsynth/p00/ours_ss0/ctrl_01.png",
+                  "audio/paper/rq1/nsynth/p00/ours_ss0/ctrl_02.png",
+                  "audio/paper/rq1/nsynth/p00/ours_ss0/ctrl_03.png",
+                  "audio/paper/rq1/nsynth/p00/ours_ss0/ctrl_04.png",
+                  "audio/paper/rq1/nsynth/p00/ours_ss0/ctrl_05.png",
+                  "audio/paper/rq1/nsynth/p00/ours_ss0/ctrl_06.png",
+                  "audio/paper/rq1/nsynth/p00/ours_ss0/ctrl_07.png",
+                  "audio/paper/rq1/nsynth/p00/ours_ss0/ctrl_08.png",
+                  "audio/paper/rq1/nsynth/p00/ours_ss0/ctrl_09.png",
+                  "audio/paper/rq1/nsynth/p00/ours_ss0/ctrl_10.png"
                 ]
               },
               "coa_no_ctrl": {
@@ -169,7 +189,17 @@
                   "audio/paper/rq1/nsynth/p00/coa_no_ctrl/spectro_10.png"
                 ],
                 "ctrl_curves": [
-                  "audio/paper/rq1/nsynth/p00/pitch_ctrl.png"
+                  "audio/paper/rq1/nsynth/p00/coa_no_ctrl/ctrl_00.png",
+                  "audio/paper/rq1/nsynth/p00/coa_no_ctrl/ctrl_01.png",
+                  "audio/paper/rq1/nsynth/p00/coa_no_ctrl/ctrl_02.png",
+                  "audio/paper/rq1/nsynth/p00/coa_no_ctrl/ctrl_03.png",
+                  "audio/paper/rq1/nsynth/p00/coa_no_ctrl/ctrl_04.png",
+                  "audio/paper/rq1/nsynth/p00/coa_no_ctrl/ctrl_05.png",
+                  "audio/paper/rq1/nsynth/p00/coa_no_ctrl/ctrl_06.png",
+                  "audio/paper/rq1/nsynth/p00/coa_no_ctrl/ctrl_07.png",
+                  "audio/paper/rq1/nsynth/p00/coa_no_ctrl/ctrl_08.png",
+                  "audio/paper/rq1/nsynth/p00/coa_no_ctrl/ctrl_09.png",
+                  "audio/paper/rq1/nsynth/p00/coa_no_ctrl/ctrl_10.png"
                 ]
               },
               "crossfade": {
@@ -213,7 +243,17 @@
                   "audio/paper/rq1/nsynth/p00/crossfade/spectro_10.png"
                 ],
                 "ctrl_curves": [
-                  "audio/paper/rq1/nsynth/p00/pitch_ctrl.png"
+                  "audio/paper/rq1/nsynth/p00/crossfade/ctrl_00.png",
+                  "audio/paper/rq1/nsynth/p00/crossfade/ctrl_01.png",
+                  "audio/paper/rq1/nsynth/p00/crossfade/ctrl_02.png",
+                  "audio/paper/rq1/nsynth/p00/crossfade/ctrl_03.png",
+                  "audio/paper/rq1/nsynth/p00/crossfade/ctrl_04.png",
+                  "audio/paper/rq1/nsynth/p00/crossfade/ctrl_05.png",
+                  "audio/paper/rq1/nsynth/p00/crossfade/ctrl_06.png",
+                  "audio/paper/rq1/nsynth/p00/crossfade/ctrl_07.png",
+                  "audio/paper/rq1/nsynth/p00/crossfade/ctrl_08.png",
+                  "audio/paper/rq1/nsynth/p00/crossfade/ctrl_09.png",
+                  "audio/paper/rq1/nsynth/p00/crossfade/ctrl_10.png"
                 ]
               }
             }
@@ -264,7 +304,17 @@
                   "audio/paper/rq1/nsynth/p01/ours/spectro_10.png"
                 ],
                 "ctrl_curves": [
-                  "audio/paper/rq1/nsynth/p01/pitch_ctrl.png"
+                  "audio/paper/rq1/nsynth/p01/ours/ctrl_00.png",
+                  "audio/paper/rq1/nsynth/p01/ours/ctrl_01.png",
+                  "audio/paper/rq1/nsynth/p01/ours/ctrl_02.png",
+                  "audio/paper/rq1/nsynth/p01/ours/ctrl_03.png",
+                  "audio/paper/rq1/nsynth/p01/ours/ctrl_04.png",
+                  "audio/paper/rq1/nsynth/p01/ours/ctrl_05.png",
+                  "audio/paper/rq1/nsynth/p01/ours/ctrl_06.png",
+                  "audio/paper/rq1/nsynth/p01/ours/ctrl_07.png",
+                  "audio/paper/rq1/nsynth/p01/ours/ctrl_08.png",
+                  "audio/paper/rq1/nsynth/p01/ours/ctrl_09.png",
+                  "audio/paper/rq1/nsynth/p01/ours/ctrl_10.png"
                 ]
               },
               "ours_ss0": {
@@ -308,7 +358,17 @@
                   "audio/paper/rq1/nsynth/p01/ours_ss0/spectro_10.png"
                 ],
                 "ctrl_curves": [
-                  "audio/paper/rq1/nsynth/p01/pitch_ctrl.png"
+                  "audio/paper/rq1/nsynth/p01/ours_ss0/ctrl_00.png",
+                  "audio/paper/rq1/nsynth/p01/ours_ss0/ctrl_01.png",
+                  "audio/paper/rq1/nsynth/p01/ours_ss0/ctrl_02.png",
+                  "audio/paper/rq1/nsynth/p01/ours_ss0/ctrl_03.png",
+                  "audio/paper/rq1/nsynth/p01/ours_ss0/ctrl_04.png",
+                  "audio/paper/rq1/nsynth/p01/ours_ss0/ctrl_05.png",
+                  "audio/paper/rq1/nsynth/p01/ours_ss0/ctrl_06.png",
+                  "audio/paper/rq1/nsynth/p01/ours_ss0/ctrl_07.png",
+                  "audio/paper/rq1/nsynth/p01/ours_ss0/ctrl_08.png",
+                  "audio/paper/rq1/nsynth/p01/ours_ss0/ctrl_09.png",
+                  "audio/paper/rq1/nsynth/p01/ours_ss0/ctrl_10.png"
                 ]
               },
               "coa_no_ctrl": {
@@ -352,7 +412,17 @@
                   "audio/paper/rq1/nsynth/p01/coa_no_ctrl/spectro_10.png"
                 ],
                 "ctrl_curves": [
-                  "audio/paper/rq1/nsynth/p01/pitch_ctrl.png"
+                  "audio/paper/rq1/nsynth/p01/coa_no_ctrl/ctrl_00.png",
+                  "audio/paper/rq1/nsynth/p01/coa_no_ctrl/ctrl_01.png",
+                  "audio/paper/rq1/nsynth/p01/coa_no_ctrl/ctrl_02.png",
+                  "audio/paper/rq1/nsynth/p01/coa_no_ctrl/ctrl_03.png",
+                  "audio/paper/rq1/nsynth/p01/coa_no_ctrl/ctrl_04.png",
+                  "audio/paper/rq1/nsynth/p01/coa_no_ctrl/ctrl_05.png",
+                  "audio/paper/rq1/nsynth/p01/coa_no_ctrl/ctrl_06.png",
+                  "audio/paper/rq1/nsynth/p01/coa_no_ctrl/ctrl_07.png",
+                  "audio/paper/rq1/nsynth/p01/coa_no_ctrl/ctrl_08.png",
+                  "audio/paper/rq1/nsynth/p01/coa_no_ctrl/ctrl_09.png",
+                  "audio/paper/rq1/nsynth/p01/coa_no_ctrl/ctrl_10.png"
                 ]
               },
               "crossfade": {
@@ -396,7 +466,17 @@
                   "audio/paper/rq1/nsynth/p01/crossfade/spectro_10.png"
                 ],
                 "ctrl_curves": [
-                  "audio/paper/rq1/nsynth/p01/pitch_ctrl.png"
+                  "audio/paper/rq1/nsynth/p01/crossfade/ctrl_00.png",
+                  "audio/paper/rq1/nsynth/p01/crossfade/ctrl_01.png",
+                  "audio/paper/rq1/nsynth/p01/crossfade/ctrl_02.png",
+                  "audio/paper/rq1/nsynth/p01/crossfade/ctrl_03.png",
+                  "audio/paper/rq1/nsynth/p01/crossfade/ctrl_04.png",
+                  "audio/paper/rq1/nsynth/p01/crossfade/ctrl_05.png",
+                  "audio/paper/rq1/nsynth/p01/crossfade/ctrl_06.png",
+                  "audio/paper/rq1/nsynth/p01/crossfade/ctrl_07.png",
+                  "audio/paper/rq1/nsynth/p01/crossfade/ctrl_08.png",
+                  "audio/paper/rq1/nsynth/p01/crossfade/ctrl_09.png",
+                  "audio/paper/rq1/nsynth/p01/crossfade/ctrl_10.png"
                 ]
               }
             }
@@ -447,7 +527,17 @@
                   "audio/paper/rq1/nsynth/p02/ours/spectro_10.png"
                 ],
                 "ctrl_curves": [
-                  "audio/paper/rq1/nsynth/p02/pitch_ctrl.png"
+                  "audio/paper/rq1/nsynth/p02/ours/ctrl_00.png",
+                  "audio/paper/rq1/nsynth/p02/ours/ctrl_01.png",
+                  "audio/paper/rq1/nsynth/p02/ours/ctrl_02.png",
+                  "audio/paper/rq1/nsynth/p02/ours/ctrl_03.png",
+                  "audio/paper/rq1/nsynth/p02/ours/ctrl_04.png",
+                  "audio/paper/rq1/nsynth/p02/ours/ctrl_05.png",
+                  "audio/paper/rq1/nsynth/p02/ours/ctrl_06.png",
+                  "audio/paper/rq1/nsynth/p02/ours/ctrl_07.png",
+                  "audio/paper/rq1/nsynth/p02/ours/ctrl_08.png",
+                  "audio/paper/rq1/nsynth/p02/ours/ctrl_09.png",
+                  "audio/paper/rq1/nsynth/p02/ours/ctrl_10.png"
                 ]
               },
               "ours_ss0": {
@@ -491,7 +581,17 @@
                   "audio/paper/rq1/nsynth/p02/ours_ss0/spectro_10.png"
                 ],
                 "ctrl_curves": [
-                  "audio/paper/rq1/nsynth/p02/pitch_ctrl.png"
+                  "audio/paper/rq1/nsynth/p02/ours_ss0/ctrl_00.png",
+                  "audio/paper/rq1/nsynth/p02/ours_ss0/ctrl_01.png",
+                  "audio/paper/rq1/nsynth/p02/ours_ss0/ctrl_02.png",
+                  "audio/paper/rq1/nsynth/p02/ours_ss0/ctrl_03.png",
+                  "audio/paper/rq1/nsynth/p02/ours_ss0/ctrl_04.png",
+                  "audio/paper/rq1/nsynth/p02/ours_ss0/ctrl_05.png",
+                  "audio/paper/rq1/nsynth/p02/ours_ss0/ctrl_06.png",
+                  "audio/paper/rq1/nsynth/p02/ours_ss0/ctrl_07.png",
+                  "audio/paper/rq1/nsynth/p02/ours_ss0/ctrl_08.png",
+                  "audio/paper/rq1/nsynth/p02/ours_ss0/ctrl_09.png",
+                  "audio/paper/rq1/nsynth/p02/ours_ss0/ctrl_10.png"
                 ]
               },
               "coa_no_ctrl": {
@@ -535,7 +635,17 @@
                   "audio/paper/rq1/nsynth/p02/coa_no_ctrl/spectro_10.png"
                 ],
                 "ctrl_curves": [
-                  "audio/paper/rq1/nsynth/p02/pitch_ctrl.png"
+                  "audio/paper/rq1/nsynth/p02/coa_no_ctrl/ctrl_00.png",
+                  "audio/paper/rq1/nsynth/p02/coa_no_ctrl/ctrl_01.png",
+                  "audio/paper/rq1/nsynth/p02/coa_no_ctrl/ctrl_02.png",
+                  "audio/paper/rq1/nsynth/p02/coa_no_ctrl/ctrl_03.png",
+                  "audio/paper/rq1/nsynth/p02/coa_no_ctrl/ctrl_04.png",
+                  "audio/paper/rq1/nsynth/p02/coa_no_ctrl/ctrl_05.png",
+                  "audio/paper/rq1/nsynth/p02/coa_no_ctrl/ctrl_06.png",
+                  "audio/paper/rq1/nsynth/p02/coa_no_ctrl/ctrl_07.png",
+                  "audio/paper/rq1/nsynth/p02/coa_no_ctrl/ctrl_08.png",
+                  "audio/paper/rq1/nsynth/p02/coa_no_ctrl/ctrl_09.png",
+                  "audio/paper/rq1/nsynth/p02/coa_no_ctrl/ctrl_10.png"
                 ]
               },
               "crossfade": {
@@ -579,7 +689,17 @@
                   "audio/paper/rq1/nsynth/p02/crossfade/spectro_10.png"
                 ],
                 "ctrl_curves": [
-                  "audio/paper/rq1/nsynth/p02/pitch_ctrl.png"
+                  "audio/paper/rq1/nsynth/p02/crossfade/ctrl_00.png",
+                  "audio/paper/rq1/nsynth/p02/crossfade/ctrl_01.png",
+                  "audio/paper/rq1/nsynth/p02/crossfade/ctrl_02.png",
+                  "audio/paper/rq1/nsynth/p02/crossfade/ctrl_03.png",
+                  "audio/paper/rq1/nsynth/p02/crossfade/ctrl_04.png",
+                  "audio/paper/rq1/nsynth/p02/crossfade/ctrl_05.png",
+                  "audio/paper/rq1/nsynth/p02/crossfade/ctrl_06.png",
+                  "audio/paper/rq1/nsynth/p02/crossfade/ctrl_07.png",
+                  "audio/paper/rq1/nsynth/p02/crossfade/ctrl_08.png",
+                  "audio/paper/rq1/nsynth/p02/crossfade/ctrl_09.png",
+                  "audio/paper/rq1/nsynth/p02/crossfade/ctrl_10.png"
                 ]
               }
             }
@@ -1321,7 +1441,17 @@
                   "audio/paper/rq2/nsynth/p00/ours/spectro_10.png"
                 ],
                 "ctrl_curves": [
-                  "audio/paper/rq2/nsynth/p00/pitch_ctrl.png"
+                  "audio/paper/rq2/nsynth/p00/ours/ctrl_00.png",
+                  "audio/paper/rq2/nsynth/p00/ours/ctrl_01.png",
+                  "audio/paper/rq2/nsynth/p00/ours/ctrl_02.png",
+                  "audio/paper/rq2/nsynth/p00/ours/ctrl_03.png",
+                  "audio/paper/rq2/nsynth/p00/ours/ctrl_04.png",
+                  "audio/paper/rq2/nsynth/p00/ours/ctrl_05.png",
+                  "audio/paper/rq2/nsynth/p00/ours/ctrl_06.png",
+                  "audio/paper/rq2/nsynth/p00/ours/ctrl_07.png",
+                  "audio/paper/rq2/nsynth/p00/ours/ctrl_08.png",
+                  "audio/paper/rq2/nsynth/p00/ours/ctrl_09.png",
+                  "audio/paper/rq2/nsynth/p00/ours/ctrl_10.png"
                 ]
               },
               "sdedit": {
@@ -1365,7 +1495,17 @@
                   "audio/paper/rq2/nsynth/p00/sdedit/spectro_10.png"
                 ],
                 "ctrl_curves": [
-                  "audio/paper/rq2/nsynth/p00/pitch_ctrl.png"
+                  "audio/paper/rq2/nsynth/p00/sdedit/ctrl_00.png",
+                  "audio/paper/rq2/nsynth/p00/sdedit/ctrl_01.png",
+                  "audio/paper/rq2/nsynth/p00/sdedit/ctrl_02.png",
+                  "audio/paper/rq2/nsynth/p00/sdedit/ctrl_03.png",
+                  "audio/paper/rq2/nsynth/p00/sdedit/ctrl_04.png",
+                  "audio/paper/rq2/nsynth/p00/sdedit/ctrl_05.png",
+                  "audio/paper/rq2/nsynth/p00/sdedit/ctrl_06.png",
+                  "audio/paper/rq2/nsynth/p00/sdedit/ctrl_07.png",
+                  "audio/paper/rq2/nsynth/p00/sdedit/ctrl_08.png",
+                  "audio/paper/rq2/nsynth/p00/sdedit/ctrl_09.png",
+                  "audio/paper/rq2/nsynth/p00/sdedit/ctrl_10.png"
                 ]
               }
             }
@@ -1416,7 +1556,17 @@
                   "audio/paper/rq2/nsynth/p01/ours/spectro_10.png"
                 ],
                 "ctrl_curves": [
-                  "audio/paper/rq2/nsynth/p01/pitch_ctrl.png"
+                  "audio/paper/rq2/nsynth/p01/ours/ctrl_00.png",
+                  "audio/paper/rq2/nsynth/p01/ours/ctrl_01.png",
+                  "audio/paper/rq2/nsynth/p01/ours/ctrl_02.png",
+                  "audio/paper/rq2/nsynth/p01/ours/ctrl_03.png",
+                  "audio/paper/rq2/nsynth/p01/ours/ctrl_04.png",
+                  "audio/paper/rq2/nsynth/p01/ours/ctrl_05.png",
+                  "audio/paper/rq2/nsynth/p01/ours/ctrl_06.png",
+                  "audio/paper/rq2/nsynth/p01/ours/ctrl_07.png",
+                  "audio/paper/rq2/nsynth/p01/ours/ctrl_08.png",
+                  "audio/paper/rq2/nsynth/p01/ours/ctrl_09.png",
+                  "audio/paper/rq2/nsynth/p01/ours/ctrl_10.png"
                 ]
               },
               "sdedit": {
@@ -1460,7 +1610,17 @@
                   "audio/paper/rq2/nsynth/p01/sdedit/spectro_10.png"
                 ],
                 "ctrl_curves": [
-                  "audio/paper/rq2/nsynth/p01/pitch_ctrl.png"
+                  "audio/paper/rq2/nsynth/p01/sdedit/ctrl_00.png",
+                  "audio/paper/rq2/nsynth/p01/sdedit/ctrl_01.png",
+                  "audio/paper/rq2/nsynth/p01/sdedit/ctrl_02.png",
+                  "audio/paper/rq2/nsynth/p01/sdedit/ctrl_03.png",
+                  "audio/paper/rq2/nsynth/p01/sdedit/ctrl_04.png",
+                  "audio/paper/rq2/nsynth/p01/sdedit/ctrl_05.png",
+                  "audio/paper/rq2/nsynth/p01/sdedit/ctrl_06.png",
+                  "audio/paper/rq2/nsynth/p01/sdedit/ctrl_07.png",
+                  "audio/paper/rq2/nsynth/p01/sdedit/ctrl_08.png",
+                  "audio/paper/rq2/nsynth/p01/sdedit/ctrl_09.png",
+                  "audio/paper/rq2/nsynth/p01/sdedit/ctrl_10.png"
                 ]
               }
             }
@@ -1511,7 +1671,17 @@
                   "audio/paper/rq2/nsynth/p02/ours/spectro_10.png"
                 ],
                 "ctrl_curves": [
-                  "audio/paper/rq2/nsynth/p02/pitch_ctrl.png"
+                  "audio/paper/rq2/nsynth/p02/ours/ctrl_00.png",
+                  "audio/paper/rq2/nsynth/p02/ours/ctrl_01.png",
+                  "audio/paper/rq2/nsynth/p02/ours/ctrl_02.png",
+                  "audio/paper/rq2/nsynth/p02/ours/ctrl_03.png",
+                  "audio/paper/rq2/nsynth/p02/ours/ctrl_04.png",
+                  "audio/paper/rq2/nsynth/p02/ours/ctrl_05.png",
+                  "audio/paper/rq2/nsynth/p02/ours/ctrl_06.png",
+                  "audio/paper/rq2/nsynth/p02/ours/ctrl_07.png",
+                  "audio/paper/rq2/nsynth/p02/ours/ctrl_08.png",
+                  "audio/paper/rq2/nsynth/p02/ours/ctrl_09.png",
+                  "audio/paper/rq2/nsynth/p02/ours/ctrl_10.png"
                 ]
               },
               "sdedit": {
@@ -1555,7 +1725,17 @@
                   "audio/paper/rq2/nsynth/p02/sdedit/spectro_10.png"
                 ],
                 "ctrl_curves": [
-                  "audio/paper/rq2/nsynth/p02/pitch_ctrl.png"
+                  "audio/paper/rq2/nsynth/p02/sdedit/ctrl_00.png",
+                  "audio/paper/rq2/nsynth/p02/sdedit/ctrl_01.png",
+                  "audio/paper/rq2/nsynth/p02/sdedit/ctrl_02.png",
+                  "audio/paper/rq2/nsynth/p02/sdedit/ctrl_03.png",
+                  "audio/paper/rq2/nsynth/p02/sdedit/ctrl_04.png",
+                  "audio/paper/rq2/nsynth/p02/sdedit/ctrl_05.png",
+                  "audio/paper/rq2/nsynth/p02/sdedit/ctrl_06.png",
+                  "audio/paper/rq2/nsynth/p02/sdedit/ctrl_07.png",
+                  "audio/paper/rq2/nsynth/p02/sdedit/ctrl_08.png",
+                  "audio/paper/rq2/nsynth/p02/sdedit/ctrl_09.png",
+                  "audio/paper/rq2/nsynth/p02/sdedit/ctrl_10.png"
                 ]
               }
             }
@@ -1615,7 +1795,17 @@
                   "audio/paper/rq2/nsynth2clotho/p00/ours/spectro_10.png"
                 ],
                 "ctrl_curves": [
-                  "audio/paper/rq2/nsynth2clotho/p00/pitch_ctrl.png"
+                  "audio/paper/rq2/nsynth2clotho/p00/ours/ctrl_00.png",
+                  "audio/paper/rq2/nsynth2clotho/p00/ours/ctrl_01.png",
+                  "audio/paper/rq2/nsynth2clotho/p00/ours/ctrl_02.png",
+                  "audio/paper/rq2/nsynth2clotho/p00/ours/ctrl_03.png",
+                  "audio/paper/rq2/nsynth2clotho/p00/ours/ctrl_04.png",
+                  "audio/paper/rq2/nsynth2clotho/p00/ours/ctrl_05.png",
+                  "audio/paper/rq2/nsynth2clotho/p00/ours/ctrl_06.png",
+                  "audio/paper/rq2/nsynth2clotho/p00/ours/ctrl_07.png",
+                  "audio/paper/rq2/nsynth2clotho/p00/ours/ctrl_08.png",
+                  "audio/paper/rq2/nsynth2clotho/p00/ours/ctrl_09.png",
+                  "audio/paper/rq2/nsynth2clotho/p00/ours/ctrl_10.png"
                 ]
               },
               "sdedit": {
@@ -1659,7 +1849,17 @@
                   "audio/paper/rq2/nsynth2clotho/p00/sdedit/spectro_10.png"
                 ],
                 "ctrl_curves": [
-                  "audio/paper/rq2/nsynth2clotho/p00/pitch_ctrl.png"
+                  "audio/paper/rq2/nsynth2clotho/p00/sdedit/ctrl_00.png",
+                  "audio/paper/rq2/nsynth2clotho/p00/sdedit/ctrl_01.png",
+                  "audio/paper/rq2/nsynth2clotho/p00/sdedit/ctrl_02.png",
+                  "audio/paper/rq2/nsynth2clotho/p00/sdedit/ctrl_03.png",
+                  "audio/paper/rq2/nsynth2clotho/p00/sdedit/ctrl_04.png",
+                  "audio/paper/rq2/nsynth2clotho/p00/sdedit/ctrl_05.png",
+                  "audio/paper/rq2/nsynth2clotho/p00/sdedit/ctrl_06.png",
+                  "audio/paper/rq2/nsynth2clotho/p00/sdedit/ctrl_07.png",
+                  "audio/paper/rq2/nsynth2clotho/p00/sdedit/ctrl_08.png",
+                  "audio/paper/rq2/nsynth2clotho/p00/sdedit/ctrl_09.png",
+                  "audio/paper/rq2/nsynth2clotho/p00/sdedit/ctrl_10.png"
                 ]
               }
             }
@@ -1710,7 +1910,17 @@
                   "audio/paper/rq2/nsynth2clotho/p01/ours/spectro_10.png"
                 ],
                 "ctrl_curves": [
-                  "audio/paper/rq2/nsynth2clotho/p01/pitch_ctrl.png"
+                  "audio/paper/rq2/nsynth2clotho/p01/ours/ctrl_00.png",
+                  "audio/paper/rq2/nsynth2clotho/p01/ours/ctrl_01.png",
+                  "audio/paper/rq2/nsynth2clotho/p01/ours/ctrl_02.png",
+                  "audio/paper/rq2/nsynth2clotho/p01/ours/ctrl_03.png",
+                  "audio/paper/rq2/nsynth2clotho/p01/ours/ctrl_04.png",
+                  "audio/paper/rq2/nsynth2clotho/p01/ours/ctrl_05.png",
+                  "audio/paper/rq2/nsynth2clotho/p01/ours/ctrl_06.png",
+                  "audio/paper/rq2/nsynth2clotho/p01/ours/ctrl_07.png",
+                  "audio/paper/rq2/nsynth2clotho/p01/ours/ctrl_08.png",
+                  "audio/paper/rq2/nsynth2clotho/p01/ours/ctrl_09.png",
+                  "audio/paper/rq2/nsynth2clotho/p01/ours/ctrl_10.png"
                 ]
               },
               "sdedit": {
@@ -1754,7 +1964,17 @@
                   "audio/paper/rq2/nsynth2clotho/p01/sdedit/spectro_10.png"
                 ],
                 "ctrl_curves": [
-                  "audio/paper/rq2/nsynth2clotho/p01/pitch_ctrl.png"
+                  "audio/paper/rq2/nsynth2clotho/p01/sdedit/ctrl_00.png",
+                  "audio/paper/rq2/nsynth2clotho/p01/sdedit/ctrl_01.png",
+                  "audio/paper/rq2/nsynth2clotho/p01/sdedit/ctrl_02.png",
+                  "audio/paper/rq2/nsynth2clotho/p01/sdedit/ctrl_03.png",
+                  "audio/paper/rq2/nsynth2clotho/p01/sdedit/ctrl_04.png",
+                  "audio/paper/rq2/nsynth2clotho/p01/sdedit/ctrl_05.png",
+                  "audio/paper/rq2/nsynth2clotho/p01/sdedit/ctrl_06.png",
+                  "audio/paper/rq2/nsynth2clotho/p01/sdedit/ctrl_07.png",
+                  "audio/paper/rq2/nsynth2clotho/p01/sdedit/ctrl_08.png",
+                  "audio/paper/rq2/nsynth2clotho/p01/sdedit/ctrl_09.png",
+                  "audio/paper/rq2/nsynth2clotho/p01/sdedit/ctrl_10.png"
                 ]
               }
             }
@@ -1805,7 +2025,17 @@
                   "audio/paper/rq2/nsynth2clotho/p02/ours/spectro_10.png"
                 ],
                 "ctrl_curves": [
-                  "audio/paper/rq2/nsynth2clotho/p02/pitch_ctrl.png"
+                  "audio/paper/rq2/nsynth2clotho/p02/ours/ctrl_00.png",
+                  "audio/paper/rq2/nsynth2clotho/p02/ours/ctrl_01.png",
+                  "audio/paper/rq2/nsynth2clotho/p02/ours/ctrl_02.png",
+                  "audio/paper/rq2/nsynth2clotho/p02/ours/ctrl_03.png",
+                  "audio/paper/rq2/nsynth2clotho/p02/ours/ctrl_04.png",
+                  "audio/paper/rq2/nsynth2clotho/p02/ours/ctrl_05.png",
+                  "audio/paper/rq2/nsynth2clotho/p02/ours/ctrl_06.png",
+                  "audio/paper/rq2/nsynth2clotho/p02/ours/ctrl_07.png",
+                  "audio/paper/rq2/nsynth2clotho/p02/ours/ctrl_08.png",
+                  "audio/paper/rq2/nsynth2clotho/p02/ours/ctrl_09.png",
+                  "audio/paper/rq2/nsynth2clotho/p02/ours/ctrl_10.png"
                 ]
               },
               "sdedit": {
@@ -1849,7 +2079,17 @@
                   "audio/paper/rq2/nsynth2clotho/p02/sdedit/spectro_10.png"
                 ],
                 "ctrl_curves": [
-                  "audio/paper/rq2/nsynth2clotho/p02/pitch_ctrl.png"
+                  "audio/paper/rq2/nsynth2clotho/p02/sdedit/ctrl_00.png",
+                  "audio/paper/rq2/nsynth2clotho/p02/sdedit/ctrl_01.png",
+                  "audio/paper/rq2/nsynth2clotho/p02/sdedit/ctrl_02.png",
+                  "audio/paper/rq2/nsynth2clotho/p02/sdedit/ctrl_03.png",
+                  "audio/paper/rq2/nsynth2clotho/p02/sdedit/ctrl_04.png",
+                  "audio/paper/rq2/nsynth2clotho/p02/sdedit/ctrl_05.png",
+                  "audio/paper/rq2/nsynth2clotho/p02/sdedit/ctrl_06.png",
+                  "audio/paper/rq2/nsynth2clotho/p02/sdedit/ctrl_07.png",
+                  "audio/paper/rq2/nsynth2clotho/p02/sdedit/ctrl_08.png",
+                  "audio/paper/rq2/nsynth2clotho/p02/sdedit/ctrl_09.png",
+                  "audio/paper/rq2/nsynth2clotho/p02/sdedit/ctrl_10.png"
                 ]
               }
             }
@@ -2619,7 +2859,17 @@
                   "audio/paper/rq3/nsynth/p00/flam_flam/spectro_10.png"
                 ],
                 "ctrl_curves": [
-                  "audio/paper/rq3/nsynth/p00/pitch_ctrl.png"
+                  "audio/paper/rq3/nsynth/p00/flam_flam/ctrl_00.png",
+                  "audio/paper/rq3/nsynth/p00/flam_flam/ctrl_01.png",
+                  "audio/paper/rq3/nsynth/p00/flam_flam/ctrl_02.png",
+                  "audio/paper/rq3/nsynth/p00/flam_flam/ctrl_03.png",
+                  "audio/paper/rq3/nsynth/p00/flam_flam/ctrl_04.png",
+                  "audio/paper/rq3/nsynth/p00/flam_flam/ctrl_05.png",
+                  "audio/paper/rq3/nsynth/p00/flam_flam/ctrl_06.png",
+                  "audio/paper/rq3/nsynth/p00/flam_flam/ctrl_07.png",
+                  "audio/paper/rq3/nsynth/p00/flam_flam/ctrl_08.png",
+                  "audio/paper/rq3/nsynth/p00/flam_flam/ctrl_09.png",
+                  "audio/paper/rq3/nsynth/p00/flam_flam/ctrl_10.png"
                 ]
               },
               "sdedit_flam": {
@@ -2663,7 +2913,17 @@
                   "audio/paper/rq3/nsynth/p00/sdedit_flam/spectro_10.png"
                 ],
                 "ctrl_curves": [
-                  "audio/paper/rq3/nsynth/p00/pitch_ctrl.png"
+                  "audio/paper/rq3/nsynth/p00/sdedit_flam/ctrl_00.png",
+                  "audio/paper/rq3/nsynth/p00/sdedit_flam/ctrl_01.png",
+                  "audio/paper/rq3/nsynth/p00/sdedit_flam/ctrl_02.png",
+                  "audio/paper/rq3/nsynth/p00/sdedit_flam/ctrl_03.png",
+                  "audio/paper/rq3/nsynth/p00/sdedit_flam/ctrl_04.png",
+                  "audio/paper/rq3/nsynth/p00/sdedit_flam/ctrl_05.png",
+                  "audio/paper/rq3/nsynth/p00/sdedit_flam/ctrl_06.png",
+                  "audio/paper/rq3/nsynth/p00/sdedit_flam/ctrl_07.png",
+                  "audio/paper/rq3/nsynth/p00/sdedit_flam/ctrl_08.png",
+                  "audio/paper/rq3/nsynth/p00/sdedit_flam/ctrl_09.png",
+                  "audio/paper/rq3/nsynth/p00/sdedit_flam/ctrl_10.png"
                 ]
               }
             }
@@ -2714,7 +2974,17 @@
                   "audio/paper/rq3/nsynth/p01/flam_flam/spectro_10.png"
                 ],
                 "ctrl_curves": [
-                  "audio/paper/rq3/nsynth/p01/pitch_ctrl.png"
+                  "audio/paper/rq3/nsynth/p01/flam_flam/ctrl_00.png",
+                  "audio/paper/rq3/nsynth/p01/flam_flam/ctrl_01.png",
+                  "audio/paper/rq3/nsynth/p01/flam_flam/ctrl_02.png",
+                  "audio/paper/rq3/nsynth/p01/flam_flam/ctrl_03.png",
+                  "audio/paper/rq3/nsynth/p01/flam_flam/ctrl_04.png",
+                  "audio/paper/rq3/nsynth/p01/flam_flam/ctrl_05.png",
+                  "audio/paper/rq3/nsynth/p01/flam_flam/ctrl_06.png",
+                  "audio/paper/rq3/nsynth/p01/flam_flam/ctrl_07.png",
+                  "audio/paper/rq3/nsynth/p01/flam_flam/ctrl_08.png",
+                  "audio/paper/rq3/nsynth/p01/flam_flam/ctrl_09.png",
+                  "audio/paper/rq3/nsynth/p01/flam_flam/ctrl_10.png"
                 ]
               },
               "sdedit_flam": {
@@ -2758,7 +3028,17 @@
                   "audio/paper/rq3/nsynth/p01/sdedit_flam/spectro_10.png"
                 ],
                 "ctrl_curves": [
-                  "audio/paper/rq3/nsynth/p01/pitch_ctrl.png"
+                  "audio/paper/rq3/nsynth/p01/sdedit_flam/ctrl_00.png",
+                  "audio/paper/rq3/nsynth/p01/sdedit_flam/ctrl_01.png",
+                  "audio/paper/rq3/nsynth/p01/sdedit_flam/ctrl_02.png",
+                  "audio/paper/rq3/nsynth/p01/sdedit_flam/ctrl_03.png",
+                  "audio/paper/rq3/nsynth/p01/sdedit_flam/ctrl_04.png",
+                  "audio/paper/rq3/nsynth/p01/sdedit_flam/ctrl_05.png",
+                  "audio/paper/rq3/nsynth/p01/sdedit_flam/ctrl_06.png",
+                  "audio/paper/rq3/nsynth/p01/sdedit_flam/ctrl_07.png",
+                  "audio/paper/rq3/nsynth/p01/sdedit_flam/ctrl_08.png",
+                  "audio/paper/rq3/nsynth/p01/sdedit_flam/ctrl_09.png",
+                  "audio/paper/rq3/nsynth/p01/sdedit_flam/ctrl_10.png"
                 ]
               }
             }
@@ -2809,7 +3089,17 @@
                   "audio/paper/rq3/nsynth/p02/flam_flam/spectro_10.png"
                 ],
                 "ctrl_curves": [
-                  "audio/paper/rq3/nsynth/p02/pitch_ctrl.png"
+                  "audio/paper/rq3/nsynth/p02/flam_flam/ctrl_00.png",
+                  "audio/paper/rq3/nsynth/p02/flam_flam/ctrl_01.png",
+                  "audio/paper/rq3/nsynth/p02/flam_flam/ctrl_02.png",
+                  "audio/paper/rq3/nsynth/p02/flam_flam/ctrl_03.png",
+                  "audio/paper/rq3/nsynth/p02/flam_flam/ctrl_04.png",
+                  "audio/paper/rq3/nsynth/p02/flam_flam/ctrl_05.png",
+                  "audio/paper/rq3/nsynth/p02/flam_flam/ctrl_06.png",
+                  "audio/paper/rq3/nsynth/p02/flam_flam/ctrl_07.png",
+                  "audio/paper/rq3/nsynth/p02/flam_flam/ctrl_08.png",
+                  "audio/paper/rq3/nsynth/p02/flam_flam/ctrl_09.png",
+                  "audio/paper/rq3/nsynth/p02/flam_flam/ctrl_10.png"
                 ]
               },
               "sdedit_flam": {
@@ -2853,7 +3143,17 @@
                   "audio/paper/rq3/nsynth/p02/sdedit_flam/spectro_10.png"
                 ],
                 "ctrl_curves": [
-                  "audio/paper/rq3/nsynth/p02/pitch_ctrl.png"
+                  "audio/paper/rq3/nsynth/p02/sdedit_flam/ctrl_00.png",
+                  "audio/paper/rq3/nsynth/p02/sdedit_flam/ctrl_01.png",
+                  "audio/paper/rq3/nsynth/p02/sdedit_flam/ctrl_02.png",
+                  "audio/paper/rq3/nsynth/p02/sdedit_flam/ctrl_03.png",
+                  "audio/paper/rq3/nsynth/p02/sdedit_flam/ctrl_04.png",
+                  "audio/paper/rq3/nsynth/p02/sdedit_flam/ctrl_05.png",
+                  "audio/paper/rq3/nsynth/p02/sdedit_flam/ctrl_06.png",
+                  "audio/paper/rq3/nsynth/p02/sdedit_flam/ctrl_07.png",
+                  "audio/paper/rq3/nsynth/p02/sdedit_flam/ctrl_08.png",
+                  "audio/paper/rq3/nsynth/p02/sdedit_flam/ctrl_09.png",
+                  "audio/paper/rq3/nsynth/p02/sdedit_flam/ctrl_10.png"
                 ]
               }
             }
@@ -2913,7 +3213,17 @@
                   "audio/paper/rq3/nsynth2clotho/p00/flam_flam/spectro_10.png"
                 ],
                 "ctrl_curves": [
-                  "audio/paper/rq3/nsynth2clotho/p00/pitch_ctrl.png"
+                  "audio/paper/rq3/nsynth2clotho/p00/flam_flam/ctrl_00.png",
+                  "audio/paper/rq3/nsynth2clotho/p00/flam_flam/ctrl_01.png",
+                  "audio/paper/rq3/nsynth2clotho/p00/flam_flam/ctrl_02.png",
+                  "audio/paper/rq3/nsynth2clotho/p00/flam_flam/ctrl_03.png",
+                  "audio/paper/rq3/nsynth2clotho/p00/flam_flam/ctrl_04.png",
+                  "audio/paper/rq3/nsynth2clotho/p00/flam_flam/ctrl_05.png",
+                  "audio/paper/rq3/nsynth2clotho/p00/flam_flam/ctrl_06.png",
+                  "audio/paper/rq3/nsynth2clotho/p00/flam_flam/ctrl_07.png",
+                  "audio/paper/rq3/nsynth2clotho/p00/flam_flam/ctrl_08.png",
+                  "audio/paper/rq3/nsynth2clotho/p00/flam_flam/ctrl_09.png",
+                  "audio/paper/rq3/nsynth2clotho/p00/flam_flam/ctrl_10.png"
                 ]
               },
               "sdedit_flam": {
@@ -2957,7 +3267,17 @@
                   "audio/paper/rq3/nsynth2clotho/p00/sdedit_flam/spectro_10.png"
                 ],
                 "ctrl_curves": [
-                  "audio/paper/rq3/nsynth2clotho/p00/pitch_ctrl.png"
+                  "audio/paper/rq3/nsynth2clotho/p00/sdedit_flam/ctrl_00.png",
+                  "audio/paper/rq3/nsynth2clotho/p00/sdedit_flam/ctrl_01.png",
+                  "audio/paper/rq3/nsynth2clotho/p00/sdedit_flam/ctrl_02.png",
+                  "audio/paper/rq3/nsynth2clotho/p00/sdedit_flam/ctrl_03.png",
+                  "audio/paper/rq3/nsynth2clotho/p00/sdedit_flam/ctrl_04.png",
+                  "audio/paper/rq3/nsynth2clotho/p00/sdedit_flam/ctrl_05.png",
+                  "audio/paper/rq3/nsynth2clotho/p00/sdedit_flam/ctrl_06.png",
+                  "audio/paper/rq3/nsynth2clotho/p00/sdedit_flam/ctrl_07.png",
+                  "audio/paper/rq3/nsynth2clotho/p00/sdedit_flam/ctrl_08.png",
+                  "audio/paper/rq3/nsynth2clotho/p00/sdedit_flam/ctrl_09.png",
+                  "audio/paper/rq3/nsynth2clotho/p00/sdedit_flam/ctrl_10.png"
                 ]
               }
             }
@@ -3008,7 +3328,17 @@
                   "audio/paper/rq3/nsynth2clotho/p01/flam_flam/spectro_10.png"
                 ],
                 "ctrl_curves": [
-                  "audio/paper/rq3/nsynth2clotho/p01/pitch_ctrl.png"
+                  "audio/paper/rq3/nsynth2clotho/p01/flam_flam/ctrl_00.png",
+                  "audio/paper/rq3/nsynth2clotho/p01/flam_flam/ctrl_01.png",
+                  "audio/paper/rq3/nsynth2clotho/p01/flam_flam/ctrl_02.png",
+                  "audio/paper/rq3/nsynth2clotho/p01/flam_flam/ctrl_03.png",
+                  "audio/paper/rq3/nsynth2clotho/p01/flam_flam/ctrl_04.png",
+                  "audio/paper/rq3/nsynth2clotho/p01/flam_flam/ctrl_05.png",
+                  "audio/paper/rq3/nsynth2clotho/p01/flam_flam/ctrl_06.png",
+                  "audio/paper/rq3/nsynth2clotho/p01/flam_flam/ctrl_07.png",
+                  "audio/paper/rq3/nsynth2clotho/p01/flam_flam/ctrl_08.png",
+                  "audio/paper/rq3/nsynth2clotho/p01/flam_flam/ctrl_09.png",
+                  "audio/paper/rq3/nsynth2clotho/p01/flam_flam/ctrl_10.png"
                 ]
               },
               "sdedit_flam": {
@@ -3052,7 +3382,17 @@
                   "audio/paper/rq3/nsynth2clotho/p01/sdedit_flam/spectro_10.png"
                 ],
                 "ctrl_curves": [
-                  "audio/paper/rq3/nsynth2clotho/p01/pitch_ctrl.png"
+                  "audio/paper/rq3/nsynth2clotho/p01/sdedit_flam/ctrl_00.png",
+                  "audio/paper/rq3/nsynth2clotho/p01/sdedit_flam/ctrl_01.png",
+                  "audio/paper/rq3/nsynth2clotho/p01/sdedit_flam/ctrl_02.png",
+                  "audio/paper/rq3/nsynth2clotho/p01/sdedit_flam/ctrl_03.png",
+                  "audio/paper/rq3/nsynth2clotho/p01/sdedit_flam/ctrl_04.png",
+                  "audio/paper/rq3/nsynth2clotho/p01/sdedit_flam/ctrl_05.png",
+                  "audio/paper/rq3/nsynth2clotho/p01/sdedit_flam/ctrl_06.png",
+                  "audio/paper/rq3/nsynth2clotho/p01/sdedit_flam/ctrl_07.png",
+                  "audio/paper/rq3/nsynth2clotho/p01/sdedit_flam/ctrl_08.png",
+                  "audio/paper/rq3/nsynth2clotho/p01/sdedit_flam/ctrl_09.png",
+                  "audio/paper/rq3/nsynth2clotho/p01/sdedit_flam/ctrl_10.png"
                 ]
               }
             }
@@ -3103,7 +3443,17 @@
                   "audio/paper/rq3/nsynth2clotho/p02/flam_flam/spectro_10.png"
                 ],
                 "ctrl_curves": [
-                  "audio/paper/rq3/nsynth2clotho/p02/pitch_ctrl.png"
+                  "audio/paper/rq3/nsynth2clotho/p02/flam_flam/ctrl_00.png",
+                  "audio/paper/rq3/nsynth2clotho/p02/flam_flam/ctrl_01.png",
+                  "audio/paper/rq3/nsynth2clotho/p02/flam_flam/ctrl_02.png",
+                  "audio/paper/rq3/nsynth2clotho/p02/flam_flam/ctrl_03.png",
+                  "audio/paper/rq3/nsynth2clotho/p02/flam_flam/ctrl_04.png",
+                  "audio/paper/rq3/nsynth2clotho/p02/flam_flam/ctrl_05.png",
+                  "audio/paper/rq3/nsynth2clotho/p02/flam_flam/ctrl_06.png",
+                  "audio/paper/rq3/nsynth2clotho/p02/flam_flam/ctrl_07.png",
+                  "audio/paper/rq3/nsynth2clotho/p02/flam_flam/ctrl_08.png",
+                  "audio/paper/rq3/nsynth2clotho/p02/flam_flam/ctrl_09.png",
+                  "audio/paper/rq3/nsynth2clotho/p02/flam_flam/ctrl_10.png"
                 ]
               },
               "sdedit_flam": {
@@ -3147,7 +3497,17 @@
                   "audio/paper/rq3/nsynth2clotho/p02/sdedit_flam/spectro_10.png"
                 ],
                 "ctrl_curves": [
-                  "audio/paper/rq3/nsynth2clotho/p02/pitch_ctrl.png"
+                  "audio/paper/rq3/nsynth2clotho/p02/sdedit_flam/ctrl_00.png",
+                  "audio/paper/rq3/nsynth2clotho/p02/sdedit_flam/ctrl_01.png",
+                  "audio/paper/rq3/nsynth2clotho/p02/sdedit_flam/ctrl_02.png",
+                  "audio/paper/rq3/nsynth2clotho/p02/sdedit_flam/ctrl_03.png",
+                  "audio/paper/rq3/nsynth2clotho/p02/sdedit_flam/ctrl_04.png",
+                  "audio/paper/rq3/nsynth2clotho/p02/sdedit_flam/ctrl_05.png",
+                  "audio/paper/rq3/nsynth2clotho/p02/sdedit_flam/ctrl_06.png",
+                  "audio/paper/rq3/nsynth2clotho/p02/sdedit_flam/ctrl_07.png",
+                  "audio/paper/rq3/nsynth2clotho/p02/sdedit_flam/ctrl_08.png",
+                  "audio/paper/rq3/nsynth2clotho/p02/sdedit_flam/ctrl_09.png",
+                  "audio/paper/rq3/nsynth2clotho/p02/sdedit_flam/ctrl_10.png"
                 ]
               }
             }
