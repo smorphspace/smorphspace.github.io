@@ -1,8 +1,8 @@
 {
   "rq_display": {
-    "rq1": "RQ1",
-    "rq2": "RQ2",
-    "rq3": "RQ3"
+    "rq1": "rq1 (prompt\u2192prompt)",
+    "rq2": "rq2 (audio\u2192prompt)",
+    "rq3": "rq3 (audio\u2192audio)"
   },
   "rq_title": {
     "rq1": "RQ1: Does structural conditioning improve the adherence-expressiveness tradeoff in prompt-to-prompt morphing?",

@@ -455,6 +455,22 @@ footer em { font-style: normal; color: var(--color-red); }
 }
 .pair-prompt.src { color: var(--color-meadow); }
 .pair-prompt.tgt { color: var(--color-red); }
+.pair-prompt audio {
+  display: block;
+  width: 100%;
+  height: 24px;
+  margin-top: .25rem;
+  accent-color: var(--color-cerulean);
+}
+.ctrl-badge {
+  font-size: .58rem;
+  font-style: italic;
+  color: var(--color-cerulean);
+  border: 1px solid var(--color-cerulean);
+  padding: .05rem .28rem;
+  border-radius: 2px;
+  white-space: nowrap;
+}
 .pair-slider-wrap { margin-bottom: .4rem; padding: .15rem 0 .4rem; }
 .pair-alpha-row { margin-bottom: .65rem; }
 .pair-transport { gap: .6rem; }
@@ -615,6 +631,7 @@ footer em { font-style: normal; color: var(--color-red); }
         <span class="ep-label">target, α=1</span>
         bubbles popping
       </div>
+      <span class="ctrl-badge" style="align-self:center">ctrl: rms</span>
     </div>
 
     <div class="morph-slider-wrap">
@@ -677,6 +694,7 @@ footer em { font-style: normal; color: var(--color-red); }
           play
         </button>
         <span class="status-text" id="canvas-pos-display">position (0.00, 0.00)</span>
+        <span class="ctrl-badge">ctrl: rms</span>
       </div>
       <div class="spectro-wrap">
         <canvas id="canvas-spectro" class="spectro-canvas"></canvas>
@@ -1470,6 +1488,11 @@ class PaperMorphPlayer {
   }
 }
 
+const METHOD_CTRL = {
+  ours:     'ctrl: rms',
+  ours_ss0: null,
+};
+
 const METHOD_WAVEFORM_COLORS = {
   ours:        '#7DB83A',  /* grass  */
   ours_ss0:    '#2AABCF',  /* cerulean */
@@ -1573,18 +1596,28 @@ class WaveformPlayer {
  * Build a pair card: prompts + shared slider, then one method row per method.
  * Each method has its own PaperMorphPlayer (lazy Web Audio); slider controls
  * all players simultaneously and highlights the active spectrogram thumbnail.
+ * rq: 'rq1'|'rq2'|'rq3' — controls whether audio source/target players are shown.
  */
-function buildPairCard(pair, methods, methodDisplay) {
+function buildPairCard(pair, methods, methodDisplay, rq) {
   const alphas = pair.methods[methods[0]].alphas;
   const nAlpha = alphas.length;
 
   const card = document.createElement('div');
   card.className = 'pair-player';
 
+  // For RQ2/RQ3 the morph starts from real audio — grab alpha=0 and alpha=1 files
+  const firstMethod = pair.methods[methods[0]];
+  const srcAudioFile = (rq === 'rq2' || rq === 'rq3') ? firstMethod.files[0] : null;
+  const tgtAudioFile = (rq === 'rq3') ? firstMethod.files[firstMethod.files.length - 1] : null;
+  const srcAudioEl = srcAudioFile
+    ? `<audio controls preload="none" src="${srcAudioFile}"></audio>` : '';
+  const tgtAudioEl = tgtAudioFile
+    ? `<audio controls preload="none" src="${tgtAudioFile}"></audio>` : '';
+
   card.innerHTML = `
     <div class="pair-prompts">
-      <div class="pair-prompt src"><span class="ep-label">source, α=0</span>${escHtml(pair.src_prompt)}</div>
-      <div class="pair-prompt tgt"><span class="ep-label">target, α=1</span>${escHtml(pair.tgt_prompt)}</div>
+      <div class="pair-prompt src"><span class="ep-label">source, α=0</span>${escHtml(pair.src_prompt)}${srcAudioEl}</div>
+      <div class="pair-prompt tgt"><span class="ep-label">target, α=1</span>${escHtml(pair.tgt_prompt)}${tgtAudioEl}</div>
     </div>
     <div class="morph-slider-wrap pair-slider-wrap">
       <input type="range" class="morph-slider pair-slider" min="0" max="${nAlpha - 1}" step="1" value="0">
@@ -1611,10 +1644,12 @@ function buildPairCard(pair, methods, methodDisplay) {
     row.className = 'pair-method-row';
     const label = methodDisplay[method] || method;
     const isOurs = method === 'ours' || method === 'ours_ss0';
-    const badge = isOurs ? ` <span class="ours-badge">&#9733;</span>` : '';
+    const starBadge = isOurs ? ` <span class="ours-badge">&#9733;</span>` : '';
+    const ctrlLabel = METHOD_CTRL[method];
+    const ctrlBadge = ctrlLabel ? ` <span class="ctrl-badge">${ctrlLabel}</span>` : '';
     row.innerHTML = `
       <div class="pair-method-top">
-        <span class="pair-method-label">${label}${badge}</span>
+        <span class="pair-method-label">${label}${starBadge}${ctrlBadge}</span>
         <button class="play-btn pair-play-btn">${SVG_PLAY} play</button>
       </div>
     `;
@@ -1779,7 +1814,7 @@ function buildPairCard(pair, methods, methodDisplay) {
         exHeader.textContent = `example ${pi + 1}`;
         dsSection.appendChild(exHeader);
 
-        const card = buildPairCard(pair, methods, method_display);
+        const card = buildPairCard(pair, methods, method_display, rq);
         dsSection.appendChild(card);
       });
 
