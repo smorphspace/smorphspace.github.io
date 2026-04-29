@@ -36,7 +36,8 @@
   --lime:   var(--color-grass);
   --yellow: var(--color-sunflower);
   --text:   var(--color-ink);
-  --muted:  var(--color-ash);
+  --muted:  var(--color-charcoal);
+  --faint:  var(--color-ash);
   --card-r: 2px;
 }
 
@@ -72,7 +73,7 @@ header {
   font-size: .68rem;
   letter-spacing: .1em;
   text-transform: uppercase;
-  color: var(--muted);
+  color: var(--color-cerulean);
   margin-bottom: .6rem;
 }
 h1 {
@@ -119,7 +120,7 @@ h1 span { color: var(--accent); }
   font-size: .62rem;
   letter-spacing: .14em;
   text-transform: uppercase;
-  color: var(--muted);
+  color: var(--color-purple);
   margin-bottom: .85rem;
 }
 .abstract-section p {
@@ -134,19 +135,19 @@ h1 span { color: var(--accent); }
 .demo-section h2 {
   font-size: 1rem;
   font-weight: 700;
-  color: var(--text);
+  color: var(--color-ink);
   margin-bottom: .3rem;
 }
 .demo-section .section-sub {
   font-size: .8rem;
-  color: var(--muted);
+  color: var(--color-charcoal);
   margin-bottom: 1.5rem;
   line-height: 1.75;
 }
 .demo-divider {
   width: 20px;
   height: 2px;
-  background: var(--accent);
+  background: var(--color-ember);
   margin: .4rem 0 1rem;
 }
 
@@ -177,7 +178,7 @@ h1 span { color: var(--accent); }
   font-weight: 400;
   letter-spacing: .08em;
   text-transform: uppercase;
-  color: var(--muted);
+  color: var(--faint);
   margin-bottom: .15rem;
 }
 
@@ -224,7 +225,7 @@ input[type="range"].morph-slider:active::-webkit-slider-thumb { cursor: grabbing
 }
 .morph-tick {
   font-size: .56rem;
-  color: var(--muted);
+  color: var(--faint);
   text-align: center;
   min-width: 0;
 }
@@ -253,7 +254,7 @@ input[type="range"].morph-slider:active::-webkit-slider-thumb { cursor: grabbing
 .play-btn:hover { background: var(--link); border-color: var(--link); color: #fff; }
 .play-btn.playing { background: var(--link); border-color: var(--link); color: #fff; }
 .play-btn svg { width: 13px; height: 13px; flex-shrink: 0; }
-.status-text { font-size: .73rem; color: var(--muted); }
+.status-text { font-size: .73rem; color: var(--color-purple); }
 
 /* ── canvas stage ──────────────────────────────────── */
 .canvas-stage-wrap {
@@ -329,9 +330,9 @@ footer {
   padding: 2rem 0;
   text-align: center;
   font-size: .7rem;
-  color: var(--muted);
+  color: var(--color-charcoal);
 }
-footer em { font-style: normal; color: var(--text); }
+footer em { font-style: normal; color: var(--color-red); }
 
 /* ── canvas corner layout ──────────────────────────── */
 .canvas-corner-grid {
@@ -346,7 +347,7 @@ footer em { font-style: normal; color: var(--text); }
 .canvas-cell { grid-column: 2; grid-row: 2; }
 .corner-label {
   font-size: .7rem;
-  color: var(--muted);
+  color: var(--color-charcoal);
   font-style: italic;
   line-height: 1.4;
   max-width: 130px;
@@ -377,8 +378,8 @@ footer em { font-style: normal; color: var(--text); }
   margin-bottom: -1px;
   transition: color .1s, border-color .1s;
 }
-.tab-btn:hover { color: var(--text); }
-.tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+.tab-btn:hover { color: var(--color-ink); }
+.tab-btn.active { color: var(--color-red); border-bottom-color: var(--color-red); }
 
 /* ── rq sub-navigation ─────────────────────────────── */
 .rq-nav {
@@ -398,7 +399,7 @@ footer em { font-style: normal; color: var(--text); }
   cursor: pointer;
   transition: background .1s, color .1s, border-color .1s;
 }
-.rq-btn:hover, .rq-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+.rq-btn:hover, .rq-btn.active { background: var(--color-cerulean); border-color: var(--color-cerulean); color: #fff; }
 .rq-question {
   font-size: .8rem;
   font-weight: 400;
@@ -407,7 +408,7 @@ footer em { font-style: normal; color: var(--text); }
   margin-bottom: 1.5rem;
   padding: .65rem .9rem;
   background: var(--bg2);
-  border-left: 3px solid var(--accent);
+  border-left: 3px solid var(--color-cerulean);
   border-radius: 0 var(--card-r) var(--card-r) 0;
 }
 
@@ -416,16 +417,16 @@ footer em { font-style: normal; color: var(--text); }
 .dataset-header {
   font-size: .88rem;
   font-weight: 700;
-  color: var(--text);
+  color: var(--color-ink);
   padding-bottom: .5rem;
   margin-bottom: 1.25rem;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 2px solid var(--color-ember);
 }
 .method-section { margin-bottom: 2rem; }
 .method-header {
   font-size: .72rem;
   font-weight: 600;
-  color: var(--accent);
+  color: var(--color-cerulean);
   letter-spacing: .04em;
   margin-bottom: .85rem;
   text-transform: uppercase;
@@ -470,7 +471,7 @@ footer em { font-style: normal; color: var(--text); }
   font-size: .55rem;
   letter-spacing: .08em;
   text-transform: uppercase;
-  color: var(--muted);
+  color: var(--faint);
   margin-bottom: .1rem;
 }
 .pair-prompt.src { color: var(--color-meadow); }
@@ -498,7 +499,7 @@ footer em { font-style: normal; color: var(--text); }
   flex: 1;
   font-size: .7rem;
   font-weight: 500;
-  color: var(--text);
+  color: var(--color-purple);
   min-width: 0;
 }
 .pair-method-row .play-btn { flex-shrink: 0; padding: .22rem .6rem; font-size: .7rem; }
@@ -516,7 +517,7 @@ footer em { font-style: normal; color: var(--text); }
 }
 .spectro-label {
   font-size: .56rem;
-  color: var(--muted);
+  color: var(--faint);
   text-align: center;
   margin-top: 3px;
   letter-spacing: .04em;
@@ -533,7 +534,7 @@ footer em { font-style: normal; color: var(--text); }
   scrollbar-color: var(--border) transparent;
 }
 .spectro-strip::-webkit-scrollbar { height: 3px; }
-.spectro-strip::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+.spectro-strip::-webkit-scrollbar-thumb { background: var(--faint); border-radius: 2px; }
 .spectro-thumb {
   flex: 1 0 0;
   min-width: 28px;
@@ -547,10 +548,10 @@ footer em { font-style: normal; color: var(--text); }
   background: #06060f;
   display: block;
 }
-.spectro-thumb.active { border-color: var(--accent); }
+.spectro-thumb.active { border-color: var(--color-cerulean); }
 .pair-method-loading {
   font-size: .63rem;
-  color: var(--muted);
+  color: var(--color-charcoal);
   padding: .25rem 0;
   text-align: center;
 }
