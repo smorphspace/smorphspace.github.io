@@ -560,6 +560,16 @@ footer em { font-style: normal; color: var(--color-red); }
 /* pitch → cerulean active border; rms → ember active border */
 .ctrl-strip[data-ctrl="pitch"] .ctrl-thumb.active { border-color: var(--color-cerulean); }
 .ctrl-strip[data-ctrl="rms"]   .ctrl-thumb.active { border-color: var(--color-ember); }
+/* Pitch posteriorgram: single full-width image (not a filmstrip) */
+.ctrl-posteriorgram {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--card-r);
+  margin-top: 2px;
+  margin-bottom: 2px;
+  background: #06060f;
+}
 .pair-method-loading {
   font-size: .63rem;
   color: var(--color-charcoal);
@@ -1695,26 +1705,40 @@ function buildPairCard(pair, methods, methodDisplay, rq, dataset) {
       row.appendChild(strip);
     }
 
-    // Control curve filmstrip (pitch or RMS depending on dataset)
+    // Control signal visualization:
+    //   pitch datasets → single posteriorgram PNG (ctrl_curves has 1 entry)
+    //   rms datasets   → per-alpha filmstrip (ctrl_curves has N entries)
     const ctrlThumbList = [];
     if (mData.ctrl_curves && mData.ctrl_curves.length) {
-      const ctrlStrip = document.createElement('div');
-      ctrlStrip.className = 'ctrl-strip';
-      ctrlStrip.dataset.ctrl = DATASET_CTRL[dataset] || 'rms';
-      mData.ctrl_curves.forEach((src, i) => {
+      const ctrlKind = DATASET_CTRL[dataset] || 'rms';
+      if (ctrlKind === 'pitch' && mData.ctrl_curves.length === 1) {
+        // Pitch posteriorgram — single full-width image, no alpha sync needed
         const img = document.createElement('img');
-        img.className = 'ctrl-thumb' + (i === 0 ? ' active' : '');
-        img.src = src;
-        img.alt = `ctrl α=${alphas[i] !== undefined ? alphas[i].toFixed(2) : i}`;
+        img.className = 'ctrl-posteriorgram';
+        img.src = mData.ctrl_curves[0];
+        img.alt = 'CREPE pitch posteriorgram (conditioning signal)';
         img.title = img.alt;
-        img.addEventListener('click', () => {
-          slider.value = String(i);
-          slider.dispatchEvent(new Event('input'));
+        row.appendChild(img);
+      } else {
+        // RMS filmstrip — one thumbnail per alpha step
+        const ctrlStrip = document.createElement('div');
+        ctrlStrip.className = 'ctrl-strip';
+        ctrlStrip.dataset.ctrl = ctrlKind;
+        mData.ctrl_curves.forEach((src, i) => {
+          const img = document.createElement('img');
+          img.className = 'ctrl-thumb' + (i === 0 ? ' active' : '');
+          img.src = src;
+          img.alt = `ctrl α=${alphas[i] !== undefined ? alphas[i].toFixed(2) : i}`;
+          img.title = img.alt;
+          img.addEventListener('click', () => {
+            slider.value = String(i);
+            slider.dispatchEvent(new Event('input'));
+          });
+          ctrlStrip.appendChild(img);
+          ctrlThumbList.push(img);
         });
-        ctrlStrip.appendChild(img);
-        ctrlThumbList.push(img);
-      });
-      row.appendChild(ctrlStrip);
+        row.appendChild(ctrlStrip);
+      }
     }
 
     methList.appendChild(row);
