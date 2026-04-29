@@ -1236,8 +1236,12 @@ class SpectroMorph {
   const playIcon = document.getElementById('morph-play-icon');
   const alphaDisplay = document.getElementById('morph-alpha-display');
 
+  const morphStop = () => { if (player.playing) { player.pause(); showPlayIcon(playBtn, playIcon, null, false); } };
+  registerAudioStop(morphStop);
+
   playBtn.addEventListener('click', async () => {
     await player.resume();
+    if (!player.playing) stopAllExcept(morphStop);
     const playing = player.togglePlay();
     showPlayIcon(playBtn, playIcon, null, playing);
   });
@@ -1303,8 +1307,12 @@ class SpectroMorph {
   const playBtn = document.getElementById('canvas-play-btn');
   const playIcon = document.getElementById('canvas-play-icon');
 
+  const canvasStop = () => { if (player.playing) { player.pause(); showPlayIcon(playBtn, playIcon, null, false); } };
+  registerAudioStop(canvasStop);
+
   playBtn.addEventListener('click', async () => {
     await player.resume();
+    if (!player.playing) stopAllExcept(canvasStop);
     const playing = player.togglePlay();
     showPlayIcon(playBtn, playIcon, null, playing);
   });
@@ -1331,6 +1339,11 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
 function escHtml(s) {
   return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
+
+/* ── global audio registry — one thing playing at a time ─────── */
+const _audioRegistry = new Set();
+function registerAudioStop(fn) { _audioRegistry.add(fn); }
+function stopAllExcept(fn) { _audioRegistry.forEach(f => { if (f !== fn) f(); }); }
 
 const SVG_PLAY  = `<svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><polygon points="5 3 19 12 5 21 5 3"/></svg>`;
 const SVG_PAUSE = `<svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>`;
@@ -1636,15 +1649,16 @@ function buildPairCard(pair, methods, methodDisplay) {
       else   wfPlayer.stopPlayhead();
     }
 
+    const pmpStop = () => { if (pmp.playing) { pmp.pause(); setPlaying(false); } };
+    registerAudioStop(pmpStop);
+
     btn.addEventListener('click', async () => {
       if (pmp.playing) {
         pmp.pause(); setPlaying(false);
         return;
       }
-      // Stop any other playing method in this card
-      Object.values(players).forEach(p => {
-        if (p.pmp.playing) { p.pmp.pause(); p.setPlaying(false); }
-      });
+      // Stop every other player site-wide
+      stopAllExcept(pmpStop);
       // Lazy-load then play
       await resumePaperACX();
       if (!pmp.loaded) {
