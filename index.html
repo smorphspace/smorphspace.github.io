@@ -527,7 +527,7 @@ footer em { font-style: normal; color: var(--color-red); }
   letter-spacing: .04em;
 }
 .spectro-strip,
-.rms-strip {
+.ctrl-strip {
   display: flex;
   flex-direction: row;
   gap: 2px;
@@ -536,13 +536,13 @@ footer em { font-style: normal; color: var(--color-red); }
   scrollbar-color: var(--border) transparent;
 }
 .spectro-strip { margin-top: 6px; }
-.rms-strip     { margin-top: 2px; margin-bottom: 2px; }
+.ctrl-strip    { margin-top: 2px; margin-bottom: 2px; }
 .spectro-strip::-webkit-scrollbar,
-.rms-strip::-webkit-scrollbar { height: 3px; }
+.ctrl-strip::-webkit-scrollbar { height: 3px; }
 .spectro-strip::-webkit-scrollbar-thumb,
-.rms-strip::-webkit-scrollbar-thumb { background: var(--faint); border-radius: 2px; }
+.ctrl-strip::-webkit-scrollbar-thumb { background: var(--faint); border-radius: 2px; }
 .spectro-thumb,
-.rms-thumb {
+.ctrl-thumb {
   flex: 1 1 0;
   min-width: 20px;
   max-width: 72px;
@@ -557,7 +557,9 @@ footer em { font-style: normal; color: var(--color-red); }
   display: block;
 }
 .spectro-thumb.active { border-color: var(--color-cerulean); }
-.rms-thumb.active     { border-color: var(--color-ember); }
+/* pitch → cerulean active border; rms → ember active border */
+.ctrl-strip[data-ctrl="pitch"] .ctrl-thumb.active { border-color: var(--color-cerulean); }
+.ctrl-strip[data-ctrl="rms"]   .ctrl-thumb.active { border-color: var(--color-ember); }
 .pair-method-loading {
   font-size: .63rem;
   color: var(--color-charcoal);
@@ -1693,25 +1695,26 @@ function buildPairCard(pair, methods, methodDisplay, rq, dataset) {
       row.appendChild(strip);
     }
 
-    // RMS envelope filmstrip (one thin strip below the spectrograms)
-    const rmsThumbList = [];
-    if (mData.rms_curves && mData.rms_curves.length) {
-      const rmsStrip = document.createElement('div');
-      rmsStrip.className = 'rms-strip';
-      mData.rms_curves.forEach((src, i) => {
+    // Control curve filmstrip (pitch or RMS depending on dataset)
+    const ctrlThumbList = [];
+    if (mData.ctrl_curves && mData.ctrl_curves.length) {
+      const ctrlStrip = document.createElement('div');
+      ctrlStrip.className = 'ctrl-strip';
+      ctrlStrip.dataset.ctrl = DATASET_CTRL[dataset] || 'rms';
+      mData.ctrl_curves.forEach((src, i) => {
         const img = document.createElement('img');
-        img.className = 'rms-thumb' + (i === 0 ? ' active' : '');
+        img.className = 'ctrl-thumb' + (i === 0 ? ' active' : '');
         img.src = src;
-        img.alt = `rms α=${alphas[i] !== undefined ? alphas[i].toFixed(2) : i}`;
+        img.alt = `ctrl α=${alphas[i] !== undefined ? alphas[i].toFixed(2) : i}`;
         img.title = img.alt;
         img.addEventListener('click', () => {
           slider.value = String(i);
           slider.dispatchEvent(new Event('input'));
         });
-        rmsStrip.appendChild(img);
-        rmsThumbList.push(img);
+        ctrlStrip.appendChild(img);
+        ctrlThumbList.push(img);
       });
-      row.appendChild(rmsStrip);
+      row.appendChild(ctrlStrip);
     }
 
     methList.appendChild(row);
@@ -1749,7 +1752,7 @@ function buildPairCard(pair, methods, methodDisplay, rq, dataset) {
       pmp.play(); setPlaying(true);
     });
 
-    players[method] = { pmp, btn, setPlaying, thumbs, rmsThumbList, wfPlayer };
+    players[method] = { pmp, btn, setPlaying, thumbs, ctrlThumbList, wfPlayer };
   });
 
   // Shared slider — updates all players, waveforms, and highlights active thumbnails
@@ -1757,10 +1760,10 @@ function buildPairCard(pair, methods, methodDisplay, rq, dataset) {
     const idx  = parseInt(slider.value, 10);
     const alpha = alphas[idx] ?? idx / (nAlpha - 1);
     alphaEl.textContent = `α = ${alpha.toFixed(2)}`;
-    Object.values(players).forEach(({ pmp, thumbs, rmsThumbList, wfPlayer }) => {
+    Object.values(players).forEach(({ pmp, thumbs, ctrlThumbList, wfPlayer }) => {
       if (pmp.loaded) pmp.setPosition(alpha);
       thumbs.forEach((th, i) => th.classList.toggle('active', i === idx));
-      rmsThumbList.forEach((th, i) => th.classList.toggle('active', i === idx));
+      ctrlThumbList.forEach((th, i) => th.classList.toggle('active', i === idx));
       if (pmp.loaded) wfPlayer.redraw(idx);
     });
   });
