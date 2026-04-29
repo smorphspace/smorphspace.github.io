@@ -410,6 +410,29 @@ footer em { font-style: normal; color: var(--color-red); }
   margin-bottom: 1.25rem;
   border-bottom: 2px solid var(--color-ember);
 }
+.ds-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 1rem;
+  margin: -.5rem 0 1.5rem 0;
+  padding-bottom: .4rem;
+  border-bottom: 1px solid var(--border);
+}
+.ds-btn {
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--color-charcoal);
+  font-family: inherit;
+  font-size: .76rem;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: transparent;
+  transition: color .1s, text-decoration-color .1s;
+}
+.ds-btn:hover  { color: var(--color-ember); text-decoration-color: var(--color-ember); }
+.ds-btn.active { color: var(--color-ember); text-decoration-color: var(--color-ember); font-weight: 600; }
 .method-section { margin-bottom: 2rem; }
 .method-header {
   font-size: .78rem;
@@ -556,6 +579,7 @@ footer em { font-style: normal; color: var(--color-red); }
   background: #06060f;
   display: block;
 }
+.ctrl-thumb { background: var(--color-paper); }
 .spectro-thumb.active { border-color: var(--color-cerulean); }
 /* pitch → cerulean active border; rms → ember active border */
 .ctrl-strip[data-ctrl="pitch"] .ctrl-thumb.active { border-color: var(--color-cerulean); }
@@ -1835,17 +1859,34 @@ function buildPairCard(pair, methods, methodDisplay, rq, dataset) {
       rqPanel.appendChild(qEl);
     }
 
-    Object.keys(data[rq]).forEach(dataset => {
+    const datasets = Object.keys(data[rq]);
+
+    // Dataset tab nav (one tab per dataset within this RQ)
+    const dsNav = document.createElement('div');
+    dsNav.className = 'ds-nav';
+    datasets.forEach((dataset, di) => {
+      const btn = document.createElement('button');
+      btn.className = 'ds-btn' + (di === 0 ? ' active' : '');
+      btn.dataset.dataset = dataset;
+      btn.innerHTML = dataset_display[dataset] || escHtml(dataset);
+      btn.addEventListener('click', () => {
+        rqPanel.querySelectorAll('.ds-btn').forEach(b => b.classList.remove('active'));
+        rqPanel.querySelectorAll('.dataset-section').forEach(s => s.style.display = 'none');
+        btn.classList.add('active');
+        rqPanel.querySelector(`.dataset-section[data-dataset="${dataset}"]`).style.display = 'block';
+      });
+      dsNav.appendChild(btn);
+    });
+    rqPanel.appendChild(dsNav);
+
+    datasets.forEach((dataset, di) => {
       const dsData = data[rq][dataset];  // { methods, pairs }
       const methods = dsData.methods;    // already ours-first, then alpha
 
       const dsSection = document.createElement('div');
       dsSection.className = 'dataset-section';
-
-      const dsHeader = document.createElement('h3');
-      dsHeader.className = 'dataset-header';
-      dsHeader.innerHTML = dataset_display[dataset] || escHtml(dataset);
-      dsSection.appendChild(dsHeader);
+      dsSection.dataset.dataset = dataset;
+      dsSection.style.display = di === 0 ? 'block' : 'none';
 
       // One card per pair, each showing all methods
       dsData.pairs.forEach((pair, pi) => {
