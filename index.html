@@ -510,23 +510,28 @@ footer em { font-style: normal; color: var(--color-red); }
   margin-top: 3px;
   letter-spacing: .04em;
 }
-.spectro-strip {
+.spectro-strip,
+.rms-strip {
   display: flex;
   flex-direction: row;
   gap: 2px;
   overflow-x: auto;
-  margin-top: 6px;
-  padding-bottom: 2px;
   scrollbar-width: thin;
   scrollbar-color: var(--border) transparent;
 }
-.spectro-strip::-webkit-scrollbar { height: 3px; }
-.spectro-strip::-webkit-scrollbar-thumb { background: var(--faint); border-radius: 2px; }
-.spectro-thumb {
-  flex: 1 0 0;
-  min-width: 28px;
-  max-width: 80px;
-  height: 72px;
+.spectro-strip { margin-top: 6px; }
+.rms-strip     { margin-top: 2px; margin-bottom: 2px; }
+.spectro-strip::-webkit-scrollbar,
+.rms-strip::-webkit-scrollbar { height: 3px; }
+.spectro-strip::-webkit-scrollbar-thumb,
+.rms-strip::-webkit-scrollbar-thumb { background: var(--faint); border-radius: 2px; }
+.spectro-thumb,
+.rms-thumb {
+  flex: 1 1 0;
+  min-width: 20px;
+  max-width: 72px;
+  width: 0;       /* flex grows from 0 */
+  height: auto;   /* preserve aspect ratio */
   object-fit: fill;
   border-radius: var(--card-r);
   border: 1.5px solid transparent;
@@ -536,6 +541,7 @@ footer em { font-style: normal; color: var(--color-red); }
   display: block;
 }
 .spectro-thumb.active { border-color: var(--color-cerulean); }
+.rms-thumb.active     { border-color: var(--color-ember); }
 .pair-method-loading {
   font-size: .63rem;
   color: var(--color-charcoal);
@@ -1640,6 +1646,27 @@ function buildPairCard(pair, methods, methodDisplay) {
       row.appendChild(strip);
     }
 
+    // RMS envelope filmstrip (one thin strip below the spectrograms)
+    const rmsThumbList = [];
+    if (mData.rms_curves && mData.rms_curves.length) {
+      const rmsStrip = document.createElement('div');
+      rmsStrip.className = 'rms-strip';
+      mData.rms_curves.forEach((src, i) => {
+        const img = document.createElement('img');
+        img.className = 'rms-thumb' + (i === 0 ? ' active' : '');
+        img.src = src;
+        img.alt = `rms α=${alphas[i] !== undefined ? alphas[i].toFixed(2) : i}`;
+        img.title = img.alt;
+        img.addEventListener('click', () => {
+          slider.value = String(i);
+          slider.dispatchEvent(new Event('input'));
+        });
+        rmsStrip.appendChild(img);
+        rmsThumbList.push(img);
+      });
+      row.appendChild(rmsStrip);
+    }
+
     methList.appendChild(row);
 
     const btn = row.querySelector('.pair-play-btn');
@@ -1675,7 +1702,7 @@ function buildPairCard(pair, methods, methodDisplay) {
       pmp.play(); setPlaying(true);
     });
 
-    players[method] = { pmp, btn, setPlaying, thumbs, wfPlayer };
+    players[method] = { pmp, btn, setPlaying, thumbs, rmsThumbList, wfPlayer };
   });
 
   // Shared slider — updates all players, waveforms, and highlights active thumbnails
@@ -1683,9 +1710,10 @@ function buildPairCard(pair, methods, methodDisplay) {
     const idx  = parseInt(slider.value, 10);
     const alpha = alphas[idx] ?? idx / (nAlpha - 1);
     alphaEl.textContent = `α = ${alpha.toFixed(2)}`;
-    Object.values(players).forEach(({ pmp, thumbs, wfPlayer }) => {
+    Object.values(players).forEach(({ pmp, thumbs, rmsThumbList, wfPlayer }) => {
       if (pmp.loaded) pmp.setPosition(alpha);
       thumbs.forEach((th, i) => th.classList.toggle('active', i === idx));
+      rmsThumbList.forEach((th, i) => th.classList.toggle('active', i === idx));
       if (pmp.loaded) wfPlayer.redraw(idx);
     });
   });
