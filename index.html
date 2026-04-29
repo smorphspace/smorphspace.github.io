@@ -1488,9 +1488,19 @@ class PaperMorphPlayer {
   }
 }
 
-const METHOD_CTRL = {
-  ours:     'ctrl: rms',
-  ours_ss0: null,
+// control_kind per dataset — from prepare_endpoints.control_kind_for_dataset()
+const DATASET_CTRL = {
+  nsynth:         'pitch',
+  nsynth2clotho:  'pitch',
+  clotho:         'rms',
+  drumset2clotho: 'rms',
+};
+
+// Which methods use explicit structural control, per RQ
+const METHODS_WITH_CTRL = {
+  rq1: new Set(['ours']),
+  rq2: new Set(['ours']),
+  rq3: new Set(['flam_flam', 'sdedit_flam']),
 };
 
 const METHOD_WAVEFORM_COLORS = {
@@ -1598,7 +1608,7 @@ class WaveformPlayer {
  * all players simultaneously and highlights the active spectrogram thumbnail.
  * rq: 'rq1'|'rq2'|'rq3' — controls whether audio source/target players are shown.
  */
-function buildPairCard(pair, methods, methodDisplay, rq) {
+function buildPairCard(pair, methods, methodDisplay, rq, dataset) {
   const alphas = pair.methods[methods[0]].alphas;
   const nAlpha = alphas.length;
 
@@ -1645,7 +1655,9 @@ function buildPairCard(pair, methods, methodDisplay, rq) {
     const label = methodDisplay[method] || method;
     const isOurs = method === 'ours' || method === 'ours_ss0';
     const starBadge = isOurs ? ` <span class="ours-badge">&#9733;</span>` : '';
-    const ctrlLabel = METHOD_CTRL[method];
+    const hasCtrl = (METHODS_WITH_CTRL[rq] || new Set()).has(method);
+    const ctrlKind = DATASET_CTRL[dataset] || 'rms';
+    const ctrlLabel = hasCtrl ? `ctrl: ${ctrlKind}` : null;
     const ctrlBadge = ctrlLabel ? ` <span class="ctrl-badge">${ctrlLabel}</span>` : '';
     row.innerHTML = `
       <div class="pair-method-top">
@@ -1814,7 +1826,7 @@ function buildPairCard(pair, methods, methodDisplay, rq) {
         exHeader.textContent = `example ${pi + 1}`;
         dsSection.appendChild(exHeader);
 
-        const card = buildPairCard(pair, methods, method_display, rq);
+        const card = buildPairCard(pair, methods, method_display, rq, dataset);
         dsSection.appendChild(card);
       });
 
