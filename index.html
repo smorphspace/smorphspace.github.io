@@ -332,11 +332,13 @@ footer em { font-style: normal; color: var(--color-red); }
 .canvas-cell { grid-column: 2; grid-row: 2; }
 .corner-label {
   font-size: .7rem;
-  color: var(--color-charcoal);
   font-style: italic;
   line-height: 1.4;
   max-width: 130px;
   text-align: center;
+  border: 1px solid currentColor;
+  padding: .25rem .45rem;
+  border-radius: 2px;
 }
 .corner-label.tl { grid-column: 1; grid-row: 1; text-align: right; color: var(--color-cerulean); }
 .corner-label.tr { grid-column: 3; grid-row: 1; text-align: left;  color: var(--color-ember); }
