@@ -16,7 +16,7 @@
   --border:    rgba(100,90,200,0.18);
   --accent:    #7b6ff0;
   --lime:      #3dffa0;
-  --orange:    #ff6040;
+  --yellow:    #FFD600;
   --text:      #e8e6f0;
   --muted:     #8884a8;
   --card-r:    10px;
@@ -157,7 +157,7 @@ h1 span { color: var(--accent); }
   letter-spacing: .03em;
 }
 .morph-ep.src { color: var(--lime); }
-.morph-ep.tgt { color: var(--orange); }
+.morph-ep.tgt { color: var(--yellow); }
 .morph-ep .ep-label {
   display: block;
   font-size: .65rem;
@@ -178,7 +178,7 @@ input[type="range"].morph-slider {
   width: 100%;
   height: 6px;
   border-radius: 3px;
-  background: linear-gradient(90deg, var(--lime) 0%, #5a4fcf 50%, var(--orange) 100%);
+  background: linear-gradient(90deg, var(--lime) 0%, #5a4fcf 50%, var(--yellow) 100%);
   outline: none;
   cursor: pointer;
 }
@@ -391,6 +391,17 @@ footer em { font-style: normal; color: var(--text); }
   transition: background .12s, color .12s, border-color .12s;
 }
 .rq-btn:hover, .rq-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+.rq-question {
+  font-size: .88rem;
+  font-weight: 500;
+  color: var(--text);
+  line-height: 1.5;
+  margin-bottom: 1.5rem;
+  padding: .6rem .9rem;
+  background: var(--bg2);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 4px 4px 0;
+}
 
 /* ── dataset / method sections ─────────────────────── */
 .dataset-section { margin-bottom: 3rem; }
@@ -455,7 +466,7 @@ footer em { font-style: normal; color: var(--text); }
   margin-bottom: .1rem;
 }
 .pair-prompt.src { color: var(--lime); }
-.pair-prompt.tgt { color: var(--orange); }
+.pair-prompt.tgt { color: var(--yellow); }
 .pair-slider-wrap { margin-bottom: .4rem; padding: .15rem 0 .4rem; }
 .pair-alpha-row { margin-bottom: .65rem; }
 .pair-transport { gap: .6rem; }
@@ -502,14 +513,41 @@ footer em { font-style: normal; color: var(--text); }
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }
-.method-spectro {
-  width: 100%;
-  height: 40px;
-  display: block;
-  border-radius: 3px;
+.spectro-strip {
+  display: flex;
+  flex-direction: row;
+  gap: 2px;
+  overflow-x: auto;
+  margin-top: 6px;
+  padding-bottom: 2px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+.spectro-strip::-webkit-scrollbar { height: 4px; }
+.spectro-strip::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+.spectro-thumb {
+  flex: 1 0 0;
+  min-width: 28px;
+  max-width: 80px;
+  height: 72px;
   object-fit: fill;
+  border-radius: 2px;
+  border: 1.5px solid transparent;
+  cursor: pointer;
+  transition: border-color .1s;
   background: #06060f;
-  margin-top: 5px;
+  display: block;
+}
+.spectro-thumb.active {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px rgba(123,111,240,.4);
+}
+/* loading overlay inside a method row */
+.pair-method-loading {
+  font-size: .68rem;
+  color: var(--muted);
+  padding: .25rem 0;
+  text-align: center;
 }
 </style>
 </head>
@@ -1307,83 +1345,123 @@ const SVG_PLAY  = `<svg viewBox="0 0 24 24" fill="currentColor" width="14" heigh
 const SVG_PAUSE = `<svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>`;
 
 
+/* shared AudioContext for all paper experiment players */
+let _paperACX = null;
+function getPaperACX() {
+  if (!_paperACX) _paperACX = new (window.AudioContext || window.webkitAudioContext)();
+  return _paperACX;
+}
+async function resumePaperACX() {
+  const ctx = getPaperACX();
+  if (ctx.state === 'suspended') await ctx.resume();
+}
+
 /**
- * CrossfadePlayer: dual-audio crossfade for seamless alpha switching.
- * Uses two <audio> elements; while one plays, the other preloads the new
- * file and fades in. No CORS required — <audio> loads cross-origin freely.
+ * PaperMorphPlayer: lazy-loading Web Audio equal-power crossfade for paper
+ * experiment cards. Loads OGG files via fetch+decodeAudioData on first play.
+ * setPosition(alpha 0..1) interpolates gains between adjacent buffers.
  */
-class CrossfadePlayer {
+class PaperMorphPlayer {
   constructor(files) {
     this.files = files;
-    this.idx = 0;
-    this._a = Object.assign(document.createElement('audio'), { loop: true, preload: 'auto', volume: 1 });
-    this._b = Object.assign(document.createElement('audio'), { loop: true, preload: 'auto', volume: 0 });
-    this._active   = this._a;
-    this._inactive = this._b;
-    this._a.src = files[0];
-    this.playing = false;
-    this._fadeTimer = null;
+    this._buffers = null;
+    this._sources = [];
+    this._gains   = [];
+    this._masterGain = null;
+    this._pos    = 0;
+    this._playing = false;
+    this._loading = false;
+    this._loaded  = false;
+    this._pauseOffset = 0;
+    this._startedAt   = 0;
+  }
+
+  get playing() { return this._playing; }
+  get loaded()  { return this._loaded;  }
+  get loading() { return this._loading; }
+
+  async load(onProgress) {
+    if (this._loaded || this._loading) return;
+    this._loading = true;
+    const ctx = getPaperACX();
+    this._buffers = [];
+    for (let i = 0; i < this.files.length; i++) {
+      const resp = await fetch(this.files[i]);
+      const buf  = await ctx.decodeAudioData(await resp.arrayBuffer());
+      this._buffers.push(buf);
+      if (onProgress) onProgress(i + 1, this.files.length);
+    }
+    this._loaded  = true;
+    this._loading = false;
   }
 
   play() {
-    this.playing = true;
-    this._active.volume = 1;
-    return this._active.play().catch(() => {});
+    if (this._playing || !this._loaded) return;
+    const ctx = getPaperACX();
+    if (!this._masterGain) {
+      this._masterGain = ctx.createGain();
+      this._masterGain.gain.value = 0.85;
+      this._masterGain.connect(ctx.destination);
+    }
+    this._stopSources();
+    this._sources = []; this._gains = [];
+    const dur = this._buffers[0].duration;
+    for (let i = 0; i < this._buffers.length; i++) {
+      const g   = ctx.createGain(); g.gain.value = 0; g.connect(this._masterGain);
+      const src = ctx.createBufferSource(); src.buffer = this._buffers[i]; src.loop = true; src.connect(g);
+      this._sources.push(src); this._gains.push(g);
+    }
+    this._applyWeights();
+    const offset = this._pauseOffset % (dur || 1), now = ctx.currentTime;
+    for (const src of this._sources) src.start(now, offset);
+    this._startedAt = now - offset;
+    this._playing = true;
   }
 
   pause() {
-    this.playing = false;
-    clearInterval(this._fadeTimer);
-    this._active.pause();
-    this._inactive.pause();
-    this._inactive.volume = 0;
+    if (!this._playing) return;
+    const ctx = getPaperACX();
+    const dur = this._buffers ? this._buffers[0].duration : 1;
+    this._pauseOffset = (ctx.currentTime - this._startedAt) % (dur || 1);
+    this._stopSources();
+    this._playing = false;
   }
 
-  setIdx(idx) {
-    if (idx === this.idx) return;
-    this.idx = idx;
+  setPosition(alpha) {
+    this._pos = Math.max(0, Math.min(1, alpha));
+    if (this._playing) this._applyWeights();
+  }
 
-    if (!this.playing) {
-      // Not playing — just update src so next play() starts at new position
-      this._active.src = this.files[idx];
-      this._active.volume = 1;
-      this._inactive.volume = 0;
-      return;
+  _applyWeights() {
+    const N = this._gains.length; if (N < 2) return;
+    const pos = this._pos * (N - 1);
+    const ix  = Math.min(Math.floor(pos), N - 2);
+    const fx  = pos - ix;
+    const hp  = Math.PI / 2;
+    const wA  = Math.cos(fx * hp), wB = Math.sin(fx * hp);
+    const now = getPaperACX().currentTime;
+    for (let i = 0; i < N; i++) {
+      const w = (i === ix ? wA : 0) + (i === ix + 1 ? wB : 0);
+      this._gains[i].gain.setTargetAtTime(w, now, 0.012);
     }
+  }
 
-    // Crossfade: fade out _active, fade in _inactive (with new file)
-    clearInterval(this._fadeTimer);
-    const out = this._active;
-    const inn = this._inactive;
-    inn.src = this.files[idx];
-    inn.volume = 0;
-    inn.play().catch(() => {});
-
-    const STEPS = 10, MS = 6;  // ~60 ms total fade
-    let step = 0;
-    this._fadeTimer = setInterval(() => {
-      step++;
-      const t = step / STEPS;
-      out.volume = Math.max(0, 1 - t);
-      inn.volume = Math.min(1, t);
-      if (step >= STEPS) {
-        clearInterval(this._fadeTimer);
-        out.pause();
-        this._active   = inn;
-        this._inactive = out;
-      }
-    }, MS);
+  _stopSources() {
+    for (const s of this._sources) { try { s.stop(); } catch {} try { s.disconnect(); } catch {} }
+    for (const g of this._gains)   { try { g.disconnect(); } catch {} }
+    this._sources = []; this._gains = [];
   }
 
   destroy() {
-    clearInterval(this._fadeTimer);
-    [this._a, this._b].forEach(a => { a.pause(); a.src = ''; });
+    this._stopSources();
+    if (this._masterGain) { try { this._masterGain.disconnect(); } catch {} this._masterGain = null; }
   }
 }
 
 /**
  * Build a pair card: prompts + shared slider, then one method row per method.
- * Each method has its own CrossfadePlayer; slider controls all simultaneously.
+ * Each method has its own PaperMorphPlayer (lazy Web Audio); slider controls
+ * all players simultaneously and highlights the active spectrogram thumbnail.
  */
 function buildPairCard(pair, methods, methodDisplay) {
   const alphas = pair.methods[methods[0]].alphas;
@@ -1410,13 +1488,13 @@ function buildPairCard(pair, methods, methodDisplay) {
   const alphaEl  = card.querySelector('.pair-alpha');
   const methList = card.querySelector('.pair-methods-list');
 
-  const players = {};  // method → { cfp, btn, setPlaying, spectroImg }
+  const players = {};  // method → { pmp, btn, setPlaying, thumbs }
 
   methods.forEach(method => {
     const mData = pair.methods[method];
     if (!mData) return;
 
-    const cfp = new CrossfadePlayer(mData.files);
+    const pmp = new PaperMorphPlayer(mData.files);
 
     const row = document.createElement('div');
     row.className = 'pair-method-row';
@@ -1430,14 +1508,25 @@ function buildPairCard(pair, methods, methodDisplay) {
       </div>
     `;
 
-    // Static spectrogram image — swapped on slider change
-    let spectroImg = null;
+    // Filmstrip of per-alpha spectrogram thumbnails
+    const thumbs = [];
     if (mData.spectros && mData.spectros.length) {
-      spectroImg = document.createElement('img');
-      spectroImg.className = 'method-spectro';
-      spectroImg.src = mData.spectros[0];
-      spectroImg.alt = '';
-      row.appendChild(spectroImg);
+      const strip = document.createElement('div');
+      strip.className = 'spectro-strip';
+      mData.spectros.forEach((src, i) => {
+        const img = document.createElement('img');
+        img.className = 'spectro-thumb' + (i === 0 ? ' active' : '');
+        img.src = src;
+        img.alt = `α=${alphas[i] !== undefined ? alphas[i].toFixed(2) : i}`;
+        img.title = img.alt;
+        img.addEventListener('click', () => {
+          slider.value = String(i);
+          slider.dispatchEvent(new Event('input'));
+        });
+        strip.appendChild(img);
+        thumbs.push(img);
+      });
+      row.appendChild(strip);
     }
 
     methList.appendChild(row);
@@ -1445,30 +1534,43 @@ function buildPairCard(pair, methods, methodDisplay) {
     const btn = row.querySelector('.pair-play-btn');
 
     function setPlaying(v) {
-      cfp.playing = v;
       btn.classList.toggle('playing', v);
       btn.innerHTML = v ? `${SVG_PAUSE} Pause` : `${SVG_PLAY} Play`;
     }
 
-    btn.addEventListener('click', () => {
-      if (cfp.playing) {
-        cfp.pause(); setPlaying(false);
-      } else {
-        Object.values(players).forEach(p => { if (p.cfp.playing) { p.cfp.pause(); p.setPlaying(false); } });
-        cfp.play(); setPlaying(true);
+    btn.addEventListener('click', async () => {
+      if (pmp.playing) {
+        pmp.pause(); setPlaying(false);
+        return;
       }
+      // Stop any other playing method in this card
+      Object.values(players).forEach(p => {
+        if (p.pmp.playing) { p.pmp.pause(); p.setPlaying(false); }
+      });
+      // Lazy-load then play
+      await resumePaperACX();
+      if (!pmp.loaded) {
+        btn.disabled = true;
+        btn.innerHTML = `<span class="pair-method-loading">Loading…</span>`;
+        await pmp.load();
+        btn.disabled = false;
+        setPlaying(false);
+      }
+      pmp.setPosition(alphas[parseInt(slider.value, 10)] ?? 0);
+      pmp.play(); setPlaying(true);
     });
 
-    players[method] = { cfp, btn, setPlaying, spectroImg, spectros: mData.spectros || [] };
+    players[method] = { pmp, btn, setPlaying, thumbs };
   });
 
-  // Shared slider — moves all players and spectrograms to the same position
+  // Shared slider — updates all players and highlights active thumbnails
   slider.addEventListener('input', () => {
-    const idx = parseInt(slider.value, 10);
-    alphaEl.textContent = `α = ${alphas[idx].toFixed(2)}`;
-    Object.values(players).forEach(({ cfp, spectroImg, spectros }) => {
-      cfp.setIdx(idx);
-      if (spectroImg && spectros && spectros[idx]) spectroImg.src = spectros[idx];
+    const idx  = parseInt(slider.value, 10);
+    const alpha = alphas[idx] ?? idx / (nAlpha - 1);
+    alphaEl.textContent = `α = ${alpha.toFixed(2)}`;
+    Object.values(players).forEach(({ pmp, thumbs }) => {
+      if (pmp.loaded) pmp.setPosition(alpha);
+      thumbs.forEach((th, i) => th.classList.toggle('active', i === idx));
     });
   });
 
@@ -1477,10 +1579,10 @@ function buildPairCard(pair, methods, methodDisplay) {
 
 (async function initExperimentsTab() {
   const samples = await fetch('audio/samples.json').then(r => r.json());
-  const { rq_display, dataset_display, method_display, data } = samples;
+  const { rq_display, rq_title, dataset_display, method_display, data } = samples;
   const expPanel = document.getElementById('tab-experiments');
 
-  // RQ sub-nav
+  // RQ sub-nav (short labels: RQ1 / RQ2 / RQ3)
   const rqs = Object.keys(data);
   const rqNav = document.createElement('nav');
   rqNav.className = 'rq-nav';
@@ -1505,6 +1607,14 @@ function buildPairCard(pair, methods, methodDisplay) {
     rqPanel.className = 'rq-panel';
     rqPanel.id = 'rq-panel-' + rq;
     rqPanel.style.display = ri === 0 ? 'block' : 'none';
+
+    // Full research question from the paper
+    if (rq_title && rq_title[rq]) {
+      const qEl = document.createElement('p');
+      qEl.className = 'rq-question';
+      qEl.textContent = rq_title[rq];
+      rqPanel.appendChild(qEl);
+    }
 
     Object.keys(data[rq]).forEach(dataset => {
       const dsData = data[rq][dataset];  // { methods, pairs }
