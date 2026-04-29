@@ -639,11 +639,11 @@ footer em { font-style: normal; color: var(--color-red); }
         <span class="ep-label">source, α=0</span>
         drum beat
       </div>
+      <span class="ctrl-badge" style="align-self:center">ctrl: rms</span>
       <div class="morph-ep tgt">
         <span class="ep-label">target, α=1</span>
         bubbles popping
       </div>
-      <span class="ctrl-badge" style="align-self:center">ctrl: rms</span>
     </div>
 
     <div class="morph-slider-wrap">
@@ -1636,9 +1636,14 @@ function buildPairCard(pair, methods, methodDisplay, rq, dataset) {
   const tgtAudioEl = tgtAudioFile
     ? `<audio controls preload="none" src="${tgtAudioFile}"></audio>` : '';
 
+  const pairCtrlKind = DATASET_CTRL[dataset];
+  const pairCtrlBadge = pairCtrlKind
+    ? `<span class="ctrl-badge" style="align-self:center">ctrl: ${pairCtrlKind}</span>` : '';
+
   card.innerHTML = `
     <div class="pair-prompts">
       <div class="pair-prompt src"><span class="ep-label">source, α=0</span>${escHtml(pair.src_prompt)}${srcAudioEl}</div>
+      ${pairCtrlBadge}
       <div class="pair-prompt tgt"><span class="ep-label">target, α=1</span>${escHtml(pair.tgt_prompt)}${tgtAudioEl}</div>
     </div>
     <div class="morph-slider-wrap pair-slider-wrap">
@@ -1667,13 +1672,9 @@ function buildPairCard(pair, methods, methodDisplay, rq, dataset) {
     const label = methodDisplay[method] || method;
     const isOurs = method === 'ours' || method === 'ours_ss0';
     const starBadge = isOurs ? ` <span class="ours-badge">&#9733;</span>` : '';
-    const hasCtrl = (METHODS_WITH_CTRL[rq] || new Set()).has(method);
-    const ctrlKind = DATASET_CTRL[dataset] || 'rms';
-    const ctrlLabel = hasCtrl ? `ctrl: ${ctrlKind}` : null;
-    const ctrlBadge = ctrlLabel ? ` <span class="ctrl-badge">${ctrlLabel}</span>` : '';
     row.innerHTML = `
       <div class="pair-method-top">
-        <span class="pair-method-label">${label}${starBadge}${ctrlBadge}</span>
+        <span class="pair-method-label">${label}${starBadge}</span>
         <button class="play-btn pair-play-btn">${SVG_PLAY} play</button>
       </div>
     `;
