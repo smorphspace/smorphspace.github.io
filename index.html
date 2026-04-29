@@ -338,10 +338,10 @@ footer em { font-style: normal; color: var(--color-red); }
   max-width: 130px;
   text-align: center;
 }
-.corner-label.tl { grid-column: 1; grid-row: 1; text-align: right; }
-.corner-label.tr { grid-column: 3; grid-row: 1; text-align: left; }
-.corner-label.bl { grid-column: 1; grid-row: 3; text-align: right; }
-.corner-label.br { grid-column: 3; grid-row: 3; text-align: left; }
+.corner-label.tl { grid-column: 1; grid-row: 1; text-align: right; color: var(--color-cerulean); }
+.corner-label.tr { grid-column: 3; grid-row: 1; text-align: left;  color: var(--color-ember); }
+.corner-label.bl { grid-column: 1; grid-row: 3; text-align: right; color: var(--color-grass); }
+.corner-label.br { grid-column: 3; grid-row: 3; text-align: left;  color: var(--color-purple); }
 
 /* ── tab navigation ────────────────────────────────── */
 .tab-nav {
@@ -478,6 +478,17 @@ footer em { font-style: normal; color: var(--color-red); }
   min-width: 0;
 }
 .pair-method-row .play-btn { flex-shrink: 0; padding: .22rem .6rem; font-size: .7rem; }
+
+/* ── waveform canvas (paper experiments) ─────────────── */
+.waveform-canvas {
+  display: block;
+  width: 100%;
+  height: 42px;
+  border-radius: var(--card-r);
+  margin: 5px 0 3px;
+  cursor: default;
+  background: var(--bg2);
+}
 
 /* ── spectrograms ────────────────────────────────────── */
 .spectro-wrap { margin-top: 10px; }
@@ -1438,6 +1449,105 @@ class PaperMorphPlayer {
   }
 }
 
+const METHOD_WAVEFORM_COLORS = {
+  ours:        '#7DB83A',  /* grass  */
+  ours_ss0:    '#2AABCF',  /* cerulean */
+  crossfade:   '#9B84E8',  /* lavender */
+  coa_no_ctrl: '#F5C842',  /* sunflower */
+  sdedit:      '#FF9A5C',  /* ember */
+  flam_flam:   '#8A63D2',  /* purple */
+  sdedit_flam: '#E8543A',  /* red */
+};
+
+class WaveformPlayer {
+  constructor(canvas, pmp, color) {
+    this._canvas = canvas;
+    this._ctx2d  = canvas.getContext('2d');
+    this._pmp    = pmp;
+    this._color  = color || '#9B84E8';
+    this._rafId  = null;
+    this._curIdx = 0;
+  }
+
+  redraw(idx) {
+    this._curIdx = idx;
+    if (!this._pmp.loaded || !this._pmp._buffers[idx]) return;
+    const W = this._resize();
+    this._drawWaveform(this._pmp._buffers[idx], W);
+    if (this._pmp.playing) this._drawPlayhead(W, this._pmp._buffers[idx].duration);
+  }
+
+  startPlayhead() { this._tick(); }
+
+  stopPlayhead() {
+    if (this._rafId) { cancelAnimationFrame(this._rafId); this._rafId = null; }
+    if (this._pmp.loaded && this._pmp._buffers[this._curIdx]) {
+      const W = this._resize();
+      this._drawWaveform(this._pmp._buffers[this._curIdx], W);
+    }
+  }
+
+  _tick() {
+    if (!this._pmp.playing) { this._rafId = null; return; }
+    const buf = this._pmp._buffers[this._curIdx];
+    if (buf) {
+      const W = this._canvas.width;
+      this._drawWaveform(buf, W);
+      this._drawPlayhead(W, buf.duration);
+    }
+    this._rafId = requestAnimationFrame(() => this._tick());
+  }
+
+  _resize() {
+    const W = this._canvas.offsetWidth || 400;
+    const H = this._canvas.offsetHeight || 42;
+    if (this._canvas.width !== W)  this._canvas.width  = W;
+    if (this._canvas.height !== H) this._canvas.height = H;
+    return W;
+  }
+
+  _drawWaveform(buffer, W) {
+    const canvas = this._canvas;
+    const ctx    = this._ctx2d;
+    const H      = canvas.height;
+    const data   = buffer.getChannelData(0);
+    const step   = Math.max(1, Math.floor(data.length / W));
+    const mid    = H / 2;
+
+    ctx.fillStyle = '#EAE6DF';
+    ctx.fillRect(0, 0, W, H);
+
+    ctx.fillStyle = this._color;
+    for (let x = 0; x < W; x++) {
+      let mn = 1, mx = -1;
+      const off = x * step;
+      for (let s = 0; s < step; s++) {
+        const v = data[off + s] || 0;
+        if (v < mn) mn = v;
+        if (v > mx) mx = v;
+      }
+      const y0 = Math.round(mid + mn * mid * 0.92);
+      const y1 = Math.round(mid + mx * mid * 0.92);
+      ctx.fillRect(x, y0, 1, Math.max(1, y1 - y0));
+    }
+  }
+
+  _drawPlayhead(W, duration) {
+    const acx  = getPaperACX();
+    const dur  = duration || 1;
+    const elapsed = (acx.currentTime - this._pmp._startedAt) % dur;
+    const frac = elapsed / dur;
+    const x    = Math.round(frac * W);
+    const ctx  = this._ctx2d;
+    const H    = this._canvas.height;
+
+    ctx.fillStyle = 'rgba(26,26,24,0.55)';
+    ctx.fillRect(x, 0, 2, H);
+    ctx.fillStyle = 'rgba(255,255,255,0.7)';
+    ctx.fillRect(x + 1, 0, 1, H);
+  }
+}
+
 /**
  * Build a pair card: prompts + shared slider, then one method row per method.
  * Each method has its own PaperMorphPlayer (lazy Web Audio); slider controls
@@ -1488,6 +1598,12 @@ function buildPairCard(pair, methods, methodDisplay) {
       </div>
     `;
 
+    // Waveform canvas with animated playhead
+    const wfCanvas = document.createElement('canvas');
+    wfCanvas.className = 'waveform-canvas';
+    row.appendChild(wfCanvas);
+    const wfPlayer = new WaveformPlayer(wfCanvas, pmp, METHOD_WAVEFORM_COLORS[method]);
+
     // Filmstrip of per-alpha spectrogram thumbnails
     const thumbs = [];
     if (mData.spectros && mData.spectros.length) {
@@ -1516,6 +1632,8 @@ function buildPairCard(pair, methods, methodDisplay) {
     function setPlaying(v) {
       btn.classList.toggle('playing', v);
       btn.innerHTML = v ? `${SVG_PAUSE} pause` : `${SVG_PLAY} play`;
+      if (v) wfPlayer.startPlayhead();
+      else   wfPlayer.stopPlayhead();
     }
 
     btn.addEventListener('click', async () => {
@@ -1535,22 +1653,24 @@ function buildPairCard(pair, methods, methodDisplay) {
         await pmp.load();
         btn.disabled = false;
         setPlaying(false);
+        wfPlayer.redraw(parseInt(slider.value, 10));
       }
       pmp.setPosition(alphas[parseInt(slider.value, 10)] ?? 0);
       pmp.play(); setPlaying(true);
     });
 
-    players[method] = { pmp, btn, setPlaying, thumbs };
+    players[method] = { pmp, btn, setPlaying, thumbs, wfPlayer };
   });
 
-  // Shared slider — updates all players and highlights active thumbnails
+  // Shared slider — updates all players, waveforms, and highlights active thumbnails
   slider.addEventListener('input', () => {
     const idx  = parseInt(slider.value, 10);
     const alpha = alphas[idx] ?? idx / (nAlpha - 1);
     alphaEl.textContent = `α = ${alpha.toFixed(2)}`;
-    Object.values(players).forEach(({ pmp, thumbs }) => {
+    Object.values(players).forEach(({ pmp, thumbs, wfPlayer }) => {
       if (pmp.loaded) pmp.setPosition(alpha);
       thumbs.forEach((th, i) => th.classList.toggle('active', i === idx));
+      if (pmp.loaded) wfPlayer.redraw(idx);
     });
   });
 
