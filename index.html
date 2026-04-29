@@ -507,7 +507,7 @@ footer em { font-style: normal; color: var(--text); }
   height: 40px;
   display: block;
   border-radius: 3px;
-  image-rendering: pixelated;
+  object-fit: fill;
   background: #06060f;
   margin-top: 5px;
 }
@@ -1306,51 +1306,6 @@ function escHtml(s) {
 const SVG_PLAY  = `<svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><polygon points="5 3 19 12 5 21 5 3"/></svg>`;
 const SVG_PAUSE = `<svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>`;
 
-/**
- * MethodSpectroLoader: lazy-loads 5 representative audio buffers for a
- * method row's spectrogram. On first setPos() call the fetch begins;
- * the canvas hides silently if CORS is not yet configured on the S3 bucket.
- */
-let _spectroCtx = null;
-function _getSpectroCtx() {
-  if (!_spectroCtx) _spectroCtx = new (window.AudioContext || window.webkitAudioContext)();
-  return _spectroCtx;
-}
-class MethodSpectroLoader {
-  constructor(canvas, spectroFiles) {
-    this.canvas = canvas;
-    this.spectroFiles = spectroFiles;
-    this._spectro = null;
-    this._promise = null;
-  }
-  async _load() {
-    if (this._promise) return this._promise;
-    this._promise = (async () => {
-      try {
-        const ctx = _getSpectroCtx();
-        const buffers = await Promise.all(
-          this.spectroFiles.map(url =>
-            fetch(url, { mode: 'cors' })
-              .then(r => r.arrayBuffer())
-              .then(ab => ctx.decodeAudioData(ab))
-              .catch(() => null)
-          )
-        );
-        const valid = buffers.filter(Boolean);
-        if (valid.length < 2) { this.canvas.style.display = 'none'; return; }
-        this._spectro = new SpectroMorph(this.canvas, { fftSize: 512, hopSize: 128, maxWidth: 400 });
-        this._spectro.loadPatches(valid);
-      } catch (_) {
-        this.canvas.style.display = 'none';
-      }
-    })();
-    return this._promise;
-  }
-  setPos(alpha) {
-    if (this._spectro) { this._spectro.setMorphPosition(alpha); return; }
-    this._load().then(() => this._spectro && this._spectro.setMorphPosition(alpha));
-  }
-}
 
 /**
  * CrossfadePlayer: dual-audio crossfade for seamless alpha switching.
@@ -1455,10 +1410,7 @@ function buildPairCard(pair, methods, methodDisplay) {
   const alphaEl  = card.querySelector('.pair-alpha');
   const methList = card.querySelector('.pair-methods-list');
 
-  const players = {};  // method → { cfp, btn, setPlaying, spectro }
-
-  // Indices into the 21-file array for spectrogram (evenly spaced: 0, 0.25, 0.5, 0.75, 1.0)
-  const SPECTRO_IDXS = [0, 5, 10, 15, 20];
+  const players = {};  // method → { cfp, btn, setPlaying, spectroImg }
 
   methods.forEach(method => {
     const mData = pair.methods[method];
@@ -1477,14 +1429,18 @@ function buildPairCard(pair, methods, methodDisplay) {
         <button class="play-btn pair-play-btn">${SVG_PLAY} Play</button>
       </div>
     `;
-    // Spectrogram canvas — lazy-loaded on first slider drag
-    const spectroCanvas = document.createElement('canvas');
-    spectroCanvas.className = 'method-spectro';
-    row.appendChild(spectroCanvas);
-    methList.appendChild(row);
 
-    const spectroFiles = SPECTRO_IDXS.map(i => mData.files[Math.min(i, mData.files.length - 1)]);
-    const spectro = new MethodSpectroLoader(spectroCanvas, spectroFiles);
+    // Static spectrogram image — swapped on slider change
+    let spectroImg = null;
+    if (mData.spectros && mData.spectros.length) {
+      spectroImg = document.createElement('img');
+      spectroImg.className = 'method-spectro';
+      spectroImg.src = mData.spectros[0];
+      spectroImg.alt = '';
+      row.appendChild(spectroImg);
+    }
+
+    methList.appendChild(row);
 
     const btn = row.querySelector('.pair-play-btn');
 
@@ -1498,23 +1454,21 @@ function buildPairCard(pair, methods, methodDisplay) {
       if (cfp.playing) {
         cfp.pause(); setPlaying(false);
       } else {
-        // Pause any other method in this card that's playing
         Object.values(players).forEach(p => { if (p.cfp.playing) { p.cfp.pause(); p.setPlaying(false); } });
         cfp.play(); setPlaying(true);
       }
     });
 
-    players[method] = { cfp, btn, setPlaying, spectro };
+    players[method] = { cfp, btn, setPlaying, spectroImg, spectros: mData.spectros || [] };
   });
 
-  // Shared slider — moves all CrossfadePlayers and spectrograms to same position
+  // Shared slider — moves all players and spectrograms to the same position
   slider.addEventListener('input', () => {
     const idx = parseInt(slider.value, 10);
     alphaEl.textContent = `α = ${alphas[idx].toFixed(2)}`;
-    const normPos = idx / Math.max(nAlpha - 1, 1);
-    Object.values(players).forEach(({ cfp, spectro }) => {
+    Object.values(players).forEach(({ cfp, spectroImg, spectros }) => {
       cfp.setIdx(idx);
-      spectro.setPos(normPos);
+      if (spectroImg && spectros && spectros[idx]) spectroImg.src = spectros[idx];
     });
   });
 
@@ -1561,7 +1515,7 @@ function buildPairCard(pair, methods, methodDisplay) {
 
       const dsHeader = document.createElement('h3');
       dsHeader.className = 'dataset-header';
-      dsHeader.textContent = dataset_display[dataset] || dataset;
+      dsHeader.innerHTML = dataset_display[dataset] || escHtml(dataset);
       dsSection.appendChild(dsHeader);
 
       // One card per pair, each showing all methods
