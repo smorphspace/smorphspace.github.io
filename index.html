@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-/* ── color palette (hugo flores garcía) ─────────────── */
+/* ── color palette ─────────────── */
 :root {
   --color-red:         #E8543A;
   --color-ember:       #FF9A5C;
@@ -115,7 +115,7 @@ h1 span { color: var(--accent); }
 .abstract-section p {
   font-size: .88rem;
   color: var(--color-charcoal);
-  line-height: 1.9;
+  line-height: 1.6;
 }
 .abstract-section strong { color: var(--text); font-weight: 700; }
 
@@ -243,28 +243,6 @@ input[type="range"].morph-slider:active::-webkit-slider-thumb { cursor: grabbing
 .play-btn svg { width: 13px; height: 13px; flex-shrink: 0; }
 .status-text { font-size: .73rem; color: var(--color-purple); }
 
-/* ── canvas stage ──────────────────────────────────── */
-.canvas-stage-wrap {
-  position: relative;
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  grid-template-rows: auto auto auto;
-  gap: .5rem;
-  align-items: center;
-  justify-items: center;
-  margin-bottom: 1.25rem;
-}
-.canvas-stage-wrap .axis-label {
-  font-size: .65rem;
-  font-style: italic;
-  color: var(--muted);
-  white-space: nowrap;
-}
-.canvas-stage-wrap .axis-label.x-top    { grid-column: 2; grid-row: 1; text-align: center; color: var(--text); }
-.canvas-stage-wrap .axis-label.x-bottom { grid-column: 2; grid-row: 3; text-align: center; }
-.canvas-stage-wrap .axis-label.y-left   { grid-column: 1; grid-row: 2; writing-mode: vertical-lr; transform: rotate(180deg); }
-.canvas-stage-wrap .axis-label.y-right  { grid-column: 3; grid-row: 2; writing-mode: vertical-lr; }
-.canvas-stage-wrap .kaoss-cell          { grid-column: 2; grid-row: 2; }
 #kaoss-pad {
   width: min(420px, 90vw);
   height: min(420px, 90vw);
@@ -309,6 +287,32 @@ input[type="range"].morph-slider:active::-webkit-slider-thumb { cursor: grabbing
   transition: width .15s;
 }
 
+/* ── canvas card dark mode ─────────────────────────── */
+#canvas-card {
+  background: var(--color-ink);
+}
+#canvas-card .status-text { color: var(--color-lavender-lt); }
+#canvas-card .spectro-label { color: var(--color-ash); }
+#canvas-card .play-btn { color: var(--color-paper); border-color: rgba(255,255,255,0.2); }
+#canvas-card .play-btn:hover { background: var(--link); border-color: var(--link); color: #fff; }
+#canvas-card .play-btn.playing { background: var(--link); border-color: var(--link); color: #fff; }
+#canvas-card .ctrl-badge { color: var(--color-cerulean); border-color: var(--color-cerulean); }
+
+/* ── morph card dark mode ──────────────────────────── */
+#morph-card {
+  background: var(--color-ink);
+}
+#morph-card .morph-ep.src { color: var(--color-lime); }
+#morph-card .morph-ep.tgt { color: var(--color-ember); }
+#morph-card .morph-ep .ep-label { color: var(--color-ash); }
+#morph-card .status-text { color: var(--color-lavender-lt); }
+#morph-card .spectro-label { color: var(--color-ash); }
+#morph-card .play-btn { color: var(--color-paper); border-color: rgba(255,255,255,0.2); }
+#morph-card .play-btn:hover { background: var(--link); border-color: var(--link); color: #fff; }
+#morph-card .play-btn.playing { background: var(--link); border-color: var(--link); color: #fff; }
+#morph-card .ctrl-badge { color: var(--color-cerulean); border-color: var(--color-cerulean); }
+#morph-card .morph-tick { color: var(--color-ash); }
+
 /* ── footer ────────────────────────────────────────── */
 footer {
   border-top: 1px solid var(--border);
@@ -324,7 +328,7 @@ footer em { font-style: normal; color: var(--color-red); }
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   grid-template-rows: auto auto auto;
-  gap: .5rem .75rem;
+  gap: .25rem .4rem;
   align-items: center;
   justify-items: center;
   margin-bottom: 1.25rem;
@@ -333,17 +337,18 @@ footer em { font-style: normal; color: var(--color-red); }
 .corner-label {
   font-size: .7rem;
   font-style: italic;
+  font-weight: 600;
   line-height: 1.4;
   max-width: 130px;
-  text-align: center;
-  border: 1px solid currentColor;
-  padding: .25rem .45rem;
+  color: var(--color-ash);
+  border: 1px solid rgba(255,255,255,0.2);
+  padding: .2rem .35rem;
   border-radius: 2px;
 }
-.corner-label.tl { grid-column: 1; grid-row: 1; text-align: right; color: var(--color-cerulean); }
-.corner-label.tr { grid-column: 3; grid-row: 1; text-align: left;  color: var(--color-ember); }
-.corner-label.bl { grid-column: 1; grid-row: 3; text-align: right; color: var(--color-grass); }
-.corner-label.br { grid-column: 3; grid-row: 3; text-align: left;  color: var(--color-purple); }
+.corner-label.tl { grid-column: 1; grid-row: 1; text-align: right; }
+.corner-label.tr { grid-column: 3; grid-row: 1; text-align: left;  }
+.corner-label.bl { grid-column: 1; grid-row: 3; text-align: right; }
+.corner-label.br { grid-column: 3; grid-row: 3; text-align: left;  }
 
 /* ── tab navigation ────────────────────────────────── */
 .tab-nav {
@@ -390,11 +395,18 @@ footer em { font-style: normal; color: var(--color-red); }
 }
 .rq-btn:hover { color: var(--color-cerulean); text-decoration-color: var(--color-cerulean); }
 .rq-btn.active { color: var(--color-cerulean); text-decoration-color: var(--color-cerulean); }
+.rq-summary {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-ink);
+  line-height: 1.45;
+  margin-bottom: .38rem;
+}
 .rq-question {
-  font-size: .82rem;
+  font-size: .72rem;
   font-style: italic;
   color: var(--color-charcoal);
-  line-height: 1.75;
+  line-height: 1.6;
   margin-bottom: 1.5rem;
   padding-left: 1rem;
   border-left: 2px solid var(--color-cerulean);
@@ -433,11 +445,11 @@ footer em { font-style: normal; color: var(--color-red); }
 }
 .ds-btn:hover  { color: var(--color-ember); text-decoration-color: var(--color-ember); }
 .ds-btn.active { color: var(--color-ember); text-decoration-color: var(--color-ember); font-weight: 600; }
-.method-section { margin-bottom: 2rem; }
 .method-header {
   font-size: .78rem;
-  font-style: italic;
-  color: var(--color-cerulean);
+  font-style: normal;
+  color: var(--color-ink);
+  font-weight: 1000;
   margin-bottom: .85rem;
 }
 .ours-badge {
@@ -449,41 +461,135 @@ footer em { font-style: normal; color: var(--color-red); }
 }
 
 /* ── pair player ────────────────────────────────────── */
-.pairs-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: .9rem;
-}
 .pair-player {
   padding: 0 0 2rem;
   border-bottom: 1px solid var(--border);
 }
 .pair-player:last-child { border-bottom: none; }
+.pair-section-label {
+  display: flex;
+  align-items: center;
+  gap: .45rem;
+  margin-bottom: .42rem;
+  font-size: .56rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--color-charcoal);
+}
+.pair-section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+.pair-section-label.no-line::after {
+  display: none;
+}
+.pair-inputs-block {
+  margin-bottom: .75rem;
+  padding: .6rem .7rem .68rem;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: var(--card-r);
+}
 .pair-prompts {
   display: flex;
-  flex-direction: column;
-  gap: .35rem;
-  margin-bottom: .8rem;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: .5rem;
+  margin-bottom: 0;
 }
 .pair-prompt {
   font-size: .73rem;
-  line-height: 1.5;
+  line-height: 1.1;
+  max-width: 42%;
+  color: var(--color-ink);
+  background: rgba(255,255,255,0.38);
+  border: 1px solid var(--border);
+  padding: .42rem .5rem .4rem;
+  border-radius: 2px;
 }
 .pair-prompt .ep-label {
-  display: block;
-  font-size: .6rem;
-  font-style: italic;
-  color: var(--faint);
-  margin-bottom: .08rem;
+  display: inline-block;
+  font-size: .56rem;
+  font-weight: 600;
+  font-style: normal;
+  color: #fff;
+  margin-bottom: .22rem;
+  padding: .12rem .3rem;
+  border-radius: 2px;
+  line-height: 1;
 }
-.pair-prompt.src { color: var(--color-meadow); }
-.pair-prompt.tgt { color: var(--color-red); }
-.pair-prompt audio {
+.pair-prompt.src .ep-label { background: var(--color-meadow); }
+.pair-prompt.tgt { text-align: right; }
+.pair-prompt.tgt .ep-label { background: var(--color-red); }
+.pair-prompt .pair-prompt-text {
+  font-size: .58rem;
+  font-weight: 400;
+  font-style: normal;
+  color: var(--color-ink);
+  line-height: 1.1;
+  margin-bottom: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  line-clamp: 3;
+  overflow: hidden;
+}
+.pair-prompt .pair-prompt-text.audio-caption {
+  margin-top: .26rem;
+  font-style: normal;
+}
+.ep-spectro-wrap {
+  position: relative;
+  margin-top: .3rem;
+}
+.ep-spectro-canvas {
   display: block;
   width: 100%;
-  height: 24px;
-  margin-top: .25rem;
-  accent-color: var(--color-cerulean);
+  height: 48px;
+  border-radius: var(--card-r);
+  image-rendering: pixelated;
+  background: #06060f;
+}
+.ep-spectro-overlay {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 48px;
+  pointer-events: none;
+  border-radius: var(--card-r);
+}
+.ep-play-btn {
+  position: absolute;
+  top: 5px; right: 5px;
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255,255,255,0.6);
+  background: rgba(0,0,0,0.45);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  transition: background .1s, border-color .1s;
+}
+.ep-play-btn:hover { background: var(--link); border-color: var(--link); }
+.ep-play-btn.playing { background: var(--link); border-color: var(--link); }
+.ep-wip-badge {
+  position: absolute;
+  top: 4px; left: 4px;
+  font-size: .55rem;
+  font-style: italic;
+  color: var(--color-sunflower);
+  background: rgba(0,0,0,0.55);
+  padding: .05rem .3rem;
+  border-radius: 2px;
+  pointer-events: none;
+  letter-spacing: .04em;
 }
 .ctrl-badge {
   font-size: .58rem;
@@ -494,9 +600,12 @@ footer em { font-style: normal; color: var(--color-red); }
   border-radius: 2px;
   white-space: nowrap;
 }
-.pair-slider-wrap { margin-bottom: .4rem; padding: .15rem 0 .4rem; }
-.pair-alpha-row { margin-bottom: .65rem; }
+.pair-selected-block { margin-bottom: .06rem; }
+.pair-slider-wrap { margin-bottom: .04rem; padding: .04rem 0 .05rem; }
+.pair-alpha-row { margin-bottom: .18rem; text-align: center; }
+.pair-alpha { font-weight: 700; }
 .pair-transport { gap: .6rem; }
+.pair-methods-block { margin-top: 0; }
 
 /* per-method rows inside a pair card */
 .pair-methods-list { display: flex; flex-direction: column; gap: .4rem; }
@@ -520,17 +629,6 @@ footer em { font-style: normal; color: var(--color-red); }
 }
 .pair-method-row .play-btn { flex-shrink: 0; padding: .22rem .6rem; font-size: .7rem; }
 
-/* ── waveform canvas (paper experiments) ─────────────── */
-.waveform-canvas {
-  display: block;
-  width: 100%;
-  height: 42px;
-  border-radius: var(--card-r);
-  margin: 5px 0 3px;
-  cursor: default;
-  background: var(--bg2);
-}
-
 /* ── spectrograms ────────────────────────────────────── */
 .spectro-wrap { margin-top: 10px; }
 .spectro-canvas {
@@ -540,7 +638,15 @@ footer em { font-style: normal; color: var(--color-red); }
   border-radius: var(--card-r);
   image-rendering: pixelated;
   background: #06060f;
-  border: 1px solid rgba(26,26,24,.1);
+}
+.spectro-wrap { position: relative; }
+.spectro-overlay {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 72px;
+  pointer-events: none;
+  border-radius: var(--card-r);
 }
 .spectro-label {
   font-size: .56rem;
@@ -549,25 +655,42 @@ footer em { font-style: normal; color: var(--color-red); }
   margin-top: 3px;
   letter-spacing: .04em;
 }
+.active-spectro-wrap { margin-top: 0; margin-bottom: .3rem; }
+.active-spectro-label {
+  position: absolute;
+  top: 6px;
+  left: 8px;
+  right: auto;
+  max-width: calc(100% - 92px);
+  transform: none;
+  margin-top: 0;
+  display: inline-block;
+  padding: .06rem .38rem;
+  border-radius: 2px;
+  background: rgba(6, 6, 15, 0.62);
+  color: rgba(242, 239, 234, 0.94);
+  white-space: nowrap;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  pointer-events: none;
+  z-index: 2;
+}
 .spectro-strip,
 .ctrl-strip {
   display: flex;
   flex-direction: row;
   gap: 2px;
-  overflow-x: auto;
-  scrollbar-width: thin;
-  scrollbar-color: var(--border) transparent;
+  padding: 0 8px;
+  margin-left: calc(-.7rem - 2px);
+  margin-right: 0;
 }
 .spectro-strip { margin-top: 6px; }
 .ctrl-strip    { margin-top: 2px; margin-bottom: 2px; }
-.spectro-strip::-webkit-scrollbar,
-.ctrl-strip::-webkit-scrollbar { height: 3px; }
-.spectro-strip::-webkit-scrollbar-thumb,
-.ctrl-strip::-webkit-scrollbar-thumb { background: var(--faint); border-radius: 2px; }
 .spectro-thumb,
 .ctrl-thumb {
   flex: 1 1 0;
-  min-width: 20px;
+  min-width: 0;
   max-width: 72px;
   width: 0;       /* flex grows from 0 */
   height: auto;   /* preserve aspect ratio */
@@ -599,6 +722,16 @@ footer em { font-style: normal; color: var(--color-red); }
   color: var(--color-charcoal);
   padding: .25rem 0;
   text-align: center;
+}
+@media (max-width: 720px) {
+  .pair-prompts {
+    flex-direction: column;
+    align-items: stretch;
+    gap: .4rem;
+  }
+  .pair-prompt { max-width: none; }
+  .pair-prompt.tgt { text-align: left; }
+  .pair-inputs-block .ctrl-badge { align-self: flex-start !important; }
 }
 </style>
 </head>
@@ -677,6 +810,7 @@ footer em { font-style: normal; color: var(--color-red); }
     <div class="morph-ticks" id="morph-ticks"></div>
     <div class="spectro-wrap">
       <canvas id="morph-spectro" class="spectro-canvas"></canvas>
+      <canvas id="morph-spectro-overlay" class="spectro-overlay"></canvas>
       <div class="spectro-label">spectrogram (blended)</div>
     </div>
 
@@ -714,6 +848,21 @@ footer em { font-style: normal; color: var(--color-red); }
     </div>
 
     <div id="canvas-stage" style="display:none">
+      <div class="transport-row" style="margin-bottom:.75rem;margin-top:0">
+        <button class="play-btn" id="canvas-play-btn">
+          <svg id="canvas-play-icon" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          play
+        </button>
+        <span class="status-text" id="canvas-pos-display">position (0.00, 0.00)</span>
+        <span class="ctrl-badge">ctrl: rms</span>
+      </div>
+
+      <div class="spectro-wrap" style="margin-bottom:1.25rem">
+        <canvas id="canvas-spectro" class="spectro-canvas"></canvas>
+        <canvas id="canvas-spectro-overlay" class="spectro-overlay"></canvas>
+        <div class="spectro-label">spectrogram (2D blend)</div>
+      </div>
+
       <div class="canvas-corner-grid">
         <span class="corner-label tl" id="corner-tl"></span>
         <span class="corner-label tr" id="corner-tr"></span>
@@ -722,19 +871,6 @@ footer em { font-style: normal; color: var(--color-red); }
         </div>
         <span class="corner-label bl" id="corner-bl"></span>
         <span class="corner-label br" id="corner-br"></span>
-      </div>
-
-      <div class="transport-row">
-        <button class="play-btn" id="canvas-play-btn">
-          <svg id="canvas-play-icon" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-          play
-        </button>
-        <span class="status-text" id="canvas-pos-display">position (0.00, 0.00)</span>
-        <span class="ctrl-badge">ctrl: rms</span>
-      </div>
-      <div class="spectro-wrap">
-        <canvas id="canvas-spectro" class="spectro-canvas"></canvas>
-        <div class="spectro-label">spectrogram (2D blend)</div>
       </div>
     </div>
   </div>
@@ -761,11 +897,11 @@ footer em { font-style: normal; color: var(--color-red); }
 'use strict';
 
 /* ── KaossPad ─────────────────────────────────────────────────── */
-const PAD_BG      = '#EAE6DF';
-const GRID_COLOR  = 'rgba(26,26,24,0.09)';
+const PAD_BG      = '#1A1A18';
+const GRID_COLOR  = 'rgba(255,255,255,0.12)';
 const CROSS_COLOR = '#E8543A';
-const LABEL_COLOR = 'rgba(26,26,24,0.55)';
-const AXIS_TITLE_COLOR = 'rgba(26,26,24,0.38)';
+const LABEL_COLOR = 'rgba(255,255,255,0.6)';
+const AXIS_TITLE_COLOR = 'rgba(255,255,255,0.35)';
 const LABEL_FONT  = '11px "IBM Plex Mono", monospace';
 const AXIS_TITLE_FONT = '9px "IBM Plex Mono", monospace';
 
@@ -1101,6 +1237,54 @@ function setProgress(bar, done, total) {
   bar.style.width = `${Math.round(done / total * 100)}%`;
 }
 
+function makeSpectroOverlay(overlayEl, getPlayer) {
+  const ctx = overlayEl.getContext('2d');
+  let _raf = null;
+
+  function syncSize() {
+    const rect = overlayEl.getBoundingClientRect();
+    overlayEl.width  = rect.width;
+    overlayEl.height = rect.height;
+  }
+  new ResizeObserver(syncSize).observe(overlayEl);
+  syncSize();
+
+  function draw() {
+    const W = overlayEl.width, H = overlayEl.height;
+    ctx.clearRect(0, 0, W, H);
+    const player = getPlayer();
+    const dur = player.duration;
+    if (!dur) return;
+    const t = player.currentTime;
+    const x = Math.round((t / dur) * W);
+
+    ctx.strokeStyle = 'rgba(255,255,255,0.75)';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
+
+    const label = `${t.toFixed(1)}s / ${dur.toFixed(1)}s`;
+    ctx.font = '9px "IBM Plex Mono", monospace';
+    ctx.textAlign = 'right'; ctx.textBaseline = 'top';
+    const tw = ctx.measureText(label).width;
+    ctx.fillStyle = 'rgba(0,0,0,0.55)';
+    ctx.fillRect(W - tw - 8, 4, tw + 6, 13);
+    ctx.fillStyle = 'rgba(255,255,255,0.85)';
+    ctx.fillText(label, W - 5, 5);
+  }
+
+  function start() {
+    if (_raf) return;
+    function tick() { draw(); if (getPlayer().playing) _raf = requestAnimationFrame(tick); else _raf = null; }
+    _raf = requestAnimationFrame(tick);
+  }
+  function stop() {
+    if (_raf) { cancelAnimationFrame(_raf); _raf = null; }
+    draw();
+  }
+  return { start, stop };
+}
+
+
 function showPlayIcon(btn, iconEl, textNode, playing) {
   const playPath = '<polygon points="5 3 19 12 5 21 5 3"/>';
   const pausePath = '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>';
@@ -1298,7 +1482,9 @@ class SpectroMorph {
   const playIcon = document.getElementById('morph-play-icon');
   const alphaDisplay = document.getElementById('morph-alpha-display');
 
-  const morphStop = () => { if (player.playing) { player.pause(); showPlayIcon(playBtn, playIcon, null, false); } };
+  const morphOverlay = makeSpectroOverlay(document.getElementById('morph-spectro-overlay'), () => player);
+
+  const morphStop = () => { if (player.playing) { player.pause(); showPlayIcon(playBtn, playIcon, null, false); morphOverlay.stop(); } };
   registerAudioStop(morphStop);
 
   playBtn.addEventListener('click', async () => {
@@ -1306,6 +1492,7 @@ class SpectroMorph {
     if (!player.playing) stopAllExcept(morphStop);
     const playing = player.togglePlay();
     showPlayIcon(playBtn, playIcon, null, playing);
+    if (playing) morphOverlay.start(); else morphOverlay.stop();
   });
 
   slider.addEventListener('input', () => {
@@ -1369,7 +1556,9 @@ class SpectroMorph {
   const playBtn = document.getElementById('canvas-play-btn');
   const playIcon = document.getElementById('canvas-play-icon');
 
-  const canvasStop = () => { if (player.playing) { player.pause(); showPlayIcon(playBtn, playIcon, null, false); } };
+  const canvasOverlay = makeSpectroOverlay(document.getElementById('canvas-spectro-overlay'), () => player);
+
+  const canvasStop = () => { if (player.playing) { player.pause(); showPlayIcon(playBtn, playIcon, null, false); canvasOverlay.stop(); } };
   registerAudioStop(canvasStop);
 
   playBtn.addEventListener('click', async () => {
@@ -1377,6 +1566,7 @@ class SpectroMorph {
     if (!player.playing) stopAllExcept(canvasStop);
     const playing = player.togglePlay();
     showPlayIcon(playBtn, playIcon, null, playing);
+    if (playing) canvasOverlay.start(); else canvasOverlay.stop();
   });
 })().catch(err => {
   document.getElementById('canvas-status').textContent = `Error: ${err.message}`;
@@ -1401,6 +1591,27 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
 function escHtml(s) {
   return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
+
+function getPairShortLabel(pair, pairDisplay = {}) {
+  const mapped = pair && pair.pair_id ? pairDisplay[pair.pair_id] : null;
+  if (typeof mapped === 'string') return mapped;
+  if (mapped && mapped.short_label) return mapped.short_label;
+  if (mapped && mapped.short_src && mapped.short_tgt) return `${mapped.short_src} → ${mapped.short_tgt}`;
+  if (pair && pair.short_label) return pair.short_label;
+  if (pair && pair.short_src && pair.short_tgt) return `${pair.short_src} → ${pair.short_tgt}`;
+  return '';
+}
+
+function formatExampleHeader(pair, index, pairDisplay = {}) {
+  const shortLabel = getPairShortLabel(pair, pairDisplay);
+  return shortLabel ? `example ${index + 1}: ${shortLabel}` : `example ${index + 1}`;
+}
+
+const RQ_SUMMARY = {
+  rq1: 'Prompt → Prompt: text-defined morphing with structural control',
+  rq2: 'Audio → Prompt: edit source audio toward a text-described concept',
+  rq3: 'Audio → Audio: edit source audio toward an audio timbre reference',
+};
 
 /* ── global audio registry — one thing playing at a time ─────── */
 const _audioRegistry = new Set();
@@ -1442,9 +1653,15 @@ class PaperMorphPlayer {
     this._startedAt   = 0;
   }
 
-  get playing() { return this._playing; }
-  get loaded()  { return this._loaded;  }
-  get loading() { return this._loading; }
+  get playing()     { return this._playing; }
+  get loaded()      { return this._loaded;  }
+  get loading()     { return this._loading; }
+  get duration()    { return this._buffers && this._buffers[0] ? this._buffers[0].duration : 0; }
+  get currentTime() {
+    if (!this._playing) return this._pauseOffset;
+    const ctx = getPaperACX();
+    return (ctx.currentTime - this._startedAt) % (this.duration || 1);
+  }
 
   async load(onProgress) {
     if (this._loaded || this._loading) return;
@@ -1539,102 +1756,199 @@ const METHODS_WITH_CTRL = {
   rq3: new Set(['flam_flam', 'sdedit_flam']),
 };
 
-const METHOD_WAVEFORM_COLORS = {
-  ours:        '#7DB83A',  /* grass  */
-  ours_ss0:    '#2AABCF',  /* cerulean */
-  crossfade:   '#9B84E8',  /* lavender */
-  coa_no_ctrl: '#F5C842',  /* sunflower */
-  sdedit:      '#FF9A5C',  /* ember */
-  flam_flam:   '#8A63D2',  /* purple */
-  sdedit_flam: '#E8543A',  /* red */
-};
 
-class WaveformPlayer {
-  constructor(canvas, pmp, color) {
-    this._canvas = canvas;
-    this._ctx2d  = canvas.getContext('2d');
+/**
+ * SpectroPlayhead: draws an animated playhead on the active spectrogram thumbnail.
+ * A single overlay canvas is positioned absolutely over the spectro-strip and
+ * repositioned to align with whichever thumb is active.
+ */
+class SpectroPlayhead {
+  constructor(strip, pmp) {
+    this._strip  = strip;
     this._pmp    = pmp;
-    this._color  = color || '#9B84E8';
     this._rafId  = null;
     this._curIdx = 0;
+
+    this._canvas = document.createElement('canvas');
+    this._canvas.style.cssText = 'position:absolute;top:0;left:0;pointer-events:none;border-radius:2px;';
+    this._ctx = this._canvas.getContext('2d');
+    strip.style.position = 'relative';
+    strip.appendChild(this._canvas);
   }
 
-  redraw(idx) {
+  setIndex(idx) {
     this._curIdx = idx;
-    if (!this._pmp.loaded || !this._pmp._buffers[idx]) return;
-    const W = this._resize();
-    this._drawWaveform(this._pmp._buffers[idx], W);
-    if (this._pmp.playing) this._drawPlayhead(W, this._pmp._buffers[idx].duration);
+    if (!this._pmp.playing) this._positionOverThumb(idx);
   }
 
   startPlayhead() { this._tick(); }
 
   stopPlayhead() {
     if (this._rafId) { cancelAnimationFrame(this._rafId); this._rafId = null; }
-    if (this._pmp.loaded && this._pmp._buffers[this._curIdx]) {
-      const W = this._resize();
-      this._drawWaveform(this._pmp._buffers[this._curIdx], W);
-    }
+    this._clear();
+  }
+
+  _positionOverThumb(idx) {
+    const thumbs = this._strip.querySelectorAll('.spectro-thumb');
+    if (!thumbs[idx]) return null;
+    const thumb = thumbs[idx];
+    const stripRect = this._strip.getBoundingClientRect();
+    const thumbRect = thumb.getBoundingClientRect();
+    const W = thumbRect.width, H = thumbRect.height;
+    this._canvas.width  = W;
+    this._canvas.height = H;
+    this._canvas.style.left   = `${thumbRect.left - stripRect.left}px`;
+    this._canvas.style.top    = `${thumbRect.top  - stripRect.top}px`;
+    this._canvas.style.width  = `${W}px`;
+    this._canvas.style.height = `${H}px`;
+    return { W, H };
+  }
+
+  _clear() {
+    this._ctx.clearRect(0, 0, this._canvas.width, this._canvas.height);
   }
 
   _tick() {
-    if (!this._pmp.playing) { this._rafId = null; return; }
-    const buf = this._pmp._buffers[this._curIdx];
-    if (buf) {
-      const W = this._canvas.width;
-      this._drawWaveform(buf, W);
-      this._drawPlayhead(W, buf.duration);
+    if (!this._pmp.playing) { this._rafId = null; this._clear(); return; }
+    const dims = this._positionOverThumb(this._curIdx);
+    if (dims) {
+      const { W, H } = dims;
+      this._ctx.clearRect(0, 0, W, H);
+      const acx = getPaperACX();
+      const dur = this._pmp._buffers ? this._pmp._buffers[0].duration : 1;
+      const elapsed = (acx.currentTime - this._pmp._startedAt) % (dur || 1);
+      const x = Math.round((elapsed / dur) * W);
+      this._ctx.strokeStyle = 'rgba(255,255,255,0.85)';
+      this._ctx.lineWidth = 1.5;
+      this._ctx.beginPath();
+      this._ctx.moveTo(x, 0);
+      this._ctx.lineTo(x, H);
+      this._ctx.stroke();
     }
     this._rafId = requestAnimationFrame(() => this._tick());
   }
+}
 
-  _resize() {
-    const W = this._canvas.offsetWidth || 400;
-    const H = this._canvas.offsetHeight || 42;
-    if (this._canvas.width !== W)  this._canvas.width  = W;
-    if (this._canvas.height !== H) this._canvas.height = H;
-    return W;
+/**
+ * EndpointPlayer: single-file lazy loader with spectrogram + playhead overlay.
+ * Attaches to a container element; call .build() to populate it.
+ */
+class EndpointPlayer {
+  constructor(file, color, spectroSrc = null, wip = false) {
+    this._file       = file;
+    this._color      = color;
+    this._spectroSrc = spectroSrc;
+    this._wip        = wip;
+    this._buffer  = null;
+    this._source  = null;
+    this._gain    = null;
+    this._playing = false;
+    this._startedAt    = 0;
+    this._pauseOffset  = 0;
+    this._overlay = null;
+    this._btn     = null;
   }
 
-  _drawWaveform(buffer, W) {
-    const canvas = this._canvas;
-    const ctx    = this._ctx2d;
-    const H      = canvas.height;
-    const data   = buffer.getChannelData(0);
-    const step   = Math.max(1, Math.floor(data.length / W));
-    const mid    = H / 2;
+  get playing() { return this._playing; }
+  get duration() { return this._buffer ? this._buffer.duration : 0; }
+  get currentTime() {
+    if (!this._playing) return this._pauseOffset;
+    const ctx = getPaperACX();
+    return (ctx.currentTime - this._startedAt) % (this.duration || 1);
+  }
 
-    ctx.fillStyle = '#EAE6DF';
-    ctx.fillRect(0, 0, W, H);
+  async build(container) {
+    const spectroWrap = document.createElement('div');
+    spectroWrap.className = 'ep-spectro-wrap';
 
-    ctx.fillStyle = this._color;
-    for (let x = 0; x < W; x++) {
-      let mn = 1, mx = -1;
-      const off = x * step;
-      for (let s = 0; s < step; s++) {
-        const v = data[off + s] || 0;
-        if (v < mn) mn = v;
-        if (v > mx) mx = v;
-      }
-      const y0 = Math.round(mid + mn * mid * 0.92);
-      const y1 = Math.round(mid + mx * mid * 0.92);
-      ctx.fillRect(x, y0, 1, Math.max(1, y1 - y0));
+    let spectroCanvas = null;
+    if (this._spectroSrc) {
+      const img = document.createElement('img');
+      img.className = 'ep-spectro-canvas';
+      img.loading = 'lazy';
+      img.src = this._spectroSrc;
+      img.alt = 'spectrogram';
+      spectroWrap.appendChild(img);
+    } else {
+      spectroCanvas = document.createElement('canvas');
+      spectroCanvas.className = 'ep-spectro-canvas';
+      spectroWrap.appendChild(spectroCanvas);
     }
+
+    if (this._wip) {
+      const badge = document.createElement('span');
+      badge.className = 'ep-wip-badge';
+      badge.textContent = 'wip';
+      spectroWrap.appendChild(badge);
+    }
+
+    const overlayCanvas = document.createElement('canvas');
+    overlayCanvas.className = 'ep-spectro-overlay';
+    spectroWrap.appendChild(overlayCanvas);
+
+    const btn = document.createElement('button');
+    btn.className = 'ep-play-btn';
+    btn.innerHTML = `<svg viewBox="0 0 24 24" fill="currentColor" width="10" height="10"><polygon points="5 3 19 12 5 21 5 3"/></svg>`;
+    this._btn = btn;
+    spectroWrap.appendChild(btn);
+
+    container.appendChild(spectroWrap);
+
+    this._overlay = makeSpectroOverlay(overlayCanvas, () => this);
+
+    btn.addEventListener('click', async () => {
+      if (this._playing) {
+        this._pause(); return;
+      }
+      stopAllExcept(stopFn);
+      await resumePaperACX();
+      if (!this._buffer) {
+        btn.disabled = true;
+        btn.innerHTML = `<svg viewBox="0 0 24 24" fill="currentColor" width="10" height="10"><circle cx="12" cy="12" r="4"/></svg>`;
+        const ctx = getPaperACX();
+        const resp = await fetch(this._file);
+        this._buffer = await ctx.decodeAudioData(await resp.arrayBuffer());
+        if (spectroCanvas) {
+          const stft = _smComputeSTFT(this._buffer, 512, 128);
+          _smRender(spectroCanvas, stft.magnitudes, stft.numBins, stft.numFrames, 400);
+        }
+        btn.disabled = false;
+      }
+      this._play();
+    });
+
+    const stopFn = () => { if (this._playing) { this._pause(); } };
+    registerAudioStop(stopFn);
   }
 
-  _drawPlayhead(W, duration) {
-    const acx  = getPaperACX();
-    const dur  = duration || 1;
-    const elapsed = (acx.currentTime - this._pmp._startedAt) % dur;
-    const frac = elapsed / dur;
-    const x    = Math.round(frac * W);
-    const ctx  = this._ctx2d;
-    const H    = this._canvas.height;
+  _play() {
+    const ctx = getPaperACX();
+    if (!this._gain) {
+      this._gain = ctx.createGain();
+      this._gain.gain.value = 0.85;
+      this._gain.connect(ctx.destination);
+    }
+    if (this._source) { try { this._source.stop(); } catch {} try { this._source.disconnect(); } catch {} }
+    this._source = ctx.createBufferSource();
+    this._source.buffer = this._buffer;
+    this._source.loop = true;
+    this._source.connect(this._gain);
+    const offset = this._pauseOffset % (this.duration || 1);
+    this._source.start(ctx.currentTime, offset);
+    this._startedAt = ctx.currentTime - offset;
+    this._playing = true;
+    this._btn.classList.add('playing');
+    this._btn.innerHTML = `<svg viewBox="0 0 24 24" fill="currentColor" width="10" height="10"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>`;
+    this._overlay.start();
+  }
 
-    ctx.fillStyle = 'rgba(26,26,24,0.55)';
-    ctx.fillRect(x, 0, 2, H);
-    ctx.fillStyle = 'rgba(255,255,255,0.7)';
-    ctx.fillRect(x + 1, 0, 1, H);
+  _pause() {
+    this._pauseOffset = this.currentTime;
+    if (this._source) { try { this._source.stop(); } catch {} try { this._source.disconnect(); } catch {} this._source = null; }
+    this._playing = false;
+    this._btn.classList.remove('playing');
+    this._btn.innerHTML = `<svg viewBox="0 0 24 24" fill="currentColor" width="10" height="10"><polygon points="5 3 19 12 5 21 5 3"/></svg>`;
+    this._overlay.stop();
   }
 }
 
@@ -1651,37 +1965,111 @@ function buildPairCard(pair, methods, methodDisplay, rq, dataset) {
   const card = document.createElement('div');
   card.className = 'pair-player';
 
-  // For RQ2/RQ3 the morph starts from real audio — grab alpha=0 and alpha=1 files
   const firstMethod = pair.methods[methods[0]];
   const srcAudioFile = (rq === 'rq2' || rq === 'rq3') ? firstMethod.files[0] : null;
   const tgtAudioFile = (rq === 'rq3') ? firstMethod.files[firstMethod.files.length - 1] : null;
-  const srcAudioEl = srcAudioFile
-    ? `<audio controls preload="none" src="${srcAudioFile}"></audio>` : '';
-  const tgtAudioEl = tgtAudioFile
-    ? `<audio controls preload="none" src="${tgtAudioFile}"></audio>` : '';
 
   const pairCtrlKind = DATASET_CTRL[dataset];
-  const pairCtrlBadge = pairCtrlKind
-    ? `<span class="ctrl-badge" style="align-self:center">ctrl: ${pairCtrlKind}</span>` : '';
 
-  card.innerHTML = `
-    <div class="pair-prompts">
-      <div class="pair-prompt src"><span class="ep-label">source, α=0</span>${escHtml(pair.src_prompt)}${srcAudioEl}</div>
-      ${pairCtrlBadge}
-      <div class="pair-prompt tgt"><span class="ep-label">target, α=1</span>${escHtml(pair.tgt_prompt)}${tgtAudioEl}</div>
-    </div>
+  // Build prompts row
+  const promptsEl = document.createElement('div');
+  promptsEl.className = 'pair-prompts';
+
+  function makePromptEl(side, label, promptText, audioFile, spectroSrc) {
+    const el = document.createElement('div');
+    el.className = `pair-prompt ${side}`;
+    const epLabel = document.createElement('span');
+    epLabel.className = 'ep-label';
+    epLabel.textContent = label;
+    el.appendChild(epLabel);
+    if (audioFile) {
+      new EndpointPlayer(audioFile, side === 'src' ? '#7DB83A' : '#E8543A', spectroSrc, true).build(el);
+      const caption = document.createElement('span');
+      caption.className = 'pair-prompt-text audio-caption';
+      caption.textContent = `(${promptText})`;
+      el.appendChild(caption);
+    } else {
+      const t = document.createElement('span');
+      t.className = 'pair-prompt-text';
+      t.textContent = promptText;
+      el.appendChild(t);
+    }
+    return el;
+  }
+
+  promptsEl.appendChild(makePromptEl('src', 'source, α=0', pair.src_prompt, srcAudioFile, pair.src_spectro || null));
+  if (pairCtrlKind) {
+    const badge = document.createElement('span');
+    badge.className = 'ctrl-badge';
+    badge.style.alignSelf = 'center';
+    badge.textContent = `ctrl: ${pairCtrlKind}`;
+    promptsEl.appendChild(badge);
+  }
+  promptsEl.appendChild(makePromptEl('tgt', 'target, α=1', pair.tgt_prompt, tgtAudioFile, pair.tgt_spectro || null));
+  const inputsBlock = document.createElement('div');
+  inputsBlock.className = 'pair-inputs-block';
+  inputsBlock.innerHTML = '<div class="pair-section-label">inputs</div>';
+  inputsBlock.appendChild(promptsEl);
+  card.appendChild(inputsBlock);
+
+  // Shared active spectrogram above slider
+  const activeSpectroWrap = document.createElement('div');
+  activeSpectroWrap.className = 'spectro-wrap active-spectro-wrap';
+  const activeSpectroImg = document.createElement('img');
+  activeSpectroImg.className = 'spectro-canvas';
+  const activeSpectroOverlay = document.createElement('canvas');
+  activeSpectroOverlay.className = 'spectro-overlay';
+  const activeSpectroLabel = document.createElement('div');
+  activeSpectroLabel.className = 'spectro-label active-spectro-label';
+  activeSpectroLabel.textContent = 'none';
+  activeSpectroWrap.appendChild(activeSpectroImg);
+  activeSpectroWrap.appendChild(activeSpectroOverlay);
+  activeSpectroWrap.appendChild(activeSpectroLabel);
+
+  const activeOverlay = makeSpectroOverlay(activeSpectroOverlay, () => activePlayer);
+  let activePlayer = { playing: false, duration: 0, currentTime: 0 };
+  let activeMethodThumbs = null;
+
+  function setActiveMethod(method, pmp) {
+    const mData = pair.methods[method];
+    if (!mData || !pmp.loaded) return;
+    activeMethodThumbs = mData.spectros || null;
+    const idx = parseInt(slider.value, 10);
+    if (activeMethodThumbs && activeMethodThumbs[idx]) {
+      activeSpectroImg.src = activeMethodThumbs[idx];
+    }
+    activeSpectroLabel.innerHTML = methodDisplay[method] || method;
+    activePlayer = pmp;
+  }
+
+  const selectedBlock = document.createElement('div');
+  selectedBlock.className = 'pair-selected-block';
+  selectedBlock.innerHTML = '<div class="pair-section-label">selected method</div>';
+  selectedBlock.appendChild(activeSpectroWrap);
+
+  const controls = document.createElement('div');
+  controls.innerHTML = `
     <div class="morph-slider-wrap pair-slider-wrap">
       <input type="range" class="morph-slider pair-slider" min="0" max="${nAlpha - 1}" step="1" value="0">
     </div>
     <div class="pair-alpha-row">
       <span class="status-text pair-alpha">&#945; = ${alphas[0].toFixed(2)}</span>
     </div>
+  `;
+  selectedBlock.appendChild(controls);
+  card.appendChild(selectedBlock);
+
+  const methodsBlock = document.createElement('div');
+  methodsBlock.className = 'pair-methods-block';
+  methodsBlock.innerHTML = `
+    <div class="pair-section-label no-line">method comparisons</div>
     <div class="pair-methods-list"></div>
   `;
+  card.appendChild(methodsBlock);
 
-  const slider   = card.querySelector('.pair-slider');
-  const alphaEl  = card.querySelector('.pair-alpha');
-  const methList = card.querySelector('.pair-methods-list');
+  const slider   = controls.querySelector('.pair-slider');
+  const alphaEl  = controls.querySelector('.pair-alpha');
+  const methList = methodsBlock.querySelector('.pair-methods-list');
 
   const players = {};  // method → { pmp, btn, setPlaying, thumbs }
 
@@ -1703,11 +2091,7 @@ function buildPairCard(pair, methods, methodDisplay, rq, dataset) {
       </div>
     `;
 
-    // Waveform canvas with animated playhead
-    const wfCanvas = document.createElement('canvas');
-    wfCanvas.className = 'waveform-canvas';
-    row.appendChild(wfCanvas);
-    const wfPlayer = new WaveformPlayer(wfCanvas, pmp, METHOD_WAVEFORM_COLORS[method]);
+    let spectroPlayhead = null;
 
     // Filmstrip of per-alpha spectrogram thumbnails
     const thumbs = [];
@@ -1717,6 +2101,7 @@ function buildPairCard(pair, methods, methodDisplay, rq, dataset) {
       mData.spectros.forEach((src, i) => {
         const img = document.createElement('img');
         img.className = 'spectro-thumb' + (i === 0 ? ' active' : '');
+        img.loading = 'lazy';
         img.src = src;
         img.alt = `α=${alphas[i] !== undefined ? alphas[i].toFixed(2) : i}`;
         img.title = img.alt;
@@ -1728,6 +2113,7 @@ function buildPairCard(pair, methods, methodDisplay, rq, dataset) {
         thumbs.push(img);
       });
       row.appendChild(strip);
+      spectroPlayhead = new SpectroPlayhead(strip, pmp);
     }
 
     // Control signal visualization:
@@ -1740,6 +2126,7 @@ function buildPairCard(pair, methods, methodDisplay, rq, dataset) {
         // Pitch posteriorgram — single full-width image, no alpha sync needed
         const img = document.createElement('img');
         img.className = 'ctrl-posteriorgram';
+        img.loading = 'lazy';
         img.src = mData.ctrl_curves[0];
         img.alt = 'CREPE pitch posteriorgram (conditioning signal)';
         img.title = img.alt;
@@ -1752,6 +2139,7 @@ function buildPairCard(pair, methods, methodDisplay, rq, dataset) {
         mData.ctrl_curves.forEach((src, i) => {
           const img = document.createElement('img');
           img.className = 'ctrl-thumb' + (i === 0 ? ' active' : '');
+          img.loading = 'lazy';
           img.src = src;
           img.alt = `ctrl α=${alphas[i] !== undefined ? alphas[i].toFixed(2) : i}`;
           img.title = img.alt;
@@ -1773,21 +2161,16 @@ function buildPairCard(pair, methods, methodDisplay, rq, dataset) {
     function setPlaying(v) {
       btn.classList.toggle('playing', v);
       btn.innerHTML = v ? `${SVG_PAUSE} pause` : `${SVG_PLAY} play`;
-      if (v) wfPlayer.startPlayhead();
-      else   wfPlayer.stopPlayhead();
+      if (spectroPlayhead) { if (v) spectroPlayhead.startPlayhead(); else spectroPlayhead.stopPlayhead(); }
+      if (!v) activeOverlay.stop();
     }
 
     const pmpStop = () => { if (pmp.playing) { pmp.pause(); setPlaying(false); } };
     registerAudioStop(pmpStop);
 
     btn.addEventListener('click', async () => {
-      if (pmp.playing) {
-        pmp.pause(); setPlaying(false);
-        return;
-      }
-      // Stop every other player site-wide
+      if (pmp.playing) { pmp.pause(); setPlaying(false); return; }
       stopAllExcept(pmpStop);
-      // Lazy-load then play
       await resumePaperACX();
       if (!pmp.loaded) {
         btn.disabled = true;
@@ -1795,26 +2178,32 @@ function buildPairCard(pair, methods, methodDisplay, rq, dataset) {
         await pmp.load();
         btn.disabled = false;
         setPlaying(false);
-        wfPlayer.redraw(parseInt(slider.value, 10));
       }
       pmp.setPosition(alphas[parseInt(slider.value, 10)] ?? 0);
+      setActiveMethod(method, pmp);
       pmp.play(); setPlaying(true);
+      activeOverlay.start();
     });
 
-    players[method] = { pmp, btn, setPlaying, thumbs, ctrlThumbList, wfPlayer };
+    players[method] = { pmp, btn, setPlaying, thumbs, ctrlThumbList, spectroPlayhead };
   });
 
-  // Shared slider — updates all players, waveforms, and highlights active thumbnails
+  // Shared slider — updates all players and highlights active thumbnails
   slider.addEventListener('input', () => {
-    const idx  = parseInt(slider.value, 10);
+    const idx   = parseInt(slider.value, 10);
     const alpha = alphas[idx] ?? idx / (nAlpha - 1);
     alphaEl.textContent = `α = ${alpha.toFixed(2)}`;
-    Object.values(players).forEach(({ pmp, thumbs, ctrlThumbList, wfPlayer }) => {
+    let playingMethod = null;
+    Object.entries(players).forEach(([method, { pmp, thumbs, ctrlThumbList, spectroPlayhead }]) => {
       if (pmp.loaded) pmp.setPosition(alpha);
       thumbs.forEach((th, i) => th.classList.toggle('active', i === idx));
       ctrlThumbList.forEach((th, i) => th.classList.toggle('active', i === idx));
-      if (pmp.loaded) wfPlayer.redraw(idx);
+      if (spectroPlayhead) spectroPlayhead.setIndex(idx);
+      if (pmp.playing) playingMethod = method;
     });
+    if (playingMethod && activeMethodThumbs && activeMethodThumbs[idx]) {
+      activeSpectroImg.src = activeMethodThumbs[idx];
+    }
   });
 
   return card;
@@ -1822,7 +2211,7 @@ function buildPairCard(pair, methods, methodDisplay, rq, dataset) {
 
 (async function initExperimentsTab() {
   const samples = await fetch('audio/samples.json').then(r => r.json());
-  const { rq_display, rq_title, dataset_display, method_display, data } = samples;
+  const { rq_display, rq_title, dataset_display, method_display, pair_display = {}, data } = samples;
   const expPanel = document.getElementById('tab-experiments');
 
   // RQ sub-nav (short labels: RQ1 / RQ2 / RQ3)
@@ -1850,6 +2239,13 @@ function buildPairCard(pair, methods, methodDisplay, rq, dataset) {
     rqPanel.className = 'rq-panel';
     rqPanel.id = 'rq-panel-' + rq;
     rqPanel.style.display = ri === 0 ? 'block' : 'none';
+
+    if (RQ_SUMMARY[rq]) {
+      const summaryEl = document.createElement('p');
+      summaryEl.className = 'rq-summary';
+      summaryEl.textContent = RQ_SUMMARY[rq];
+      rqPanel.appendChild(summaryEl);
+    }
 
     // Full research question from the paper
     if (rq_title && rq_title[rq]) {
@@ -1892,7 +2288,7 @@ function buildPairCard(pair, methods, methodDisplay, rq, dataset) {
       dsData.pairs.forEach((pair, pi) => {
         const exHeader = document.createElement('h4');
         exHeader.className = 'method-header';
-        exHeader.textContent = `example ${pi + 1}`;
+        exHeader.textContent = formatExampleHeader(pair, pi, pair_display);
         dsSection.appendChild(exHeader);
 
         const card = buildPairCard(pair, methods, method_display, rq, dataset);
