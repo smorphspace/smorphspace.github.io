@@ -395,11 +395,18 @@ footer em { font-style: normal; color: var(--color-red); }
 }
 .rq-btn:hover { color: var(--color-cerulean); text-decoration-color: var(--color-cerulean); }
 .rq-btn.active { color: var(--color-cerulean); text-decoration-color: var(--color-cerulean); }
+.rq-summary {
+  font-size: .78rem;
+  font-weight: 700;
+  color: var(--color-ink);
+  line-height: 1.45;
+  margin-bottom: .38rem;
+}
 .rq-question {
-  font-size: .82rem;
+  font-size: .72rem;
   font-style: italic;
   color: var(--color-charcoal);
-  line-height: 1.75;
+  line-height: 1.6;
   margin-bottom: 1.5rem;
   padding-left: 1rem;
   border-left: 2px solid var(--color-cerulean);
@@ -1600,6 +1607,12 @@ function formatExampleHeader(pair, index, pairDisplay = {}) {
   return shortLabel ? `example ${index + 1}: ${shortLabel}` : `example ${index + 1}`;
 }
 
+const RQ_SUMMARY = {
+  rq1: 'Prompt → Prompt: text-defined morphing with structural control',
+  rq2: 'Audio → Prompt: edit source audio toward a text-described concept',
+  rq3: 'Audio → Audio: edit source audio toward an audio timbre reference',
+};
+
 /* ── global audio registry — one thing playing at a time ─────── */
 const _audioRegistry = new Set();
 function registerAudioStop(fn) { _audioRegistry.add(fn); }
@@ -2226,6 +2239,13 @@ function buildPairCard(pair, methods, methodDisplay, rq, dataset) {
     rqPanel.className = 'rq-panel';
     rqPanel.id = 'rq-panel-' + rq;
     rqPanel.style.display = ri === 0 ? 'block' : 'none';
+
+    if (RQ_SUMMARY[rq]) {
+      const summaryEl = document.createElement('p');
+      summaryEl.className = 'rq-summary';
+      summaryEl.textContent = RQ_SUMMARY[rq];
+      rqPanel.appendChild(summaryEl);
+    }
 
     // Full research question from the paper
     if (rq_title && rq_title[rq]) {
