@@ -579,17 +579,6 @@ footer em { font-style: normal; color: var(--color-red); }
 }
 .pair-method-row .play-btn { flex-shrink: 0; padding: .22rem .6rem; font-size: .7rem; }
 
-/* ── waveform canvas (paper experiments) ─────────────── */
-.waveform-canvas {
-  display: block;
-  width: 100%;
-  height: 42px;
-  border-radius: var(--card-r);
-  margin: 5px 0 3px;
-  cursor: default;
-  background: var(--bg2);
-}
-
 /* ── spectrograms ────────────────────────────────────── */
 .spectro-wrap { margin-top: 10px; }
 .spectro-canvas {
@@ -621,20 +610,13 @@ footer em { font-style: normal; color: var(--color-red); }
   display: flex;
   flex-direction: row;
   gap: 2px;
-  overflow-x: auto;
-  scrollbar-width: thin;
-  scrollbar-color: var(--border) transparent;
 }
 .spectro-strip { margin-top: 6px; }
 .ctrl-strip    { margin-top: 2px; margin-bottom: 2px; }
-.spectro-strip::-webkit-scrollbar,
-.ctrl-strip::-webkit-scrollbar { height: 3px; }
-.spectro-strip::-webkit-scrollbar-thumb,
-.ctrl-strip::-webkit-scrollbar-thumb { background: var(--faint); border-radius: 2px; }
 .spectro-thumb,
 .ctrl-thumb {
   flex: 1 1 0;
-  min-width: 20px;
+  min-width: 0;
   max-width: 72px;
   width: 0;       /* flex grows from 0 */
   height: auto;   /* preserve aspect ratio */
@@ -1566,9 +1548,15 @@ class PaperMorphPlayer {
     this._startedAt   = 0;
   }
 
-  get playing() { return this._playing; }
-  get loaded()  { return this._loaded;  }
-  get loading() { return this._loading; }
+  get playing()     { return this._playing; }
+  get loaded()      { return this._loaded;  }
+  get loading()     { return this._loading; }
+  get duration()    { return this._buffers && this._buffers[0] ? this._buffers[0].duration : 0; }
+  get currentTime() {
+    if (!this._playing) return this._pauseOffset;
+    const ctx = getPaperACX();
+    return (ctx.currentTime - this._startedAt) % (this.duration || 1);
+  }
 
   async load(onProgress) {
     if (this._loaded || this._loading) return;
@@ -1663,102 +1651,76 @@ const METHODS_WITH_CTRL = {
   rq3: new Set(['flam_flam', 'sdedit_flam']),
 };
 
-const METHOD_WAVEFORM_COLORS = {
-  ours:        '#7DB83A',  /* grass  */
-  ours_ss0:    '#2AABCF',  /* cerulean */
-  crossfade:   '#9B84E8',  /* lavender */
-  coa_no_ctrl: '#F5C842',  /* sunflower */
-  sdedit:      '#FF9A5C',  /* ember */
-  flam_flam:   '#8A63D2',  /* purple */
-  sdedit_flam: '#E8543A',  /* red */
-};
 
-class WaveformPlayer {
-  constructor(canvas, pmp, color) {
-    this._canvas = canvas;
-    this._ctx2d  = canvas.getContext('2d');
+/**
+ * SpectroPlayhead: draws an animated playhead on the active spectrogram thumbnail.
+ * A single overlay canvas is positioned absolutely over the spectro-strip and
+ * repositioned to align with whichever thumb is active.
+ */
+class SpectroPlayhead {
+  constructor(strip, pmp) {
+    this._strip  = strip;
     this._pmp    = pmp;
-    this._color  = color || '#9B84E8';
     this._rafId  = null;
     this._curIdx = 0;
+
+    this._canvas = document.createElement('canvas');
+    this._canvas.style.cssText = 'position:absolute;top:0;left:0;pointer-events:none;border-radius:2px;';
+    this._ctx = this._canvas.getContext('2d');
+    strip.style.position = 'relative';
+    strip.appendChild(this._canvas);
   }
 
-  redraw(idx) {
+  setIndex(idx) {
     this._curIdx = idx;
-    if (!this._pmp.loaded || !this._pmp._buffers[idx]) return;
-    const W = this._resize();
-    this._drawWaveform(this._pmp._buffers[idx], W);
-    if (this._pmp.playing) this._drawPlayhead(W, this._pmp._buffers[idx].duration);
+    if (!this._pmp.playing) this._positionOverThumb(idx);
   }
 
   startPlayhead() { this._tick(); }
 
   stopPlayhead() {
     if (this._rafId) { cancelAnimationFrame(this._rafId); this._rafId = null; }
-    if (this._pmp.loaded && this._pmp._buffers[this._curIdx]) {
-      const W = this._resize();
-      this._drawWaveform(this._pmp._buffers[this._curIdx], W);
-    }
+    this._clear();
+  }
+
+  _positionOverThumb(idx) {
+    const thumbs = this._strip.querySelectorAll('.spectro-thumb');
+    if (!thumbs[idx]) return null;
+    const thumb = thumbs[idx];
+    const stripRect = this._strip.getBoundingClientRect();
+    const thumbRect = thumb.getBoundingClientRect();
+    const W = thumbRect.width, H = thumbRect.height;
+    this._canvas.width  = W;
+    this._canvas.height = H;
+    this._canvas.style.left   = `${thumbRect.left - stripRect.left}px`;
+    this._canvas.style.top    = `${thumbRect.top  - stripRect.top}px`;
+    this._canvas.style.width  = `${W}px`;
+    this._canvas.style.height = `${H}px`;
+    return { W, H };
+  }
+
+  _clear() {
+    this._ctx.clearRect(0, 0, this._canvas.width, this._canvas.height);
   }
 
   _tick() {
-    if (!this._pmp.playing) { this._rafId = null; return; }
-    const buf = this._pmp._buffers[this._curIdx];
-    if (buf) {
-      const W = this._canvas.width;
-      this._drawWaveform(buf, W);
-      this._drawPlayhead(W, buf.duration);
+    if (!this._pmp.playing) { this._rafId = null; this._clear(); return; }
+    const dims = this._positionOverThumb(this._curIdx);
+    if (dims) {
+      const { W, H } = dims;
+      this._ctx.clearRect(0, 0, W, H);
+      const acx = getPaperACX();
+      const dur = this._pmp._buffers ? this._pmp._buffers[0].duration : 1;
+      const elapsed = (acx.currentTime - this._pmp._startedAt) % (dur || 1);
+      const x = Math.round((elapsed / dur) * W);
+      this._ctx.strokeStyle = 'rgba(255,255,255,0.85)';
+      this._ctx.lineWidth = 1.5;
+      this._ctx.beginPath();
+      this._ctx.moveTo(x, 0);
+      this._ctx.lineTo(x, H);
+      this._ctx.stroke();
     }
     this._rafId = requestAnimationFrame(() => this._tick());
-  }
-
-  _resize() {
-    const W = this._canvas.offsetWidth || 400;
-    const H = this._canvas.offsetHeight || 42;
-    if (this._canvas.width !== W)  this._canvas.width  = W;
-    if (this._canvas.height !== H) this._canvas.height = H;
-    return W;
-  }
-
-  _drawWaveform(buffer, W) {
-    const canvas = this._canvas;
-    const ctx    = this._ctx2d;
-    const H      = canvas.height;
-    const data   = buffer.getChannelData(0);
-    const step   = Math.max(1, Math.floor(data.length / W));
-    const mid    = H / 2;
-
-    ctx.fillStyle = '#EAE6DF';
-    ctx.fillRect(0, 0, W, H);
-
-    ctx.fillStyle = this._color;
-    for (let x = 0; x < W; x++) {
-      let mn = 1, mx = -1;
-      const off = x * step;
-      for (let s = 0; s < step; s++) {
-        const v = data[off + s] || 0;
-        if (v < mn) mn = v;
-        if (v > mx) mx = v;
-      }
-      const y0 = Math.round(mid + mn * mid * 0.92);
-      const y1 = Math.round(mid + mx * mid * 0.92);
-      ctx.fillRect(x, y0, 1, Math.max(1, y1 - y0));
-    }
-  }
-
-  _drawPlayhead(W, duration) {
-    const acx  = getPaperACX();
-    const dur  = duration || 1;
-    const elapsed = (acx.currentTime - this._pmp._startedAt) % dur;
-    const frac = elapsed / dur;
-    const x    = Math.round(frac * W);
-    const ctx  = this._ctx2d;
-    const H    = this._canvas.height;
-
-    ctx.fillStyle = 'rgba(26,26,24,0.55)';
-    ctx.fillRect(x, 0, 2, H);
-    ctx.fillStyle = 'rgba(255,255,255,0.7)';
-    ctx.fillRect(x + 1, 0, 1, H);
   }
 }
 
@@ -1940,6 +1902,38 @@ function buildPairCard(pair, methods, methodDisplay, rq, dataset) {
   promptsEl.appendChild(makePromptEl('tgt', 'target, α=1', pair.tgt_prompt, tgtAudioFile, pair.tgt_spectro || null));
   card.appendChild(promptsEl);
 
+  // Shared active spectrogram above slider
+  const activeSpectroWrap = document.createElement('div');
+  activeSpectroWrap.className = 'spectro-wrap';
+  activeSpectroWrap.style.marginBottom = '.75rem';
+  const activeSpectroImg = document.createElement('img');
+  activeSpectroImg.className = 'spectro-canvas';
+  const activeSpectroOverlay = document.createElement('canvas');
+  activeSpectroOverlay.className = 'spectro-overlay';
+  const activeSpectroLabel = document.createElement('div');
+  activeSpectroLabel.className = 'spectro-label';
+  activeSpectroLabel.innerHTML = '— no method playing —';
+  activeSpectroWrap.appendChild(activeSpectroImg);
+  activeSpectroWrap.appendChild(activeSpectroOverlay);
+  activeSpectroWrap.appendChild(activeSpectroLabel);
+  card.appendChild(activeSpectroWrap);
+
+  const activeOverlay = makeSpectroOverlay(activeSpectroOverlay, () => activePlayer);
+  let activePlayer = { playing: false, duration: 0, currentTime: 0 };
+  let activeMethodThumbs = null;
+
+  function setActiveMethod(method, pmp) {
+    const mData = pair.methods[method];
+    if (!mData || !pmp.loaded) return;
+    activeMethodThumbs = mData.spectros || null;
+    const idx = parseInt(slider.value, 10);
+    if (activeMethodThumbs && activeMethodThumbs[idx]) {
+      activeSpectroImg.src = activeMethodThumbs[idx];
+    }
+    activeSpectroLabel.innerHTML = methodDisplay[method] || method;
+    activePlayer = pmp;
+  }
+
   // Rest of card via innerHTML
   const rest = document.createElement('div');
   rest.innerHTML = `
@@ -1977,11 +1971,7 @@ function buildPairCard(pair, methods, methodDisplay, rq, dataset) {
       </div>
     `;
 
-    // Waveform canvas with animated playhead
-    const wfCanvas = document.createElement('canvas');
-    wfCanvas.className = 'waveform-canvas';
-    row.appendChild(wfCanvas);
-    const wfPlayer = new WaveformPlayer(wfCanvas, pmp, METHOD_WAVEFORM_COLORS[method]);
+    let spectroPlayhead = null;
 
     // Filmstrip of per-alpha spectrogram thumbnails
     const thumbs = [];
@@ -2003,6 +1993,7 @@ function buildPairCard(pair, methods, methodDisplay, rq, dataset) {
         thumbs.push(img);
       });
       row.appendChild(strip);
+      spectroPlayhead = new SpectroPlayhead(strip, pmp);
     }
 
     // Control signal visualization:
@@ -2050,21 +2041,16 @@ function buildPairCard(pair, methods, methodDisplay, rq, dataset) {
     function setPlaying(v) {
       btn.classList.toggle('playing', v);
       btn.innerHTML = v ? `${SVG_PAUSE} pause` : `${SVG_PLAY} play`;
-      if (v) wfPlayer.startPlayhead();
-      else   wfPlayer.stopPlayhead();
+      if (spectroPlayhead) { if (v) spectroPlayhead.startPlayhead(); else spectroPlayhead.stopPlayhead(); }
+      if (!v) activeOverlay.stop();
     }
 
     const pmpStop = () => { if (pmp.playing) { pmp.pause(); setPlaying(false); } };
     registerAudioStop(pmpStop);
 
     btn.addEventListener('click', async () => {
-      if (pmp.playing) {
-        pmp.pause(); setPlaying(false);
-        return;
-      }
-      // Stop every other player site-wide
+      if (pmp.playing) { pmp.pause(); setPlaying(false); return; }
       stopAllExcept(pmpStop);
-      // Lazy-load then play
       await resumePaperACX();
       if (!pmp.loaded) {
         btn.disabled = true;
@@ -2072,26 +2058,32 @@ function buildPairCard(pair, methods, methodDisplay, rq, dataset) {
         await pmp.load();
         btn.disabled = false;
         setPlaying(false);
-        wfPlayer.redraw(parseInt(slider.value, 10));
       }
       pmp.setPosition(alphas[parseInt(slider.value, 10)] ?? 0);
+      setActiveMethod(method, pmp);
       pmp.play(); setPlaying(true);
+      activeOverlay.start();
     });
 
-    players[method] = { pmp, btn, setPlaying, thumbs, ctrlThumbList, wfPlayer };
+    players[method] = { pmp, btn, setPlaying, thumbs, ctrlThumbList, spectroPlayhead };
   });
 
-  // Shared slider — updates all players, waveforms, and highlights active thumbnails
+  // Shared slider — updates all players and highlights active thumbnails
   slider.addEventListener('input', () => {
-    const idx  = parseInt(slider.value, 10);
+    const idx   = parseInt(slider.value, 10);
     const alpha = alphas[idx] ?? idx / (nAlpha - 1);
     alphaEl.textContent = `α = ${alpha.toFixed(2)}`;
-    Object.values(players).forEach(({ pmp, thumbs, ctrlThumbList, wfPlayer }) => {
+    let playingMethod = null;
+    Object.entries(players).forEach(([method, { pmp, thumbs, ctrlThumbList, spectroPlayhead }]) => {
       if (pmp.loaded) pmp.setPosition(alpha);
       thumbs.forEach((th, i) => th.classList.toggle('active', i === idx));
       ctrlThumbList.forEach((th, i) => th.classList.toggle('active', i === idx));
-      if (pmp.loaded) wfPlayer.redraw(idx);
+      if (spectroPlayhead) spectroPlayhead.setIndex(idx);
+      if (pmp.playing) playingMethod = method;
     });
+    if (playingMethod && activeMethodThumbs && activeMethodThumbs[idx]) {
+      activeSpectroImg.src = activeMethodThumbs[idx];
+    }
   });
 
   return card;
