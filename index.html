@@ -442,23 +442,28 @@ footer em { font-style: normal; color: var(--color-red); }
 .pair-player:last-child { border-bottom: none; }
 .pair-prompts {
   display: flex;
-  flex-direction: column;
-  gap: .35rem;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: .5rem;
   margin-bottom: .8rem;
 }
 .pair-prompt {
   font-size: .73rem;
+  font-weight: 600;
   line-height: 1.5;
+  max-width: 42%;
 }
 .pair-prompt .ep-label {
   display: block;
   font-size: .6rem;
+  font-weight: 400;
   font-style: italic;
   color: var(--faint);
   margin-bottom: .08rem;
 }
 .pair-prompt.src { color: var(--color-meadow); }
-.pair-prompt.tgt { color: var(--color-red); }
+.pair-prompt.tgt { color: var(--color-red); text-align: right; }
 .pair-prompt audio {
   display: block;
   width: 100%;
