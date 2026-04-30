@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-/* ── color palette (hugo flores garcía) ─────────────── */
+/* ── color palette ─────────────── */
 :root {
   --color-red:         #E8543A;
   --color-ember:       #FF9A5C;
@@ -440,8 +440,9 @@ footer em { font-style: normal; color: var(--color-red); }
 .ds-btn.active { color: var(--color-ember); text-decoration-color: var(--color-ember); font-weight: 600; }
 .method-header {
   font-size: .78rem;
-  font-style: italic;
-  color: var(--color-cerulean);
+  font-style: normal;
+  color: var(--color-ink);
+  font-weight: 1000;
   margin-bottom: .85rem;
 }
 .ours-badge {
@@ -495,32 +496,44 @@ footer em { font-style: normal; color: var(--color-red); }
 }
 .pair-prompt {
   font-size: .73rem;
-  font-weight: 600;
-  line-height: 1.5;
+  line-height: 1.1;
   max-width: 42%;
+  color: var(--color-ink);
+  background: rgba(255,255,255,0.38);
+  border: 1px solid var(--border);
+  padding: .42rem .5rem .4rem;
+  border-radius: 2px;
 }
 .pair-prompt .ep-label {
-  display: block;
-  font-size: .6rem;
-  font-weight: 400;
-  font-style: italic;
-  color: var(--faint);
-  margin-bottom: .08rem;
+  display: inline-block;
+  font-size: .56rem;
+  font-weight: 600;
+  font-style: normal;
+  color: #fff;
+  margin-bottom: .22rem;
+  padding: .12rem .3rem;
+  border-radius: 2px;
+  line-height: 1;
 }
-.pair-prompt.src { color: var(--color-meadow); border: 1px solid var(--color-meadow); padding: .35rem .5rem; border-radius: 2px; }
-.pair-prompt.tgt { color: var(--color-red); text-align: right; border: 1px solid var(--color-red); padding: .35rem .5rem; border-radius: 2px; }
-.pair-prompt .ep-caption {
+.pair-prompt.src .ep-label { background: var(--color-meadow); }
+.pair-prompt.tgt { text-align: right; }
+.pair-prompt.tgt .ep-label { background: var(--color-red); }
+.pair-prompt .pair-prompt-text {
   font-size: .58rem;
   font-weight: 400;
-  font-style: italic;
+  font-style: normal;
   color: var(--color-ink);
-  line-height: 1.3;
-  margin-bottom: .2rem;
+  line-height: 1.1;
+  margin-bottom: 0;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   line-clamp: 3;
   overflow: hidden;
+}
+.pair-prompt .pair-prompt-text.audio-caption {
+  margin-top: .26rem;
+  font-style: normal;
 }
 .ep-spectro-wrap {
   position: relative;
@@ -1572,6 +1585,21 @@ function escHtml(s) {
   return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
+function getPairShortLabel(pair, pairDisplay = {}) {
+  const mapped = pair && pair.pair_id ? pairDisplay[pair.pair_id] : null;
+  if (typeof mapped === 'string') return mapped;
+  if (mapped && mapped.short_label) return mapped.short_label;
+  if (mapped && mapped.short_src && mapped.short_tgt) return `${mapped.short_src} → ${mapped.short_tgt}`;
+  if (pair && pair.short_label) return pair.short_label;
+  if (pair && pair.short_src && pair.short_tgt) return `${pair.short_src} → ${pair.short_tgt}`;
+  return '';
+}
+
+function formatExampleHeader(pair, index, pairDisplay = {}) {
+  const shortLabel = getPairShortLabel(pair, pairDisplay);
+  return shortLabel ? `example ${index + 1}: ${shortLabel}` : `example ${index + 1}`;
+}
+
 /* ── global audio registry — one thing playing at a time ─────── */
 const _audioRegistry = new Set();
 function registerAudioStop(fn) { _audioRegistry.add(fn); }
@@ -1942,13 +1970,14 @@ function buildPairCard(pair, methods, methodDisplay, rq, dataset) {
     epLabel.textContent = label;
     el.appendChild(epLabel);
     if (audioFile) {
+      new EndpointPlayer(audioFile, side === 'src' ? '#7DB83A' : '#E8543A', spectroSrc, true).build(el);
       const caption = document.createElement('span');
-      caption.className = 'ep-caption';
+      caption.className = 'pair-prompt-text audio-caption';
       caption.textContent = `(${promptText})`;
       el.appendChild(caption);
-      new EndpointPlayer(audioFile, side === 'src' ? '#7DB83A' : '#E8543A', spectroSrc, true).build(el);
     } else {
       const t = document.createElement('span');
+      t.className = 'pair-prompt-text';
       t.textContent = promptText;
       el.appendChild(t);
     }
@@ -2169,7 +2198,7 @@ function buildPairCard(pair, methods, methodDisplay, rq, dataset) {
 
 (async function initExperimentsTab() {
   const samples = await fetch('audio/samples.json').then(r => r.json());
-  const { rq_display, rq_title, dataset_display, method_display, data } = samples;
+  const { rq_display, rq_title, dataset_display, method_display, pair_display = {}, data } = samples;
   const expPanel = document.getElementById('tab-experiments');
 
   // RQ sub-nav (short labels: RQ1 / RQ2 / RQ3)
@@ -2239,7 +2268,7 @@ function buildPairCard(pair, methods, methodDisplay, rq, dataset) {
       dsData.pairs.forEach((pair, pi) => {
         const exHeader = document.createElement('h4');
         exHeader.className = 'method-header';
-        exHeader.textContent = `example ${pi + 1}`;
+        exHeader.textContent = formatExampleHeader(pair, pi, pair_display);
         dsSection.appendChild(exHeader);
 
         const card = buildPairCard(pair, methods, method_display, rq, dataset);
