@@ -298,6 +298,21 @@ input[type="range"].morph-slider:active::-webkit-slider-thumb { cursor: grabbing
 #canvas-card .play-btn.playing { background: var(--link); border-color: var(--link); color: #fff; }
 #canvas-card .ctrl-badge { color: var(--color-cerulean); border-color: var(--color-cerulean); }
 
+/* ── morph card dark mode ──────────────────────────── */
+#morph-card {
+  background: var(--color-ink);
+}
+#morph-card .morph-ep.src { color: var(--color-lime); }
+#morph-card .morph-ep.tgt { color: var(--color-ember); }
+#morph-card .morph-ep .ep-label { color: var(--color-ash); }
+#morph-card .status-text { color: var(--color-lavender-lt); }
+#morph-card .spectro-label { color: var(--color-ash); }
+#morph-card .play-btn { color: var(--color-paper); border-color: rgba(255,255,255,0.2); }
+#morph-card .play-btn:hover { background: var(--link); border-color: var(--link); color: #fff; }
+#morph-card .play-btn.playing { background: var(--link); border-color: var(--link); color: #fff; }
+#morph-card .ctrl-badge { color: var(--color-cerulean); border-color: var(--color-cerulean); }
+#morph-card .morph-tick { color: var(--color-ash); }
+
 /* ── footer ────────────────────────────────────────── */
 footer {
   border-top: 1px solid var(--border);
@@ -326,6 +341,9 @@ footer em { font-style: normal; color: var(--color-red); }
   line-height: 1.4;
   max-width: 130px;
   color: var(--color-ash);
+  border: 1px solid rgba(255,255,255,0.2);
+  padding: .2rem .35rem;
+  border-radius: 2px;
 }
 .corner-label.tl { grid-column: 1; grid-row: 1; text-align: right; }
 .corner-label.tr { grid-column: 3; grid-row: 1; text-align: left;  }
