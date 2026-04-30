@@ -27,5 +27,7 @@
     "audio_08.wav",
     "audio_09.wav",
     "audio_10.wav"
-  ]
+  ],
+  "envelope_median_filter": 1,
+  "ctrl_kind": "rms"
 }
