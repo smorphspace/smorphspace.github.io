@@ -1966,8 +1966,13 @@ function buildPairCard(pair, methods, methodDisplay, rq, dataset) {
   card.className = 'pair-player';
 
   const firstMethod = pair.methods[methods[0]];
-  const srcAudioFile = (rq === 'rq2' || rq === 'rq3') ? firstMethod.files[0] : null;
-  const tgtAudioFile = (rq === 'rq3') ? firstMethod.files[firstMethod.files.length - 1] : null;
+  // For RQ2/RQ3 we show the REAL dataset recordings as the source/target
+  // reference clips (not morph endpoints). Falls back to the morph at α=0/α=1
+  // only if the real-audio fields are missing for some reason.
+  const srcAudioFile = (rq === 'rq2' || rq === 'rq3')
+    ? (pair.src_audio_real || firstMethod.files[0]) : null;
+  const tgtAudioFile = (rq === 'rq3')
+    ? (pair.tgt_audio_real || firstMethod.files[firstMethod.files.length - 1]) : null;
 
   const pairCtrlKind = DATASET_CTRL[dataset];
 
@@ -1997,7 +2002,7 @@ function buildPairCard(pair, methods, methodDisplay, rq, dataset) {
     return el;
   }
 
-  promptsEl.appendChild(makePromptEl('src', 'source, α=0', pair.src_prompt, srcAudioFile, pair.src_spectro || null));
+  promptsEl.appendChild(makePromptEl('src', 'source, α=0', pair.src_prompt, srcAudioFile, pair.src_spectro_real || pair.src_spectro || null));
   if (pairCtrlKind) {
     const badge = document.createElement('span');
     badge.className = 'ctrl-badge';
@@ -2005,7 +2010,7 @@ function buildPairCard(pair, methods, methodDisplay, rq, dataset) {
     badge.textContent = `ctrl: ${pairCtrlKind}`;
     promptsEl.appendChild(badge);
   }
-  promptsEl.appendChild(makePromptEl('tgt', 'target, α=1', pair.tgt_prompt, tgtAudioFile, pair.tgt_spectro || null));
+  promptsEl.appendChild(makePromptEl('tgt', 'target, α=1', pair.tgt_prompt, tgtAudioFile, pair.tgt_spectro_real || pair.tgt_spectro || null));
   const inputsBlock = document.createElement('div');
   inputsBlock.className = 'pair-inputs-block';
   inputsBlock.innerHTML = '<div class="pair-section-label">inputs</div>';
