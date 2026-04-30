@@ -464,13 +464,50 @@ footer em { font-style: normal; color: var(--color-red); }
 }
 .pair-prompt.src { color: var(--color-meadow); }
 .pair-prompt.tgt { color: var(--color-red); text-align: right; }
-.pair-prompt audio {
+.pair-prompt .ep-caption {
+  font-size: .58rem;
+  font-weight: 400;
+  font-style: italic;
+  color: var(--faint);
+  margin-bottom: .2rem;
+}
+.ep-spectro-wrap {
+  position: relative;
+  margin-top: .3rem;
+}
+.ep-spectro-canvas {
   display: block;
   width: 100%;
-  height: 24px;
-  margin-top: .25rem;
-  accent-color: var(--color-cerulean);
+  height: 48px;
+  border-radius: var(--card-r);
+  image-rendering: pixelated;
+  background: #06060f;
 }
+.ep-spectro-overlay {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 48px;
+  pointer-events: none;
+  border-radius: var(--card-r);
+}
+.ep-play-btn {
+  margin-top: .3rem;
+  display: inline-flex;
+  align-items: center;
+  gap: .3rem;
+  padding: .22rem .6rem;
+  border-radius: var(--card-r);
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text);
+  font-family: inherit;
+  font-size: .68rem;
+  cursor: pointer;
+  transition: background .1s, border-color .1s, color .1s;
+}
+.ep-play-btn:hover { background: var(--link); border-color: var(--link); color: #fff; }
+.ep-play-btn.playing { background: var(--link); border-color: var(--link); color: #fff; }
 .ctrl-badge {
   font-size: .58rem;
   font-style: italic;
@@ -1690,6 +1727,109 @@ class WaveformPlayer {
 }
 
 /**
+ * EndpointPlayer: single-file lazy loader with spectrogram + playhead overlay.
+ * Attaches to a container element; call .build() to populate it.
+ */
+class EndpointPlayer {
+  constructor(file, color) {
+    this._file    = file;
+    this._color   = color;
+    this._buffer  = null;
+    this._source  = null;
+    this._gain    = null;
+    this._playing = false;
+    this._startedAt    = 0;
+    this._pauseOffset  = 0;
+    this._overlay = null;
+    this._btn     = null;
+  }
+
+  get playing() { return this._playing; }
+  get duration() { return this._buffer ? this._buffer.duration : 0; }
+  get currentTime() {
+    if (!this._playing) return this._pauseOffset;
+    const ctx = getPaperACX();
+    return (ctx.currentTime - this._startedAt) % (this.duration || 1);
+  }
+
+  async build(container) {
+    const spectroWrap = document.createElement('div');
+    spectroWrap.className = 'ep-spectro-wrap';
+
+    const spectroCanvas = document.createElement('canvas');
+    spectroCanvas.className = 'ep-spectro-canvas';
+
+    const overlayCanvas = document.createElement('canvas');
+    overlayCanvas.className = 'ep-spectro-overlay';
+
+    spectroWrap.appendChild(spectroCanvas);
+    spectroWrap.appendChild(overlayCanvas);
+
+    const btn = document.createElement('button');
+    btn.className = 'ep-play-btn';
+    btn.innerHTML = `${SVG_PLAY} play`;
+    this._btn = btn;
+
+    container.appendChild(spectroWrap);
+    container.appendChild(btn);
+
+    this._overlay = makeSpectroOverlay(overlayCanvas, () => this);
+
+    btn.addEventListener('click', async () => {
+      if (this._playing) {
+        this._pause(); return;
+      }
+      stopAllExcept(stopFn);
+      await resumePaperACX();
+      if (!this._buffer) {
+        btn.disabled = true;
+        btn.innerHTML = `<span style="font-size:.6rem;font-style:italic">loading…</span>`;
+        const ctx = getPaperACX();
+        const resp = await fetch(this._file);
+        this._buffer = await ctx.decodeAudioData(await resp.arrayBuffer());
+        const stft = _smComputeSTFT(this._buffer, 512, 128);
+        _smRender(spectroCanvas, stft.magnitudes, stft.numBins, stft.numFrames, 400);
+        btn.disabled = false;
+      }
+      this._play();
+    });
+
+    const stopFn = () => { if (this._playing) { this._pause(); } };
+    registerAudioStop(stopFn);
+  }
+
+  _play() {
+    const ctx = getPaperACX();
+    if (!this._gain) {
+      this._gain = ctx.createGain();
+      this._gain.gain.value = 0.85;
+      this._gain.connect(ctx.destination);
+    }
+    if (this._source) { try { this._source.stop(); } catch {} try { this._source.disconnect(); } catch {} }
+    this._source = ctx.createBufferSource();
+    this._source.buffer = this._buffer;
+    this._source.loop = true;
+    this._source.connect(this._gain);
+    const offset = this._pauseOffset % (this.duration || 1);
+    this._source.start(ctx.currentTime, offset);
+    this._startedAt = ctx.currentTime - offset;
+    this._playing = true;
+    this._btn.classList.add('playing');
+    this._btn.innerHTML = `${SVG_PAUSE} pause`;
+    this._overlay.start();
+  }
+
+  _pause() {
+    this._pauseOffset = this.currentTime;
+    if (this._source) { try { this._source.stop(); } catch {} try { this._source.disconnect(); } catch {} this._source = null; }
+    this._playing = false;
+    this._btn.classList.remove('playing');
+    this._btn.innerHTML = `${SVG_PLAY} play`;
+    this._overlay.stop();
+  }
+}
+
+/**
  * Build a pair card: prompts + shared slider, then one method row per method.
  * Each method has its own PaperMorphPlayer (lazy Web Audio); slider controls
  * all players simultaneously and highlights the active spectrogram thumbnail.
@@ -1702,25 +1842,51 @@ function buildPairCard(pair, methods, methodDisplay, rq, dataset) {
   const card = document.createElement('div');
   card.className = 'pair-player';
 
-  // For RQ2/RQ3 the morph starts from real audio — grab alpha=0 and alpha=1 files
   const firstMethod = pair.methods[methods[0]];
   const srcAudioFile = (rq === 'rq2' || rq === 'rq3') ? firstMethod.files[0] : null;
   const tgtAudioFile = (rq === 'rq3') ? firstMethod.files[firstMethod.files.length - 1] : null;
-  const srcAudioEl = srcAudioFile
-    ? `<audio controls preload="none" src="${srcAudioFile}"></audio>` : '';
-  const tgtAudioEl = tgtAudioFile
-    ? `<audio controls preload="none" src="${tgtAudioFile}"></audio>` : '';
 
   const pairCtrlKind = DATASET_CTRL[dataset];
-  const pairCtrlBadge = pairCtrlKind
-    ? `<span class="ctrl-badge" style="align-self:center">ctrl: ${pairCtrlKind}</span>` : '';
 
-  card.innerHTML = `
-    <div class="pair-prompts">
-      <div class="pair-prompt src"><span class="ep-label">source, α=0</span>${escHtml(pair.src_prompt)}${srcAudioEl}</div>
-      ${pairCtrlBadge}
-      <div class="pair-prompt tgt"><span class="ep-label">target, α=1</span>${escHtml(pair.tgt_prompt)}${tgtAudioEl}</div>
-    </div>
+  // Build prompts row
+  const promptsEl = document.createElement('div');
+  promptsEl.className = 'pair-prompts';
+
+  function makePromptEl(side, label, promptText, audioFile) {
+    const el = document.createElement('div');
+    el.className = `pair-prompt ${side}`;
+    const epLabel = document.createElement('span');
+    epLabel.className = 'ep-label';
+    epLabel.textContent = label;
+    el.appendChild(epLabel);
+    if (audioFile) {
+      const caption = document.createElement('span');
+      caption.className = 'ep-caption';
+      caption.textContent = `(${promptText})`;
+      el.appendChild(caption);
+      new EndpointPlayer(audioFile, side === 'src' ? '#7DB83A' : '#E8543A').build(el);
+    } else {
+      const t = document.createElement('span');
+      t.textContent = promptText;
+      el.appendChild(t);
+    }
+    return el;
+  }
+
+  promptsEl.appendChild(makePromptEl('src', 'source, α=0', pair.src_prompt, srcAudioFile));
+  if (pairCtrlKind) {
+    const badge = document.createElement('span');
+    badge.className = 'ctrl-badge';
+    badge.style.alignSelf = 'center';
+    badge.textContent = `ctrl: ${pairCtrlKind}`;
+    promptsEl.appendChild(badge);
+  }
+  promptsEl.appendChild(makePromptEl('tgt', 'target, α=1', pair.tgt_prompt, tgtAudioFile));
+  card.appendChild(promptsEl);
+
+  // Rest of card via innerHTML
+  const rest = document.createElement('div');
+  rest.innerHTML = `
     <div class="morph-slider-wrap pair-slider-wrap">
       <input type="range" class="morph-slider pair-slider" min="0" max="${nAlpha - 1}" step="1" value="0">
     </div>
@@ -1729,6 +1895,7 @@ function buildPairCard(pair, methods, methodDisplay, rq, dataset) {
     </div>
     <div class="pair-methods-list"></div>
   `;
+  card.appendChild(rest);
 
   const slider   = card.querySelector('.pair-slider');
   const alphaEl  = card.querySelector('.pair-alpha');
