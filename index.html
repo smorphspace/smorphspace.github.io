@@ -458,13 +458,40 @@ footer em { font-style: normal; color: var(--color-red); }
   border-bottom: 1px solid var(--border);
 }
 .pair-player:last-child { border-bottom: none; }
+.pair-section-label {
+  display: flex;
+  align-items: center;
+  gap: .45rem;
+  margin-bottom: .42rem;
+  font-size: .56rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--color-charcoal);
+}
+.pair-section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+.pair-section-label.no-line::after {
+  display: none;
+}
+.pair-inputs-block {
+  margin-bottom: .75rem;
+  padding: .6rem .7rem .68rem;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: var(--card-r);
+}
 .pair-prompts {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: flex-end;
   gap: .5rem;
-  margin-bottom: .8rem;
+  margin-bottom: 0;
 }
 .pair-prompt {
   font-size: .73rem;
@@ -553,10 +580,12 @@ footer em { font-style: normal; color: var(--color-red); }
   border-radius: 2px;
   white-space: nowrap;
 }
-.pair-slider-wrap { margin-bottom: .16rem; padding: .05rem 0 .16rem; }
-.pair-alpha-row { margin-bottom: .45rem; text-align: center; }
+.pair-selected-block { margin-bottom: .06rem; }
+.pair-slider-wrap { margin-bottom: .04rem; padding: .04rem 0 .05rem; }
+.pair-alpha-row { margin-bottom: .18rem; text-align: center; }
 .pair-alpha { font-weight: 700; }
 .pair-transport { gap: .6rem; }
+.pair-methods-block { margin-top: 0; }
 
 /* per-method rows inside a pair card */
 .pair-methods-list { display: flex; flex-direction: column; gap: .4rem; }
@@ -606,18 +635,24 @@ footer em { font-style: normal; color: var(--color-red); }
   margin-top: 3px;
   letter-spacing: .04em;
 }
-.active-spectro-wrap { margin-bottom: .3rem; }
+.active-spectro-wrap { margin-top: 0; margin-bottom: .3rem; }
 .active-spectro-label {
   position: absolute;
   top: 6px;
-  left: 50%;
-  transform: translateX(-50%);
+  left: 8px;
+  right: auto;
+  max-width: calc(100% - 92px);
+  transform: none;
   margin-top: 0;
+  display: inline-block;
   padding: .06rem .38rem;
   border-radius: 2px;
   background: rgba(6, 6, 15, 0.62);
   color: rgba(242, 239, 234, 0.94);
   white-space: nowrap;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
   pointer-events: none;
   z-index: 2;
 }
@@ -667,6 +702,16 @@ footer em { font-style: normal; color: var(--color-red); }
   color: var(--color-charcoal);
   padding: .25rem 0;
   text-align: center;
+}
+@media (max-width: 720px) {
+  .pair-prompts {
+    flex-direction: column;
+    align-items: stretch;
+    gap: .4rem;
+  }
+  .pair-prompt { max-width: none; }
+  .pair-prompt.tgt { text-align: left; }
+  .pair-inputs-block .ctrl-badge { align-self: flex-start !important; }
 }
 </style>
 </head>
@@ -1919,7 +1964,11 @@ function buildPairCard(pair, methods, methodDisplay, rq, dataset) {
     promptsEl.appendChild(badge);
   }
   promptsEl.appendChild(makePromptEl('tgt', 'target, α=1', pair.tgt_prompt, tgtAudioFile, pair.tgt_spectro || null));
-  card.appendChild(promptsEl);
+  const inputsBlock = document.createElement('div');
+  inputsBlock.className = 'pair-inputs-block';
+  inputsBlock.innerHTML = '<div class="pair-section-label">inputs</div>';
+  inputsBlock.appendChild(promptsEl);
+  card.appendChild(inputsBlock);
 
   // Shared active spectrogram above slider
   const activeSpectroWrap = document.createElement('div');
@@ -1930,11 +1979,10 @@ function buildPairCard(pair, methods, methodDisplay, rq, dataset) {
   activeSpectroOverlay.className = 'spectro-overlay';
   const activeSpectroLabel = document.createElement('div');
   activeSpectroLabel.className = 'spectro-label active-spectro-label';
-  activeSpectroLabel.innerHTML = '— no method playing —';
+  activeSpectroLabel.textContent = 'none';
   activeSpectroWrap.appendChild(activeSpectroImg);
   activeSpectroWrap.appendChild(activeSpectroOverlay);
   activeSpectroWrap.appendChild(activeSpectroLabel);
-  card.appendChild(activeSpectroWrap);
 
   const activeOverlay = makeSpectroOverlay(activeSpectroOverlay, () => activePlayer);
   let activePlayer = { playing: false, duration: 0, currentTime: 0 };
@@ -1952,22 +2000,34 @@ function buildPairCard(pair, methods, methodDisplay, rq, dataset) {
     activePlayer = pmp;
   }
 
-  // Rest of card via innerHTML
-  const rest = document.createElement('div');
-  rest.innerHTML = `
+  const selectedBlock = document.createElement('div');
+  selectedBlock.className = 'pair-selected-block';
+  selectedBlock.innerHTML = '<div class="pair-section-label">selected method</div>';
+  selectedBlock.appendChild(activeSpectroWrap);
+
+  const controls = document.createElement('div');
+  controls.innerHTML = `
     <div class="morph-slider-wrap pair-slider-wrap">
       <input type="range" class="morph-slider pair-slider" min="0" max="${nAlpha - 1}" step="1" value="0">
     </div>
     <div class="pair-alpha-row">
       <span class="status-text pair-alpha">&#945; = ${alphas[0].toFixed(2)}</span>
     </div>
+  `;
+  selectedBlock.appendChild(controls);
+  card.appendChild(selectedBlock);
+
+  const methodsBlock = document.createElement('div');
+  methodsBlock.className = 'pair-methods-block';
+  methodsBlock.innerHTML = `
+    <div class="pair-section-label no-line">method comparisons</div>
     <div class="pair-methods-list"></div>
   `;
-  card.appendChild(rest);
+  card.appendChild(methodsBlock);
 
-  const slider   = card.querySelector('.pair-slider');
-  const alphaEl  = card.querySelector('.pair-alpha');
-  const methList = card.querySelector('.pair-methods-list');
+  const slider   = controls.querySelector('.pair-slider');
+  const alphaEl  = controls.querySelector('.pair-alpha');
+  const methList = methodsBlock.querySelector('.pair-methods-list');
 
   const players = {};  // method → { pmp, btn, setPlaying, thumbs }
 
