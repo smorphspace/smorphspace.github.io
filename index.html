@@ -553,8 +553,9 @@ footer em { font-style: normal; color: var(--color-red); }
   border-radius: 2px;
   white-space: nowrap;
 }
-.pair-slider-wrap { margin-bottom: .4rem; padding: .15rem 0 .4rem; }
-.pair-alpha-row { margin-bottom: .65rem; }
+.pair-slider-wrap { margin-bottom: .16rem; padding: .05rem 0 .16rem; }
+.pair-alpha-row { margin-bottom: .45rem; text-align: center; }
+.pair-alpha { font-weight: 700; }
 .pair-transport { gap: .6rem; }
 
 /* per-method rows inside a pair card */
@@ -605,11 +606,29 @@ footer em { font-style: normal; color: var(--color-red); }
   margin-top: 3px;
   letter-spacing: .04em;
 }
+.active-spectro-wrap { margin-bottom: .3rem; }
+.active-spectro-label {
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 0;
+  padding: .06rem .38rem;
+  border-radius: 2px;
+  background: rgba(6, 6, 15, 0.62);
+  color: rgba(242, 239, 234, 0.94);
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 2;
+}
 .spectro-strip,
 .ctrl-strip {
   display: flex;
   flex-direction: row;
   gap: 2px;
+  padding: 0 8px;
+  margin-left: calc(-.7rem - 2px);
+  margin-right: 0;
 }
 .spectro-strip { margin-top: 6px; }
 .ctrl-strip    { margin-top: 2px; margin-bottom: 2px; }
@@ -1904,14 +1923,13 @@ function buildPairCard(pair, methods, methodDisplay, rq, dataset) {
 
   // Shared active spectrogram above slider
   const activeSpectroWrap = document.createElement('div');
-  activeSpectroWrap.className = 'spectro-wrap';
-  activeSpectroWrap.style.marginBottom = '.75rem';
+  activeSpectroWrap.className = 'spectro-wrap active-spectro-wrap';
   const activeSpectroImg = document.createElement('img');
   activeSpectroImg.className = 'spectro-canvas';
   const activeSpectroOverlay = document.createElement('canvas');
   activeSpectroOverlay.className = 'spectro-overlay';
   const activeSpectroLabel = document.createElement('div');
-  activeSpectroLabel.className = 'spectro-label';
+  activeSpectroLabel.className = 'spectro-label active-spectro-label';
   activeSpectroLabel.innerHTML = '— no method playing —';
   activeSpectroWrap.appendChild(activeSpectroImg);
   activeSpectroWrap.appendChild(activeSpectroOverlay);
