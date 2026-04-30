@@ -333,7 +333,8 @@
                   "audio/paper/rq1/nsynth/p00/crossfade/ctrl_10.png"
                 ]
               }
-            }
+            },
+            "ctrl_signal_png": "audio/paper/rq1/nsynth/p00/_ctrl_signal.png"
           },
           {
             "pair_id": "nsynth_031_a-warm-mellow-brass_to_a-deep-resonant-mallet",
@@ -556,7 +557,8 @@
                   "audio/paper/rq1/nsynth/p01/crossfade/ctrl_10.png"
                 ]
               }
-            }
+            },
+            "ctrl_signal_png": "audio/paper/rq1/nsynth/p01/_ctrl_signal.png"
           },
           {
             "pair_id": "nsynth_078_a-synthetic-flute-emits_to_a-bright-acoustic-guitar",
@@ -779,7 +781,8 @@
                   "audio/paper/rq1/nsynth/p02/crossfade/ctrl_10.png"
                 ]
               }
-            }
+            },
+            "ctrl_signal_png": "audio/paper/rq1/nsynth/p02/_ctrl_signal.png"
           }
         ]
       },
@@ -1013,7 +1016,8 @@
                   "audio/paper/rq1/clotho/p00/crossfade/ctrl_10.png"
                 ]
               }
-            }
+            },
+            "ctrl_signal_png": "audio/paper/rq1/clotho/p00/_ctrl_signal.png"
           },
           {
             "pair_id": "clotho_072_a-large-truck-moving_to_a-group-of-motorcycles",
@@ -1236,7 +1240,8 @@
                   "audio/paper/rq1/clotho/p01/crossfade/ctrl_10.png"
                 ]
               }
-            }
+            },
+            "ctrl_signal_png": "audio/paper/rq1/clotho/p01/_ctrl_signal.png"
           },
           {
             "pair_id": "clotho_079_a-rail-car-passes_to_a-train-horn-rings",
@@ -1459,7 +1464,8 @@
                   "audio/paper/rq1/clotho/p02/crossfade/ctrl_10.png"
                 ]
               }
-            }
+            },
+            "ctrl_signal_png": "audio/paper/rq1/clotho/p02/_ctrl_signal.png"
           }
         ]
       }
@@ -1588,7 +1594,8 @@
             },
             "src_spectro": "audio/paper/rq2/nsynth/p00/ours/spectro_10.png",
             "src_audio_real": "audio/paper/rq2/nsynth/p00/_real_src.ogg",
-            "src_spectro_real": "audio/paper/rq2/nsynth/p00/_real_src_spectro.png"
+            "src_spectro_real": "audio/paper/rq2/nsynth/p00/_real_src_spectro.png",
+            "ctrl_signal_png": "audio/paper/rq2/nsynth/p00/_ctrl_signal.png"
           },
           {
             "pair_id": "nsynth_096_an-electronic-guitar-note_to_a-mallet-acoustic-instrument",
@@ -1706,7 +1713,8 @@
             },
             "src_spectro": "audio/paper/rq2/nsynth/p01/ours/spectro_10.png",
             "src_audio_real": "audio/paper/rq2/nsynth/p01/_real_src.ogg",
-            "src_spectro_real": "audio/paper/rq2/nsynth/p01/_real_src_spectro.png"
+            "src_spectro_real": "audio/paper/rq2/nsynth/p01/_real_src_spectro.png",
+            "ctrl_signal_png": "audio/paper/rq2/nsynth/p01/_ctrl_signal.png"
           },
           {
             "pair_id": "nsynth_074_a-plucked-string-instrument_to_an-electronic-organ-note",
@@ -1824,7 +1832,8 @@
             },
             "src_spectro": "audio/paper/rq2/nsynth/p02/ours/spectro_10.png",
             "src_audio_real": "audio/paper/rq2/nsynth/p02/_real_src.ogg",
-            "src_spectro_real": "audio/paper/rq2/nsynth/p02/_real_src_spectro.png"
+            "src_spectro_real": "audio/paper/rq2/nsynth/p02/_real_src_spectro.png",
+            "ctrl_signal_png": "audio/paper/rq2/nsynth/p02/_ctrl_signal.png"
           }
         ]
       },
@@ -1951,7 +1960,8 @@
             },
             "src_spectro": "audio/paper/rq2/nsynth2clotho/p00/ours/spectro_10.png",
             "src_audio_real": "audio/paper/rq2/nsynth2clotho/p00/_real_src.ogg",
-            "src_spectro_real": "audio/paper/rq2/nsynth2clotho/p00/_real_src_spectro.png"
+            "src_spectro_real": "audio/paper/rq2/nsynth2clotho/p00/_real_src_spectro.png",
+            "ctrl_signal_png": "audio/paper/rq2/nsynth2clotho/p00/_ctrl_signal.png"
           },
           {
             "pair_id": "nsynth2clotho_136_a-synthetic-flute-note_to_a-person-is-attempting",
@@ -2069,7 +2079,8 @@
             },
             "src_spectro": "audio/paper/rq2/nsynth2clotho/p01/ours/spectro_10.png",
             "src_audio_real": "audio/paper/rq2/nsynth2clotho/p01/_real_src.ogg",
-            "src_spectro_real": "audio/paper/rq2/nsynth2clotho/p01/_real_src_spectro.png"
+            "src_spectro_real": "audio/paper/rq2/nsynth2clotho/p01/_real_src_spectro.png",
+            "ctrl_signal_png": "audio/paper/rq2/nsynth2clotho/p01/_ctrl_signal.png"
           },
           {
             "pair_id": "nsynth2clotho_091_a-smooth-brass-note_to_a-conveyor-belt-is",
@@ -2187,7 +2198,8 @@
             },
             "src_spectro": "audio/paper/rq2/nsynth2clotho/p02/ours/spectro_10.png",
             "src_audio_real": "audio/paper/rq2/nsynth2clotho/p02/_real_src.ogg",
-            "src_spectro_real": "audio/paper/rq2/nsynth2clotho/p02/_real_src_spectro.png"
+            "src_spectro_real": "audio/paper/rq2/nsynth2clotho/p02/_real_src_spectro.png",
+            "ctrl_signal_png": "audio/paper/rq2/nsynth2clotho/p02/_ctrl_signal.png"
           }
         ]
       },
@@ -2314,7 +2326,8 @@
             },
             "src_spectro": "audio/paper/rq2/clotho/p00/ours/spectro_10.png",
             "src_audio_real": "audio/paper/rq2/clotho/p00/_real_src.ogg",
-            "src_spectro_real": "audio/paper/rq2/clotho/p00/_real_src_spectro.png"
+            "src_spectro_real": "audio/paper/rq2/clotho/p00/_real_src_spectro.png",
+            "ctrl_signal_png": "audio/paper/rq2/clotho/p00/_ctrl_signal.png"
           },
           {
             "pair_id": "clotho_028_a-person-is-chewing_to_a-metal-rod-was",
@@ -2432,7 +2445,8 @@
             },
             "src_spectro": "audio/paper/rq2/clotho/p01/ours/spectro_10.png",
             "src_audio_real": "audio/paper/rq2/clotho/p01/_real_src.ogg",
-            "src_spectro_real": "audio/paper/rq2/clotho/p01/_real_src_spectro.png"
+            "src_spectro_real": "audio/paper/rq2/clotho/p01/_real_src_spectro.png",
+            "ctrl_signal_png": "audio/paper/rq2/clotho/p01/_ctrl_signal.png"
           },
           {
             "pair_id": "clotho_031_someone-is-washing-a_to_in-a-high-place",
@@ -2550,7 +2564,8 @@
             },
             "src_spectro": "audio/paper/rq2/clotho/p02/ours/spectro_10.png",
             "src_audio_real": "audio/paper/rq2/clotho/p02/_real_src.ogg",
-            "src_spectro_real": "audio/paper/rq2/clotho/p02/_real_src_spectro.png"
+            "src_spectro_real": "audio/paper/rq2/clotho/p02/_real_src_spectro.png",
+            "ctrl_signal_png": "audio/paper/rq2/clotho/p02/_ctrl_signal.png"
           }
         ]
       },
@@ -2677,7 +2692,8 @@
             },
             "src_spectro": "audio/paper/rq2/drumset2clotho/p00/ours/spectro_10.png",
             "src_audio_real": "audio/paper/rq2/drumset2clotho/p00/_real_src.ogg",
-            "src_spectro_real": "audio/paper/rq2/drumset2clotho/p00/_real_src_spectro.png"
+            "src_spectro_real": "audio/paper/rq2/drumset2clotho/p00/_real_src_spectro.png",
+            "ctrl_signal_png": "audio/paper/rq2/drumset2clotho/p00/_ctrl_signal.png"
           },
           {
             "pair_id": "drumset2clotho_002_a-drum-loop-metal_to_a-drop-of-water",
@@ -2795,7 +2811,8 @@
             },
             "src_spectro": "audio/paper/rq2/drumset2clotho/p01/ours/spectro_10.png",
             "src_audio_real": "audio/paper/rq2/drumset2clotho/p01/_real_src.ogg",
-            "src_spectro_real": "audio/paper/rq2/drumset2clotho/p01/_real_src_spectro.png"
+            "src_spectro_real": "audio/paper/rq2/drumset2clotho/p01/_real_src_spectro.png",
+            "ctrl_signal_png": "audio/paper/rq2/drumset2clotho/p01/_ctrl_signal.png"
           },
           {
             "pair_id": "drumset2clotho_041_a-drum-loop-buzzypercussion_to_a-group-of-birds",
@@ -2913,7 +2930,8 @@
             },
             "src_spectro": "audio/paper/rq2/drumset2clotho/p02/ours/spectro_10.png",
             "src_audio_real": "audio/paper/rq2/drumset2clotho/p02/_real_src.ogg",
-            "src_spectro_real": "audio/paper/rq2/drumset2clotho/p02/_real_src_spectro.png"
+            "src_spectro_real": "audio/paper/rq2/drumset2clotho/p02/_real_src_spectro.png",
+            "ctrl_signal_png": "audio/paper/rq2/drumset2clotho/p02/_ctrl_signal.png"
           }
         ]
       }
@@ -3045,7 +3063,8 @@
             "src_audio_real": "audio/paper/rq3/nsynth/p00/_real_src.ogg",
             "tgt_audio_real": "audio/paper/rq3/nsynth/p00/_real_tgt.ogg",
             "src_spectro_real": "audio/paper/rq3/nsynth/p00/_real_src_spectro.png",
-            "tgt_spectro_real": "audio/paper/rq3/nsynth/p00/_real_tgt_spectro.png"
+            "tgt_spectro_real": "audio/paper/rq3/nsynth/p00/_real_tgt_spectro.png",
+            "ctrl_signal_png": "audio/paper/rq3/nsynth/p00/_ctrl_signal.png"
           },
           {
             "pair_id": "nsynth_034_an-acoustic-guitar-note_to_a-synthetic-bass-note",
@@ -3166,7 +3185,8 @@
             "src_audio_real": "audio/paper/rq3/nsynth/p01/_real_src.ogg",
             "tgt_audio_real": "audio/paper/rq3/nsynth/p01/_real_tgt.ogg",
             "src_spectro_real": "audio/paper/rq3/nsynth/p01/_real_src_spectro.png",
-            "tgt_spectro_real": "audio/paper/rq3/nsynth/p01/_real_tgt_spectro.png"
+            "tgt_spectro_real": "audio/paper/rq3/nsynth/p01/_real_tgt_spectro.png",
+            "ctrl_signal_png": "audio/paper/rq3/nsynth/p01/_ctrl_signal.png"
           },
           {
             "pair_id": "nsynth_065_an-electronic-keyboard-emits_to_a-clear-airy-acoustic",
@@ -3287,7 +3307,8 @@
             "src_audio_real": "audio/paper/rq3/nsynth/p02/_real_src.ogg",
             "tgt_audio_real": "audio/paper/rq3/nsynth/p02/_real_tgt.ogg",
             "src_spectro_real": "audio/paper/rq3/nsynth/p02/_real_src_spectro.png",
-            "tgt_spectro_real": "audio/paper/rq3/nsynth/p02/_real_tgt_spectro.png"
+            "tgt_spectro_real": "audio/paper/rq3/nsynth/p02/_real_tgt_spectro.png",
+            "ctrl_signal_png": "audio/paper/rq3/nsynth/p02/_ctrl_signal.png"
           }
         ]
       },
@@ -3417,7 +3438,8 @@
             "src_audio_real": "audio/paper/rq3/nsynth2clotho/p00/_real_src.ogg",
             "tgt_audio_real": "audio/paper/rq3/nsynth2clotho/p00/_real_tgt.ogg",
             "src_spectro_real": "audio/paper/rq3/nsynth2clotho/p00/_real_src_spectro.png",
-            "tgt_spectro_real": "audio/paper/rq3/nsynth2clotho/p00/_real_tgt_spectro.png"
+            "tgt_spectro_real": "audio/paper/rq3/nsynth2clotho/p00/_real_tgt_spectro.png",
+            "ctrl_signal_png": "audio/paper/rq3/nsynth2clotho/p00/_ctrl_signal.png"
           },
           {
             "pair_id": "nsynth2clotho_091_a-smooth-brass-note_to_a-conveyor-belt-is",
@@ -3538,7 +3560,8 @@
             "src_audio_real": "audio/paper/rq3/nsynth2clotho/p01/_real_src.ogg",
             "tgt_audio_real": "audio/paper/rq3/nsynth2clotho/p01/_real_tgt.ogg",
             "src_spectro_real": "audio/paper/rq3/nsynth2clotho/p01/_real_src_spectro.png",
-            "tgt_spectro_real": "audio/paper/rq3/nsynth2clotho/p01/_real_tgt_spectro.png"
+            "tgt_spectro_real": "audio/paper/rq3/nsynth2clotho/p01/_real_tgt_spectro.png",
+            "ctrl_signal_png": "audio/paper/rq3/nsynth2clotho/p01/_ctrl_signal.png"
           },
           {
             "pair_id": "nsynth2clotho_165_an-acoustic-guitar-note_to_a-hammer-being-struck",
@@ -3659,7 +3682,8 @@
             "src_audio_real": "audio/paper/rq3/nsynth2clotho/p02/_real_src.ogg",
             "tgt_audio_real": "audio/paper/rq3/nsynth2clotho/p02/_real_tgt.ogg",
             "src_spectro_real": "audio/paper/rq3/nsynth2clotho/p02/_real_src_spectro.png",
-            "tgt_spectro_real": "audio/paper/rq3/nsynth2clotho/p02/_real_tgt_spectro.png"
+            "tgt_spectro_real": "audio/paper/rq3/nsynth2clotho/p02/_real_tgt_spectro.png",
+            "ctrl_signal_png": "audio/paper/rq3/nsynth2clotho/p02/_ctrl_signal.png"
           }
         ]
       },
@@ -3789,7 +3813,8 @@
             "src_audio_real": "audio/paper/rq3/clotho/p00/_real_src.ogg",
             "tgt_audio_real": "audio/paper/rq3/clotho/p00/_real_tgt.ogg",
             "src_spectro_real": "audio/paper/rq3/clotho/p00/_real_src_spectro.png",
-            "tgt_spectro_real": "audio/paper/rq3/clotho/p00/_real_tgt_spectro.png"
+            "tgt_spectro_real": "audio/paper/rq3/clotho/p00/_real_tgt_spectro.png",
+            "ctrl_signal_png": "audio/paper/rq3/clotho/p00/_ctrl_signal.png"
           },
           {
             "pair_id": "clotho_063_a-person-is-using_to_a-pencil-scratches-rhythmically",
@@ -3910,7 +3935,8 @@
             "src_audio_real": "audio/paper/rq3/clotho/p01/_real_src.ogg",
             "tgt_audio_real": "audio/paper/rq3/clotho/p01/_real_tgt.ogg",
             "src_spectro_real": "audio/paper/rq3/clotho/p01/_real_src_spectro.png",
-            "tgt_spectro_real": "audio/paper/rq3/clotho/p01/_real_tgt_spectro.png"
+            "tgt_spectro_real": "audio/paper/rq3/clotho/p01/_real_tgt_spectro.png",
+            "ctrl_signal_png": "audio/paper/rq3/clotho/p01/_ctrl_signal.png"
           },
           {
             "pair_id": "clotho_035_a-bus-was-speedily_to_a-person-is-dragging",
@@ -4031,7 +4057,8 @@
             "src_audio_real": "audio/paper/rq3/clotho/p02/_real_src.ogg",
             "tgt_audio_real": "audio/paper/rq3/clotho/p02/_real_tgt.ogg",
             "src_spectro_real": "audio/paper/rq3/clotho/p02/_real_src_spectro.png",
-            "tgt_spectro_real": "audio/paper/rq3/clotho/p02/_real_tgt_spectro.png"
+            "tgt_spectro_real": "audio/paper/rq3/clotho/p02/_real_tgt_spectro.png",
+            "ctrl_signal_png": "audio/paper/rq3/clotho/p02/_ctrl_signal.png"
           }
         ]
       },
@@ -4161,7 +4188,8 @@
             "src_audio_real": "audio/paper/rq3/drumset2clotho/p00/_real_src.ogg",
             "tgt_audio_real": "audio/paper/rq3/drumset2clotho/p00/_real_tgt.ogg",
             "src_spectro_real": "audio/paper/rq3/drumset2clotho/p00/_real_src_spectro.png",
-            "tgt_spectro_real": "audio/paper/rq3/drumset2clotho/p00/_real_tgt_spectro.png"
+            "tgt_spectro_real": "audio/paper/rq3/drumset2clotho/p00/_real_tgt_spectro.png",
+            "ctrl_signal_png": "audio/paper/rq3/drumset2clotho/p00/_ctrl_signal.png"
           },
           {
             "pair_id": "drumset2clotho_083_a-drum-loop-duppyrnb01_to_a-high-pitched-squeal",
@@ -4282,7 +4310,8 @@
             "src_audio_real": "audio/paper/rq3/drumset2clotho/p01/_real_src.ogg",
             "tgt_audio_real": "audio/paper/rq3/drumset2clotho/p01/_real_tgt.ogg",
             "src_spectro_real": "audio/paper/rq3/drumset2clotho/p01/_real_src_spectro.png",
-            "tgt_spectro_real": "audio/paper/rq3/drumset2clotho/p01/_real_tgt_spectro.png"
+            "tgt_spectro_real": "audio/paper/rq3/drumset2clotho/p01/_real_tgt_spectro.png",
+            "ctrl_signal_png": "audio/paper/rq3/drumset2clotho/p01/_ctrl_signal.png"
           },
           {
             "pair_id": "drumset2clotho_042_a-drum-loop-distopia_to_a-person-is-walking",
@@ -4403,7 +4432,8 @@
             "src_audio_real": "audio/paper/rq3/drumset2clotho/p02/_real_src.ogg",
             "tgt_audio_real": "audio/paper/rq3/drumset2clotho/p02/_real_tgt.ogg",
             "src_spectro_real": "audio/paper/rq3/drumset2clotho/p02/_real_src_spectro.png",
-            "tgt_spectro_real": "audio/paper/rq3/drumset2clotho/p02/_real_tgt_spectro.png"
+            "tgt_spectro_real": "audio/paper/rq3/drumset2clotho/p02/_real_tgt_spectro.png",
+            "ctrl_signal_png": "audio/paper/rq3/drumset2clotho/p02/_ctrl_signal.png"
           }
         ]
       }

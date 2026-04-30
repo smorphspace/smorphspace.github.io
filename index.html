@@ -600,6 +600,21 @@ footer em { font-style: normal; color: var(--color-red); }
   border-radius: 2px;
   white-space: nowrap;
 }
+.ctrl-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-self: center;
+  gap: .25rem;
+  min-width: 140px;
+  max-width: 220px;
+}
+.ctrl-signal-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 2px;
+}
 .pair-selected-block { margin-bottom: .06rem; }
 .pair-slider-wrap { margin-bottom: .04rem; padding: .04rem 0 .05rem; }
 .pair-alpha-row { margin-bottom: .18rem; text-align: center; }
@@ -2004,11 +2019,21 @@ function buildPairCard(pair, methods, methodDisplay, rq, dataset) {
 
   promptsEl.appendChild(makePromptEl('src', 'source, α=0', pair.src_prompt, srcAudioFile, pair.src_spectro_real || pair.src_spectro || null));
   if (pairCtrlKind) {
+    const ctrlStack = document.createElement('div');
+    ctrlStack.className = 'ctrl-stack';
     const badge = document.createElement('span');
     badge.className = 'ctrl-badge';
-    badge.style.alignSelf = 'center';
     badge.textContent = `ctrl: ${pairCtrlKind}`;
-    promptsEl.appendChild(badge);
+    ctrlStack.appendChild(badge);
+    if (pair.ctrl_signal_png) {
+      const img = document.createElement('img');
+      img.className = 'ctrl-signal-img';
+      img.dataset.ctrl = pairCtrlKind;
+      img.src = pair.ctrl_signal_png;
+      img.alt = `${pairCtrlKind} control signal`;
+      ctrlStack.appendChild(img);
+    }
+    promptsEl.appendChild(ctrlStack);
   }
   promptsEl.appendChild(makePromptEl('tgt', 'target, α=1', pair.tgt_prompt, tgtAudioFile, pair.tgt_spectro_real || pair.tgt_spectro || null));
   const inputsBlock = document.createElement('div');
