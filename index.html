@@ -1394,14 +1394,17 @@ function _smRender(canvas, magnitudes, numBins, numFrames, maxWidth) {
   const ctx2d = canvas.getContext('2d');
   const displayW = (maxWidth && maxWidth > 32 && maxWidth < numFrames) ? maxWidth : numFrames;
   canvas.width = displayW; canvas.height = numBins;
-  const stride = Math.max(1, Math.ceil(numFrames / displayW));
   let globalMax = 0;
   for (let i = 0; i < magnitudes.length; i++) if (magnitudes[i] > globalMax) globalMax = magnitudes[i];
   const norm = globalMax > 0 ? 1 / Math.log1p(globalMax) : 1;
   const img = ctx2d.createImageData(displayW, numBins);
   const px = img.data;
+  // Map column x ∈ [0, displayW) to frame ∈ [0, numFrames) proportionally so
+  // the last column hits the last frame. Using integer ceil-stride here would
+  // wrap past numFrames-1 for ~40% of the canvas and make a "blank stripe".
   for (let x = 0; x < displayW; x++) {
-    const frame = Math.min(x * stride, numFrames - 1), fOff = frame * numBins;
+    const frame = Math.min(Math.floor(x * numFrames / displayW), numFrames - 1);
+    const fOff = frame * numBins;
     for (let y = 0; y < numBins; y++) {
       const bin = numBins - 1 - y, mag = magnitudes[fOff + bin];
       const [r,g,b] = _smColor(Math.log1p(mag) * norm);
