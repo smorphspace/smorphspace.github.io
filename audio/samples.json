@@ -13,7 +13,7 @@
     "nsynth": "NSynth&#8211;NSynth",
     "clotho": "Clotho&#8211;Clotho",
     "nsynth2clotho": "NSynth&#8211;Clotho",
-    "drumset2clotho": "Drumset&#8211;Clotho"
+    "drumset2clotho": "FSL-Clotho"
   },
   "method_display": {
     "ours": "SMORPH<sub><em>e</em></sub> (ours)",
