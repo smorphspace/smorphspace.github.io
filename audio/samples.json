@@ -1508,7 +1508,8 @@
                   "audio/paper/rq2/nsynth/p00/sdedit/ctrl_00.png"
                 ]
               }
-            }
+            },
+            "src_spectro": "audio/paper/rq2/nsynth/p00/ours/spectro_10.png"
           },
           {
             "pair_id": "nsynth_096_an-electronic-guitar-note_to_a-mallet-acoustic-instrument",
@@ -1623,7 +1624,8 @@
                   "audio/paper/rq2/nsynth/p01/sdedit/ctrl_00.png"
                 ]
               }
-            }
+            },
+            "src_spectro": "audio/paper/rq2/nsynth/p01/ours/spectro_10.png"
           },
           {
             "pair_id": "nsynth_074_a-plucked-string-instrument_to_an-electronic-organ-note",
@@ -1738,7 +1740,8 @@
                   "audio/paper/rq2/nsynth/p02/sdedit/ctrl_00.png"
                 ]
               }
-            }
+            },
+            "src_spectro": "audio/paper/rq2/nsynth/p02/ours/spectro_10.png"
           }
         ]
       },
@@ -1862,7 +1865,8 @@
                   "audio/paper/rq2/nsynth2clotho/p00/sdedit/ctrl_00.png"
                 ]
               }
-            }
+            },
+            "src_spectro": "audio/paper/rq2/nsynth2clotho/p00/ours/spectro_10.png"
           },
           {
             "pair_id": "nsynth2clotho_136_a-synthetic-flute-note_to_a-person-is-attempting",
@@ -1977,7 +1981,8 @@
                   "audio/paper/rq2/nsynth2clotho/p01/sdedit/ctrl_00.png"
                 ]
               }
-            }
+            },
+            "src_spectro": "audio/paper/rq2/nsynth2clotho/p01/ours/spectro_10.png"
           },
           {
             "pair_id": "nsynth2clotho_091_a-smooth-brass-note_to_a-conveyor-belt-is",
@@ -2092,7 +2097,8 @@
                   "audio/paper/rq2/nsynth2clotho/p02/sdedit/ctrl_00.png"
                 ]
               }
-            }
+            },
+            "src_spectro": "audio/paper/rq2/nsynth2clotho/p02/ours/spectro_10.png"
           }
         ]
       },
@@ -2216,7 +2222,8 @@
                   "audio/paper/rq2/clotho/p00/sdedit/ctrl_00.png"
                 ]
               }
-            }
+            },
+            "src_spectro": "audio/paper/rq2/clotho/p00/ours/spectro_10.png"
           },
           {
             "pair_id": "clotho_028_a-person-is-chewing_to_a-metal-rod-was",
@@ -2331,7 +2338,8 @@
                   "audio/paper/rq2/clotho/p01/sdedit/ctrl_00.png"
                 ]
               }
-            }
+            },
+            "src_spectro": "audio/paper/rq2/clotho/p01/ours/spectro_10.png"
           },
           {
             "pair_id": "clotho_031_someone-is-washing-a_to_in-a-high-place",
@@ -2446,7 +2454,8 @@
                   "audio/paper/rq2/clotho/p02/sdedit/ctrl_00.png"
                 ]
               }
-            }
+            },
+            "src_spectro": "audio/paper/rq2/clotho/p02/ours/spectro_10.png"
           }
         ]
       },
@@ -2570,7 +2579,8 @@
                   "audio/paper/rq2/drumset2clotho/p00/sdedit/ctrl_00.png"
                 ]
               }
-            }
+            },
+            "src_spectro": "audio/paper/rq2/drumset2clotho/p00/ours/spectro_10.png"
           },
           {
             "pair_id": "drumset2clotho_002_a-drum-loop-metal_to_a-drop-of-water",
@@ -2685,7 +2695,8 @@
                   "audio/paper/rq2/drumset2clotho/p01/sdedit/ctrl_00.png"
                 ]
               }
-            }
+            },
+            "src_spectro": "audio/paper/rq2/drumset2clotho/p01/ours/spectro_10.png"
           },
           {
             "pair_id": "drumset2clotho_041_a-drum-loop-buzzypercussion_to_a-group-of-birds",
@@ -2800,7 +2811,8 @@
                   "audio/paper/rq2/drumset2clotho/p02/sdedit/ctrl_00.png"
                 ]
               }
-            }
+            },
+            "src_spectro": "audio/paper/rq2/drumset2clotho/p02/ours/spectro_10.png"
           }
         ]
       }
@@ -2926,7 +2938,9 @@
                   "audio/paper/rq3/nsynth/p00/sdedit_flam/ctrl_00.png"
                 ]
               }
-            }
+            },
+            "src_spectro": "audio/paper/rq3/nsynth/p00/flam_flam/spectro_00.png",
+            "tgt_spectro": "audio/paper/rq3/nsynth/p00/flam_flam/spectro_10.png"
           },
           {
             "pair_id": "nsynth_034_an-acoustic-guitar-note_to_a-synthetic-bass-note",
@@ -3041,7 +3055,9 @@
                   "audio/paper/rq3/nsynth/p01/sdedit_flam/ctrl_00.png"
                 ]
               }
-            }
+            },
+            "src_spectro": "audio/paper/rq3/nsynth/p01/flam_flam/spectro_00.png",
+            "tgt_spectro": "audio/paper/rq3/nsynth/p01/flam_flam/spectro_10.png"
           },
           {
             "pair_id": "nsynth_065_an-electronic-keyboard-emits_to_a-clear-airy-acoustic",
@@ -3156,7 +3172,9 @@
                   "audio/paper/rq3/nsynth/p02/sdedit_flam/ctrl_00.png"
                 ]
               }
-            }
+            },
+            "src_spectro": "audio/paper/rq3/nsynth/p02/flam_flam/spectro_00.png",
+            "tgt_spectro": "audio/paper/rq3/nsynth/p02/flam_flam/spectro_10.png"
           }
         ]
       },
@@ -3280,7 +3298,9 @@
                   "audio/paper/rq3/nsynth2clotho/p00/sdedit_flam/ctrl_00.png"
                 ]
               }
-            }
+            },
+            "src_spectro": "audio/paper/rq3/nsynth2clotho/p00/flam_flam/spectro_00.png",
+            "tgt_spectro": "audio/paper/rq3/nsynth2clotho/p00/flam_flam/spectro_10.png"
           },
           {
             "pair_id": "nsynth2clotho_091_a-smooth-brass-note_to_a-conveyor-belt-is",
@@ -3395,7 +3415,9 @@
                   "audio/paper/rq3/nsynth2clotho/p01/sdedit_flam/ctrl_00.png"
                 ]
               }
-            }
+            },
+            "src_spectro": "audio/paper/rq3/nsynth2clotho/p01/flam_flam/spectro_00.png",
+            "tgt_spectro": "audio/paper/rq3/nsynth2clotho/p01/flam_flam/spectro_10.png"
           },
           {
             "pair_id": "nsynth2clotho_165_an-acoustic-guitar-note_to_a-hammer-being-struck",
@@ -3510,7 +3532,9 @@
                   "audio/paper/rq3/nsynth2clotho/p02/sdedit_flam/ctrl_00.png"
                 ]
               }
-            }
+            },
+            "src_spectro": "audio/paper/rq3/nsynth2clotho/p02/flam_flam/spectro_00.png",
+            "tgt_spectro": "audio/paper/rq3/nsynth2clotho/p02/flam_flam/spectro_10.png"
           }
         ]
       },
@@ -3634,7 +3658,9 @@
                   "audio/paper/rq3/clotho/p00/sdedit_flam/ctrl_00.png"
                 ]
               }
-            }
+            },
+            "src_spectro": "audio/paper/rq3/clotho/p00/flam_flam/spectro_00.png",
+            "tgt_spectro": "audio/paper/rq3/clotho/p00/flam_flam/spectro_10.png"
           },
           {
             "pair_id": "clotho_063_a-person-is-using_to_a-pencil-scratches-rhythmically",
@@ -3749,7 +3775,9 @@
                   "audio/paper/rq3/clotho/p01/sdedit_flam/ctrl_00.png"
                 ]
               }
-            }
+            },
+            "src_spectro": "audio/paper/rq3/clotho/p01/flam_flam/spectro_00.png",
+            "tgt_spectro": "audio/paper/rq3/clotho/p01/flam_flam/spectro_10.png"
           },
           {
             "pair_id": "clotho_035_a-bus-was-speedily_to_a-person-is-dragging",
@@ -3864,7 +3892,9 @@
                   "audio/paper/rq3/clotho/p02/sdedit_flam/ctrl_00.png"
                 ]
               }
-            }
+            },
+            "src_spectro": "audio/paper/rq3/clotho/p02/flam_flam/spectro_00.png",
+            "tgt_spectro": "audio/paper/rq3/clotho/p02/flam_flam/spectro_10.png"
           }
         ]
       },
@@ -3988,7 +4018,9 @@
                   "audio/paper/rq3/drumset2clotho/p00/sdedit_flam/ctrl_00.png"
                 ]
               }
-            }
+            },
+            "src_spectro": "audio/paper/rq3/drumset2clotho/p00/flam_flam/spectro_00.png",
+            "tgt_spectro": "audio/paper/rq3/drumset2clotho/p00/flam_flam/spectro_10.png"
           },
           {
             "pair_id": "drumset2clotho_083_a-drum-loop-duppyrnb01_to_a-high-pitched-squeal",
@@ -4103,7 +4135,9 @@
                   "audio/paper/rq3/drumset2clotho/p01/sdedit_flam/ctrl_00.png"
                 ]
               }
-            }
+            },
+            "src_spectro": "audio/paper/rq3/drumset2clotho/p01/flam_flam/spectro_00.png",
+            "tgt_spectro": "audio/paper/rq3/drumset2clotho/p01/flam_flam/spectro_10.png"
           },
           {
             "pair_id": "drumset2clotho_042_a-drum-loop-distopia_to_a-person-is-walking",
@@ -4218,7 +4252,9 @@
                   "audio/paper/rq3/drumset2clotho/p02/sdedit_flam/ctrl_00.png"
                 ]
               }
-            }
+            },
+            "src_spectro": "audio/paper/rq3/drumset2clotho/p02/flam_flam/spectro_00.png",
+            "tgt_spectro": "audio/paper/rq3/drumset2clotho/p02/flam_flam/spectro_10.png"
           }
         ]
       }

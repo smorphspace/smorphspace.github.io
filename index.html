@@ -508,6 +508,18 @@ footer em { font-style: normal; color: var(--color-red); }
 }
 .ep-play-btn:hover { background: var(--link); border-color: var(--link); color: #fff; }
 .ep-play-btn.playing { background: var(--link); border-color: var(--link); color: #fff; }
+.ep-wip-badge {
+  position: absolute;
+  top: 4px; left: 4px;
+  font-size: .55rem;
+  font-style: italic;
+  color: var(--color-sunflower);
+  background: rgba(0,0,0,0.55);
+  padding: .05rem .3rem;
+  border-radius: 2px;
+  pointer-events: none;
+  letter-spacing: .04em;
+}
 .ctrl-badge {
   font-size: .58rem;
   font-style: italic;
@@ -1731,9 +1743,11 @@ class WaveformPlayer {
  * Attaches to a container element; call .build() to populate it.
  */
 class EndpointPlayer {
-  constructor(file, color) {
-    this._file    = file;
-    this._color   = color;
+  constructor(file, color, spectroSrc = null, wip = false) {
+    this._file       = file;
+    this._color      = color;
+    this._spectroSrc = spectroSrc;
+    this._wip        = wip;
     this._buffer  = null;
     this._source  = null;
     this._gain    = null;
@@ -1756,13 +1770,28 @@ class EndpointPlayer {
     const spectroWrap = document.createElement('div');
     spectroWrap.className = 'ep-spectro-wrap';
 
-    const spectroCanvas = document.createElement('canvas');
-    spectroCanvas.className = 'ep-spectro-canvas';
+    let spectroCanvas = null;
+    if (this._spectroSrc) {
+      const img = document.createElement('img');
+      img.className = 'ep-spectro-canvas';
+      img.src = this._spectroSrc;
+      img.alt = 'spectrogram';
+      spectroWrap.appendChild(img);
+    } else {
+      spectroCanvas = document.createElement('canvas');
+      spectroCanvas.className = 'ep-spectro-canvas';
+      spectroWrap.appendChild(spectroCanvas);
+    }
+
+    if (this._wip) {
+      const badge = document.createElement('span');
+      badge.className = 'ep-wip-badge';
+      badge.textContent = 'wip';
+      spectroWrap.appendChild(badge);
+    }
 
     const overlayCanvas = document.createElement('canvas');
     overlayCanvas.className = 'ep-spectro-overlay';
-
-    spectroWrap.appendChild(spectroCanvas);
     spectroWrap.appendChild(overlayCanvas);
 
     const btn = document.createElement('button');
@@ -1787,8 +1816,10 @@ class EndpointPlayer {
         const ctx = getPaperACX();
         const resp = await fetch(this._file);
         this._buffer = await ctx.decodeAudioData(await resp.arrayBuffer());
-        const stft = _smComputeSTFT(this._buffer, 512, 128);
-        _smRender(spectroCanvas, stft.magnitudes, stft.numBins, stft.numFrames, 400);
+        if (spectroCanvas) {
+          const stft = _smComputeSTFT(this._buffer, 512, 128);
+          _smRender(spectroCanvas, stft.magnitudes, stft.numBins, stft.numFrames, 400);
+        }
         btn.disabled = false;
       }
       this._play();
@@ -1852,7 +1883,7 @@ function buildPairCard(pair, methods, methodDisplay, rq, dataset) {
   const promptsEl = document.createElement('div');
   promptsEl.className = 'pair-prompts';
 
-  function makePromptEl(side, label, promptText, audioFile) {
+  function makePromptEl(side, label, promptText, audioFile, spectroSrc) {
     const el = document.createElement('div');
     el.className = `pair-prompt ${side}`;
     const epLabel = document.createElement('span');
@@ -1864,7 +1895,7 @@ function buildPairCard(pair, methods, methodDisplay, rq, dataset) {
       caption.className = 'ep-caption';
       caption.textContent = `(${promptText})`;
       el.appendChild(caption);
-      new EndpointPlayer(audioFile, side === 'src' ? '#7DB83A' : '#E8543A').build(el);
+      new EndpointPlayer(audioFile, side === 'src' ? '#7DB83A' : '#E8543A', spectroSrc, true).build(el);
     } else {
       const t = document.createElement('span');
       t.textContent = promptText;
@@ -1873,7 +1904,7 @@ function buildPairCard(pair, methods, methodDisplay, rq, dataset) {
     return el;
   }
 
-  promptsEl.appendChild(makePromptEl('src', 'source, α=0', pair.src_prompt, srcAudioFile));
+  promptsEl.appendChild(makePromptEl('src', 'source, α=0', pair.src_prompt, srcAudioFile, pair.src_spectro || null));
   if (pairCtrlKind) {
     const badge = document.createElement('span');
     badge.className = 'ctrl-badge';
@@ -1881,7 +1912,7 @@ function buildPairCard(pair, methods, methodDisplay, rq, dataset) {
     badge.textContent = `ctrl: ${pairCtrlKind}`;
     promptsEl.appendChild(badge);
   }
-  promptsEl.appendChild(makePromptEl('tgt', 'target, α=1', pair.tgt_prompt, tgtAudioFile));
+  promptsEl.appendChild(makePromptEl('tgt', 'target, α=1', pair.tgt_prompt, tgtAudioFile, pair.tgt_spectro || null));
   card.appendChild(promptsEl);
 
   // Rest of card via innerHTML
@@ -1935,6 +1966,7 @@ function buildPairCard(pair, methods, methodDisplay, rq, dataset) {
       mData.spectros.forEach((src, i) => {
         const img = document.createElement('img');
         img.className = 'spectro-thumb' + (i === 0 ? ' active' : '');
+        img.loading = 'lazy';
         img.src = src;
         img.alt = `α=${alphas[i] !== undefined ? alphas[i].toFixed(2) : i}`;
         img.title = img.alt;
@@ -1958,6 +1990,7 @@ function buildPairCard(pair, methods, methodDisplay, rq, dataset) {
         // Pitch posteriorgram — single full-width image, no alpha sync needed
         const img = document.createElement('img');
         img.className = 'ctrl-posteriorgram';
+        img.loading = 'lazy';
         img.src = mData.ctrl_curves[0];
         img.alt = 'CREPE pitch posteriorgram (conditioning signal)';
         img.title = img.alt;
@@ -1970,6 +2003,7 @@ function buildPairCard(pair, methods, methodDisplay, rq, dataset) {
         mData.ctrl_curves.forEach((src, i) => {
           const img = document.createElement('img');
           img.className = 'ctrl-thumb' + (i === 0 ? ' active' : '');
+          img.loading = 'lazy';
           img.src = src;
           img.alt = `ctrl α=${alphas[i] !== undefined ? alphas[i].toFixed(2) : i}`;
           img.title = img.alt;
