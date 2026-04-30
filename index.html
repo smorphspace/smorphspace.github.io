@@ -309,6 +309,17 @@ input[type="range"].morph-slider:active::-webkit-slider-thumb { cursor: grabbing
   transition: width .15s;
 }
 
+/* ── canvas card dark mode ─────────────────────────── */
+#canvas-card {
+  background: var(--color-ink);
+}
+#canvas-card .status-text { color: var(--color-lavender-lt); }
+#canvas-card .spectro-label { color: var(--color-ash); }
+#canvas-card .play-btn { color: var(--color-paper); border-color: rgba(255,255,255,0.2); }
+#canvas-card .play-btn:hover { background: var(--link); border-color: var(--link); color: #fff; }
+#canvas-card .play-btn.playing { background: var(--link); border-color: var(--link); color: #fff; }
+#canvas-card .ctrl-badge { color: var(--color-cerulean); border-color: var(--color-cerulean); }
+
 /* ── footer ────────────────────────────────────────── */
 footer {
   border-top: 1px solid var(--border);
@@ -324,7 +335,7 @@ footer em { font-style: normal; color: var(--color-red); }
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   grid-template-rows: auto auto auto;
-  gap: .5rem .75rem;
+  gap: .25rem .4rem;
   align-items: center;
   justify-items: center;
   margin-bottom: 1.25rem;
@@ -333,17 +344,15 @@ footer em { font-style: normal; color: var(--color-red); }
 .corner-label {
   font-size: .7rem;
   font-style: italic;
+  font-weight: 600;
   line-height: 1.4;
   max-width: 130px;
-  text-align: center;
-  border: 1px solid currentColor;
-  padding: .25rem .45rem;
-  border-radius: 2px;
+  color: var(--color-ash);
 }
-.corner-label.tl { grid-column: 1; grid-row: 1; text-align: right; color: var(--color-cerulean); }
-.corner-label.tr { grid-column: 3; grid-row: 1; text-align: left;  color: var(--color-ember); }
-.corner-label.bl { grid-column: 1; grid-row: 3; text-align: right; color: var(--color-grass); }
-.corner-label.br { grid-column: 3; grid-row: 3; text-align: left;  color: var(--color-purple); }
+.corner-label.tl { grid-column: 1; grid-row: 1; text-align: right; }
+.corner-label.tr { grid-column: 3; grid-row: 1; text-align: left;  }
+.corner-label.bl { grid-column: 1; grid-row: 3; text-align: right; }
+.corner-label.br { grid-column: 3; grid-row: 3; text-align: left;  }
 
 /* ── tab navigation ────────────────────────────────── */
 .tab-nav {
@@ -540,7 +549,15 @@ footer em { font-style: normal; color: var(--color-red); }
   border-radius: var(--card-r);
   image-rendering: pixelated;
   background: #06060f;
-  border: 1px solid rgba(26,26,24,.1);
+}
+.spectro-wrap { position: relative; }
+.spectro-overlay {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 72px;
+  pointer-events: none;
+  border-radius: var(--card-r);
 }
 .spectro-label {
   font-size: .56rem;
@@ -677,6 +694,7 @@ footer em { font-style: normal; color: var(--color-red); }
     <div class="morph-ticks" id="morph-ticks"></div>
     <div class="spectro-wrap">
       <canvas id="morph-spectro" class="spectro-canvas"></canvas>
+      <canvas id="morph-spectro-overlay" class="spectro-overlay"></canvas>
       <div class="spectro-label">spectrogram (blended)</div>
     </div>
 
@@ -714,6 +732,21 @@ footer em { font-style: normal; color: var(--color-red); }
     </div>
 
     <div id="canvas-stage" style="display:none">
+      <div class="transport-row" style="margin-bottom:.75rem;margin-top:0">
+        <button class="play-btn" id="canvas-play-btn">
+          <svg id="canvas-play-icon" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          play
+        </button>
+        <span class="status-text" id="canvas-pos-display">position (0.00, 0.00)</span>
+        <span class="ctrl-badge">ctrl: rms</span>
+      </div>
+
+      <div class="spectro-wrap" style="margin-bottom:1.25rem">
+        <canvas id="canvas-spectro" class="spectro-canvas"></canvas>
+        <canvas id="canvas-spectro-overlay" class="spectro-overlay"></canvas>
+        <div class="spectro-label">spectrogram (2D blend)</div>
+      </div>
+
       <div class="canvas-corner-grid">
         <span class="corner-label tl" id="corner-tl"></span>
         <span class="corner-label tr" id="corner-tr"></span>
@@ -722,19 +755,6 @@ footer em { font-style: normal; color: var(--color-red); }
         </div>
         <span class="corner-label bl" id="corner-bl"></span>
         <span class="corner-label br" id="corner-br"></span>
-      </div>
-
-      <div class="transport-row">
-        <button class="play-btn" id="canvas-play-btn">
-          <svg id="canvas-play-icon" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-          play
-        </button>
-        <span class="status-text" id="canvas-pos-display">position (0.00, 0.00)</span>
-        <span class="ctrl-badge">ctrl: rms</span>
-      </div>
-      <div class="spectro-wrap">
-        <canvas id="canvas-spectro" class="spectro-canvas"></canvas>
-        <div class="spectro-label">spectrogram (2D blend)</div>
       </div>
     </div>
   </div>
@@ -761,11 +781,11 @@ footer em { font-style: normal; color: var(--color-red); }
 'use strict';
 
 /* ── KaossPad ─────────────────────────────────────────────────── */
-const PAD_BG      = '#EAE6DF';
-const GRID_COLOR  = 'rgba(26,26,24,0.09)';
+const PAD_BG      = '#1A1A18';
+const GRID_COLOR  = 'rgba(255,255,255,0.12)';
 const CROSS_COLOR = '#E8543A';
-const LABEL_COLOR = 'rgba(26,26,24,0.55)';
-const AXIS_TITLE_COLOR = 'rgba(26,26,24,0.38)';
+const LABEL_COLOR = 'rgba(255,255,255,0.6)';
+const AXIS_TITLE_COLOR = 'rgba(255,255,255,0.35)';
 const LABEL_FONT  = '11px "IBM Plex Mono", monospace';
 const AXIS_TITLE_FONT = '9px "IBM Plex Mono", monospace';
 
@@ -1101,6 +1121,54 @@ function setProgress(bar, done, total) {
   bar.style.width = `${Math.round(done / total * 100)}%`;
 }
 
+function makeSpectroOverlay(overlayEl, getPlayer) {
+  const ctx = overlayEl.getContext('2d');
+  let _raf = null;
+
+  function syncSize() {
+    const rect = overlayEl.getBoundingClientRect();
+    overlayEl.width  = rect.width;
+    overlayEl.height = rect.height;
+  }
+  new ResizeObserver(syncSize).observe(overlayEl);
+  syncSize();
+
+  function draw() {
+    const W = overlayEl.width, H = overlayEl.height;
+    ctx.clearRect(0, 0, W, H);
+    const player = getPlayer();
+    const dur = player.duration;
+    if (!dur) return;
+    const t = player.currentTime;
+    const x = Math.round((t / dur) * W);
+
+    ctx.strokeStyle = 'rgba(255,255,255,0.75)';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
+
+    const label = `${t.toFixed(1)}s / ${dur.toFixed(1)}s`;
+    ctx.font = '9px "IBM Plex Mono", monospace';
+    ctx.textAlign = 'right'; ctx.textBaseline = 'top';
+    const tw = ctx.measureText(label).width;
+    ctx.fillStyle = 'rgba(0,0,0,0.55)';
+    ctx.fillRect(W - tw - 8, 4, tw + 6, 13);
+    ctx.fillStyle = 'rgba(255,255,255,0.85)';
+    ctx.fillText(label, W - 5, 5);
+  }
+
+  function start() {
+    if (_raf) return;
+    function tick() { draw(); if (getPlayer().playing) _raf = requestAnimationFrame(tick); else _raf = null; }
+    _raf = requestAnimationFrame(tick);
+  }
+  function stop() {
+    if (_raf) { cancelAnimationFrame(_raf); _raf = null; }
+    draw();
+  }
+  return { start, stop };
+}
+
+
 function showPlayIcon(btn, iconEl, textNode, playing) {
   const playPath = '<polygon points="5 3 19 12 5 21 5 3"/>';
   const pausePath = '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>';
@@ -1298,7 +1366,9 @@ class SpectroMorph {
   const playIcon = document.getElementById('morph-play-icon');
   const alphaDisplay = document.getElementById('morph-alpha-display');
 
-  const morphStop = () => { if (player.playing) { player.pause(); showPlayIcon(playBtn, playIcon, null, false); } };
+  const morphOverlay = makeSpectroOverlay(document.getElementById('morph-spectro-overlay'), () => player);
+
+  const morphStop = () => { if (player.playing) { player.pause(); showPlayIcon(playBtn, playIcon, null, false); morphOverlay.stop(); } };
   registerAudioStop(morphStop);
 
   playBtn.addEventListener('click', async () => {
@@ -1306,6 +1376,7 @@ class SpectroMorph {
     if (!player.playing) stopAllExcept(morphStop);
     const playing = player.togglePlay();
     showPlayIcon(playBtn, playIcon, null, playing);
+    if (playing) morphOverlay.start(); else morphOverlay.stop();
   });
 
   slider.addEventListener('input', () => {
@@ -1369,7 +1440,9 @@ class SpectroMorph {
   const playBtn = document.getElementById('canvas-play-btn');
   const playIcon = document.getElementById('canvas-play-icon');
 
-  const canvasStop = () => { if (player.playing) { player.pause(); showPlayIcon(playBtn, playIcon, null, false); } };
+  const canvasOverlay = makeSpectroOverlay(document.getElementById('canvas-spectro-overlay'), () => player);
+
+  const canvasStop = () => { if (player.playing) { player.pause(); showPlayIcon(playBtn, playIcon, null, false); canvasOverlay.stop(); } };
   registerAudioStop(canvasStop);
 
   playBtn.addEventListener('click', async () => {
@@ -1377,6 +1450,7 @@ class SpectroMorph {
     if (!player.playing) stopAllExcept(canvasStop);
     const playing = player.togglePlay();
     showPlayIcon(playBtn, playIcon, null, playing);
+    if (playing) canvasOverlay.start(); else canvasOverlay.stop();
   });
 })().catch(err => {
   document.getElementById('canvas-status').textContent = `Error: ${err.message}`;
