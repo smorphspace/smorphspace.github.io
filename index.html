@@ -1598,6 +1598,7 @@ class SpectroMorph {
   let   canvasOverlay = null;
   let   loadedPatch   = null;   // currently loaded patch slug
 
+  let canvasStopRegistered = false;
   const canvasStop = () => {
     if (player.playing) {
       player.pause();
@@ -1605,7 +1606,6 @@ class SpectroMorph {
       if (canvasOverlay) canvasOverlay.stop();
     }
   };
-  registerAudioStop(canvasStop);
 
   playBtn.addEventListener('click', async () => {
     await player.resume();
@@ -1627,6 +1627,7 @@ class SpectroMorph {
     statusEl.textContent = 'loading audio…';
 
     if (!player.ctx) await player.init();
+    if (!canvasStopRegistered) { registerAudioStop(canvasStop); canvasStopRegistered = true; }
 
     const basePath = `audio/patches/${slug}`;
     const manifest = await fetch(`${basePath}/manifest.json`).then(r => r.json());
