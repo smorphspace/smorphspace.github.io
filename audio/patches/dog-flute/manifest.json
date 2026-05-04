@@ -1,0 +1,38 @@
+{
+  "name": "dog barking / car revving / flute, warm / wind through a tunnel",
+  "grid_x": 5,
+  "grid_y": 5,
+  "prompts": {
+    "a": "dog barking",
+    "b": "car revving",
+    "c": "flute, warm",
+    "d": "wind through a tunnel"
+  },
+  "files": [
+    "audio_0.wav",
+    "audio_1.wav",
+    "audio_2.wav",
+    "audio_3.wav",
+    "audio_4.wav",
+    "audio_5.wav",
+    "audio_6.wav",
+    "audio_7.wav",
+    "audio_8.wav",
+    "audio_9.wav",
+    "audio_10.wav",
+    "audio_11.wav",
+    "audio_12.wav",
+    "audio_13.wav",
+    "audio_14.wav",
+    "audio_15.wav",
+    "audio_16.wav",
+    "audio_17.wav",
+    "audio_18.wav",
+    "audio_19.wav",
+    "audio_20.wav",
+    "audio_21.wav",
+    "audio_22.wav",
+    "audio_23.wav",
+    "audio_24.wav"
+  ]
+}

@@ -345,6 +345,27 @@ footer {
 }
 footer em { font-style: normal; color: var(--color-red); }
 
+/* ── patch selector tabs ────────────────────────────── */
+.patch-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .35rem;
+  margin-bottom: 1rem;
+}
+.patch-tab {
+  padding: .3rem .75rem;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  background: transparent;
+  color: var(--color-charcoal);
+  font-family: inherit;
+  font-size: .76rem;
+  cursor: pointer;
+  transition: color .1s, border-color .1s, background .1s;
+}
+.patch-tab:hover { color: var(--link); border-color: var(--link); }
+.patch-tab.active { color: var(--link); border-color: var(--link); background: rgba(108,92,231,.08); font-weight: 600; }
+
 /* ── canvas corner layout ──────────────────────────── */
 .canvas-corner-grid {
   display: grid;
@@ -873,13 +894,20 @@ footer em { font-style: normal; color: var(--color-red); }
 
 <!-- ── demo 2: sound canvas ── -->
 <section class="demo-section">
-  <h2>sound canvas: fire crackling</h2>
+  <h2>sound canvas</h2>
   <div class="demo-divider"></div>
   <p class="section-sub">
-    Click or drag on the canvas to blend four semantically derived sound concepts in real time.
-    The seed prompt <em>&ldquo;fire crackling&rdquo;</em> was automatically expanded into orthogonal
-    timbral axes. All 16 grid points share the same structural template; only timbral identity varies.
+    Click or drag on the pad to blend four timbral concepts in real time.
+    Each 5&times;5 grid of sounds is pre-generated with SMORPH using a self-derived structural control signal;
+    moving the crosshair performs structure-preserving timbral interpolation between corner prompts.
   </p>
+
+  <div class="patch-tabs" id="patch-tabs">
+    <button class="patch-tab active" data-patch="snare-glass">dry snare &middot; rocks &middot; fork &middot; water</button>
+    <button class="patch-tab" data-patch="conga-gravel">conga &middot; footsteps &middot; knocks &middot; coins</button>
+    <button class="patch-tab" data-patch="dog-flute">dog &middot; car &middot; flute &middot; wind</button>
+    <button class="patch-tab" data-patch="xylophone-synth">xylophone &middot; oscillator &middot; pad &middot; violin</button>
+  </div>
 
   <div class="card" id="canvas-card">
     <div id="canvas-loading" class="loading-overlay">
@@ -894,7 +922,7 @@ footer em { font-style: normal; color: var(--color-red); }
           <svg id="canvas-play-icon" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
           play
         </button>
-        <span class="status-text" id="canvas-pos-display">position (0.00, 0.00)</span>
+        <span class="status-text" id="canvas-pos-display">position (0.50, 0.50)</span>
         <span class="ctrl-badge">ctrl: rms</span>
       </div>
 
@@ -1551,58 +1579,30 @@ class SpectroMorph {
 });
 
 /* ══════════════════════════════════════════════════════════════
-   SOUND CANVAS DEMO
+   SOUND CANVAS DEMO — multi-patch
    ══════════════════════════════════════════════════════════════ */
-(async function initCanvasDemo() {
-  const manifest = await fetch('audio/canvas-fire/manifest.json').then(r => r.json());
-  const { grid_x, grid_y, files, prompts } = manifest;
-
+(function initCanvasDemo() {
   const progressBar = document.getElementById('canvas-progress');
-  const statusEl = document.getElementById('canvas-status');
+  const statusEl    = document.getElementById('canvas-status');
+  const loadingEl   = document.getElementById('canvas-loading');
+  const stageEl     = document.getElementById('canvas-stage');
+  const playBtn     = document.getElementById('canvas-play-btn');
+  const playIcon    = document.getElementById('canvas-play-icon');
+  const posDisplay  = document.getElementById('canvas-pos-display');
 
-  const player = new CanvasPlayer();
-  await player.init();
+  const player      = new CanvasPlayer();
+  let   canvasSpectro = null;
+  let   pad           = null;
+  let   canvasOverlay = null;
+  let   loadedPatch   = null;   // currently loaded patch slug
 
-  const urls = files.map(f => `audio/canvas-fire/${f}`);
-  await player.loadGrid(urls, grid_x, grid_y, (done, total) => {
-    setProgress(progressBar, done, total);
-    statusEl.textContent = `Loading… ${done}/${total}`;
-  });
-
-  // hide loading, show canvas
-  document.getElementById('canvas-loading').style.display = 'none';
-  document.getElementById('canvas-stage').style.display = 'block';
-
-  const canvasSpectro = new SpectroMorph(document.getElementById('canvas-spectro'), { maxWidth: 600 });
-  canvasSpectro.loadPatchGrid(player._buffers, grid_x, grid_y);
-
-  const padEl = document.getElementById('kaoss-pad');
-  const pad = new KaossPad(padEl, {
-    onMove(x, y) {
-      player.setPosition(x, y);
-      canvasSpectro.setMorphPosition2D(x, y);
-      document.getElementById('canvas-pos-display').textContent =
-        `position (${x.toFixed(2)}, ${y.toFixed(2)})`;
+  const canvasStop = () => {
+    if (player.playing) {
+      player.pause();
+      showPlayIcon(playBtn, playIcon, null, false);
+      if (canvasOverlay) canvasOverlay.stop();
     }
-  });
-
-  // Populate external corner labels using full prompt text
-  document.getElementById('corner-tl').textContent = prompts.a;
-  document.getElementById('corner-tr').textContent = prompts.b;
-  document.getElementById('corner-bl').textContent = prompts.c;
-  document.getElementById('corner-br').textContent = prompts.d;
-  // Plain pad — no in-canvas labels at all
-  pad.setPadLabels({ sides: {}, axisNameX: '', axisNameY: '' });
-  pad.setGrid(grid_x, grid_y);
-  pad.setPosition(0.5, 0.5);
-  player.setPosition(0.5, 0.5);
-
-  const playBtn = document.getElementById('canvas-play-btn');
-  const playIcon = document.getElementById('canvas-play-icon');
-
-  const canvasOverlay = makeSpectroOverlay(document.getElementById('canvas-spectro-overlay'), () => player);
-
-  const canvasStop = () => { if (player.playing) { player.pause(); showPlayIcon(playBtn, playIcon, null, false); canvasOverlay.stop(); } };
+  };
   registerAudioStop(canvasStop);
 
   playBtn.addEventListener('click', async () => {
@@ -1610,11 +1610,85 @@ class SpectroMorph {
     if (!player.playing) stopAllExcept(canvasStop);
     const playing = player.togglePlay();
     showPlayIcon(playBtn, playIcon, null, playing);
-    if (playing) canvasOverlay.start(); else canvasOverlay.stop();
+    if (playing && canvasOverlay) canvasOverlay.start();
+    else if (canvasOverlay) canvasOverlay.stop();
   });
-})().catch(err => {
-  document.getElementById('canvas-status').textContent = `Error: ${err.message}`;
-});
+
+  async function loadPatch(slug) {
+    if (loadedPatch === slug) return;
+    canvasStop();
+
+    // show loading
+    stageEl.style.display = 'none';
+    loadingEl.style.display = 'flex';
+    setProgress(progressBar, 0, 1);
+    statusEl.textContent = 'loading audio…';
+
+    if (!player.ctx) await player.init();
+
+    const basePath = `audio/patches/${slug}`;
+    const manifest = await fetch(`${basePath}/manifest.json`).then(r => r.json());
+    const { grid_x, grid_y, files, prompts } = manifest;
+
+    const urls = files.map(f => `${basePath}/${f}`);
+    await player.loadGrid(urls, grid_x, grid_y, (done, total) => {
+      setProgress(progressBar, done, total);
+      statusEl.textContent = `Loading… ${done}/${total}`;
+    });
+
+    loadedPatch = slug;
+
+    // init or reinit spectro
+    const spectroEl = document.getElementById('canvas-spectro');
+    canvasSpectro = new SpectroMorph(spectroEl, { maxWidth: 600 });
+    canvasSpectro.loadPatchGrid(player._buffers, grid_x, grid_y);
+
+    // init or reinit pad
+    const padEl = document.getElementById('kaoss-pad');
+    if (pad) pad.destroy();
+    pad = new KaossPad(padEl, {
+      onMove(x, y) {
+        player.setPosition(x, y);
+        canvasSpectro.setMorphPosition2D(x, y);
+        posDisplay.textContent = `position (${x.toFixed(2)}, ${y.toFixed(2)})`;
+      }
+    });
+    pad.setPadLabels({ sides: {}, axisNameX: '', axisNameY: '' });
+    pad.setGrid(grid_x, grid_y);
+    pad.setPosition(0.5, 0.5);
+    player.setPosition(0.5, 0.5);
+
+    // corner labels
+    document.getElementById('corner-tl').textContent = prompts.a;
+    document.getElementById('corner-tr').textContent = prompts.b;
+    document.getElementById('corner-bl').textContent = prompts.c;
+    document.getElementById('corner-br').textContent = prompts.d;
+
+    // spectro overlay
+    canvasOverlay = makeSpectroOverlay(document.getElementById('canvas-spectro-overlay'), () => player);
+
+    // show stage
+    loadingEl.style.display = 'none';
+    stageEl.style.display = 'block';
+    showPlayIcon(playBtn, playIcon, null, false);
+  }
+
+  // patch tab switching
+  document.querySelectorAll('.patch-tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.patch-tab').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      loadPatch(btn.dataset.patch).catch(err => {
+        statusEl.textContent = `Error: ${err.message}`;
+      });
+    });
+  });
+
+  // load first patch on startup
+  loadPatch('snare-glass').catch(err => {
+    statusEl.textContent = `Error: ${err.message}`;
+  });
+})();
 
 /* ══════════════════════════════════════════════════════════════
    TAB SWITCHING
