@@ -938,7 +938,7 @@ footer em { font-style: normal; color: var(--color-red); }
           play
         </button>
         <span class="status-text" id="canvas-pos-display">position (0.50, 0.50)</span>
-        <span class="ctrl-badge">ctrl: rms</span>
+        <span class="ctrl-badge" id="canvas-ctrl-badge">ctrl: rms</span>
       </div>
 
       <div class="spectro-wrap" style="margin-bottom:1.25rem">
@@ -1679,6 +1679,7 @@ class SpectroMorph {
     document.getElementById('corner-tr').textContent = prompts.b;
     document.getElementById('corner-bl').textContent = prompts.c;
     document.getElementById('corner-br').textContent = prompts.d;
+    document.getElementById('canvas-ctrl-badge').textContent = `ctrl: ${manifest.ctrl_kind || 'rms'}`;
 
     // spectro overlay
     canvasOverlay = makeSpectroOverlay(document.getElementById('canvas-spectro-overlay'), () => player);
