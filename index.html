@@ -272,9 +272,10 @@ input[type="range"].morph-slider:active::-webkit-slider-thumb { cursor: grabbing
 .status-text { font-size: .73rem; color: var(--color-purple); }
 
 #kaoss-pad {
-  width: min(420px, 90vw);
-  height: min(420px, 90vw);
+  width: 100%;
+  max-width: 420px;
   aspect-ratio: 1;
+  height: auto;
   border-radius: var(--card-r);
   border: 1px solid var(--border);
   cursor: crosshair;
@@ -383,20 +384,20 @@ footer em { font-style: normal; color: var(--color-red); }
 /* ── canvas corner layout ──────────────────────────── */
 .canvas-corner-grid {
   display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  grid-template-columns: minmax(0, 80px) 1fr minmax(0, 80px);
   grid-template-rows: auto auto auto;
   gap: .25rem .4rem;
   align-items: center;
   justify-items: center;
   margin-bottom: 1.25rem;
 }
-.canvas-cell { grid-column: 2; grid-row: 2; }
+.canvas-cell { grid-column: 2; grid-row: 2; width: 100%; display: flex; justify-content: center; }
 .corner-label {
   font-size: .7rem;
   font-style: italic;
   font-weight: 600;
   line-height: 1.4;
-  max-width: 130px;
+  max-width: 78px;
   color: var(--color-ash);
   border: 1px solid rgba(255,255,255,0.2);
   padding: .2rem .35rem;
