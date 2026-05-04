@@ -2133,7 +2133,7 @@ function buildPairCard(pair, methods, methodDisplay, rq, dataset) {
     epLabel.textContent = label;
     el.appendChild(epLabel);
     if (audioFile) {
-      new EndpointPlayer(audioFile, side === 'src' ? '#7DB83A' : '#E8543A', spectroSrc, true).build(el);
+      new EndpointPlayer(audioFile, side === 'src' ? '#7DB83A' : '#E8543A', spectroSrc).build(el);
       const caption = document.createElement('span');
       caption.className = 'pair-prompt-text audio-caption';
       caption.textContent = `(${promptText})`;
