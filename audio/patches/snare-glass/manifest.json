@@ -35,5 +35,6 @@
     "audio_23.wav",
     "audio_24.wav"
   ],
-  "ctrl_signal_png": "audio/patches/snare-glass/_ctrl_signal.png"
+  "ctrl_signal_png": "audio/patches/snare-glass/_ctrl_signal.png",
+  "default_xy": [0.9, 0.1]
 }

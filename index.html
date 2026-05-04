@@ -1710,8 +1710,9 @@ class SpectroMorph {
     });
     pad.setPadLabels({ sides: {}, axisNameX: '', axisNameY: '' });
     pad.setGrid(grid_x, grid_y);
-    pad.setPosition(0.5, 0.5);
-    player.setPosition(0.5, 0.5);
+    const [defX, defY] = manifest.default_xy || [0.5, 0.5];
+    pad.setPosition(defX, defY);
+    player.setPosition(defX, defY);
 
     // corner labels
     document.getElementById('corner-tl').textContent = prompts.a;
