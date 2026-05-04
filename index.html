@@ -938,8 +938,8 @@ footer em { font-style: normal; color: var(--color-red); }
   </p>
 
   <div class="patch-tabs" id="patch-tabs">
-    <button class="patch-tab active" data-patch="snare-glass">dry snare &middot; rocks &middot; fork &middot; water</button>
-    <button class="patch-tab" data-patch="conga-gravel">conga &middot; footsteps &middot; knocks &middot; coins</button>
+    <button class="patch-tab" data-patch="snare-glass">dry snare &middot; rocks &middot; fork &middot; water</button>
+    <button class="patch-tab active" data-patch="conga-gravel">conga &middot; footsteps &middot; knocks &middot; coins</button>
     <button class="patch-tab" data-patch="dog-flute">dog &middot; car &middot; flute &middot; wind</button>
     <button class="patch-tab" data-patch="xylophone-synth">xylophone &middot; oscillator &middot; pad &middot; violin</button>
     <button class="patch-tab" data-patch="retro-synth">retro synth &middot; windy singing &middot; marimba &middot; FM</button>
@@ -1749,7 +1749,7 @@ class SpectroMorph {
   });
 
   // load first patch on startup
-  loadPatch('snare-glass').catch(err => {
+  loadPatch('conga-gravel').catch(err => {
     if (err.message !== 'load cancelled') statusEl.textContent = `Error: ${err.message}`;
   });
 })();
