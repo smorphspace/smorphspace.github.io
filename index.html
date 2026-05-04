@@ -6,7 +6,7 @@
 <title>SMORPH: Playable Sound Morphing with Diffusion Models</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 /* ── color palette ─────────────── */
 :root {
@@ -558,7 +558,8 @@ footer em { font-style: normal; color: var(--color-red); }
   margin-bottom: 0;
 }
 .pair-prompt {
-  font-size: .73rem;
+  font-size: .68rem;
+  /* font-family: 'IBM Plex Sans', sans-serif; */
   line-height: 1.1;
   max-width: 42%;
   color: var(--color-ink);
@@ -569,7 +570,7 @@ footer em { font-style: normal; color: var(--color-red); }
 }
 .pair-prompt .ep-label {
   display: inline-block;
-  font-size: .56rem;
+  font-size: .68rem;
   font-weight: 600;
   font-style: normal;
   color: #fff;
@@ -582,7 +583,7 @@ footer em { font-style: normal; color: var(--color-red); }
 .pair-prompt.tgt { text-align: right; }
 .pair-prompt.tgt .ep-label { background: var(--color-red); }
 .pair-prompt .pair-prompt-text {
-  font-size: .58rem;
+  font-size: .72rem;
   font-weight: 400;
   font-style: normal;
   color: var(--color-ink);
@@ -596,7 +597,9 @@ footer em { font-style: normal; color: var(--color-red); }
 }
 .pair-prompt .pair-prompt-text.audio-caption {
   margin-top: .26rem;
-  font-style: normal;
+  font-style: italic;
+  font-size: .56rem;
+  color: var(--color-charcoal);
 }
 .ep-spectro-wrap {
   position: relative;
@@ -2137,7 +2140,7 @@ function buildPairCard(pair, methods, methodDisplay, rq, dataset) {
       new EndpointPlayer(audioFile, side === 'src' ? '#7DB83A' : '#E8543A', spectroSrc).build(el);
       const caption = document.createElement('span');
       caption.className = 'pair-prompt-text audio-caption';
-      caption.textContent = `(${promptText})`;
+      caption.textContent = `${promptText}`;
       el.appendChild(caption);
     } else {
       const t = document.createElement('span');
