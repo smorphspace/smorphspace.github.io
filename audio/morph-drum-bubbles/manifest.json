@@ -23,5 +23,6 @@
     "audio_07.wav"
   ],
   "envelope_median_filter": 1,
-  "ctrl_kind": "rms"
+  "ctrl_kind": "rms",
+  "ctrl_signal_png": "audio/morph-drum-bubbles/_ctrl_signal.png"
 }
