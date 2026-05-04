@@ -1172,7 +1172,7 @@ class CanvasPlayer {
   constructor() {
     this.ctx=null; this.masterGain=null; this.limiter=null;
     this._buffers=[]; this._sources=[]; this._gains=[];
-    this._gridCols=0; this._gridRows=0;
+    this._gridCols=0; this._gridRows=0; this._loadId=0;
     this._playing=false; this._looping=true; this._volume=0.8;
     this._x=0; this._y=0; this._startedAt=0; this._pauseOffset=0;
     this._onEndedBound=this._onEnded.bind(this);
@@ -1187,6 +1187,7 @@ class CanvasPlayer {
   }
   async resume() { if(this.ctx&&this.ctx.state==='suspended')await this.ctx.resume(); }
   async loadGrid(urls,cols,rows,onProgress) {
+    const myId=++this._loadId;
     this.stop(); this._gridCols=cols; this._gridRows=rows; this._buffers=[];
     const bust=`_cb=${Date.now()}`;
     const loadOne=async(url)=>{
@@ -1196,8 +1197,13 @@ class CanvasPlayer {
       return buf;
     };
     if(typeof onProgress==='function'){
-      for(let i=0;i<urls.length;i++){this._buffers.push(await loadOne(urls[i]));onProgress(i+1,urls.length);}
+      for(let i=0;i<urls.length;i++){
+        if(this._loadId!==myId)throw new Error('load cancelled');
+        this._buffers.push(await loadOne(urls[i]));
+        onProgress(i+1,urls.length);
+      }
     } else { this._buffers=await Promise.all(urls.map(loadOne)); }
+    if(this._loadId!==myId)throw new Error('load cancelled');
     this._pauseOffset=0;
   }
   get ready(){return this._buffers.length>0&&this._gridCols>=2&&this._gridRows>=2;}
@@ -1736,14 +1742,14 @@ class SpectroMorph {
       document.querySelectorAll('.patch-tab').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       loadPatch(btn.dataset.patch).catch(err => {
-        statusEl.textContent = `Error: ${err.message}`;
+        if (err.message !== 'load cancelled') statusEl.textContent = `Error: ${err.message}`;
       });
     });
   });
 
   // load first patch on startup
   loadPatch('snare-glass').catch(err => {
-    statusEl.textContent = `Error: ${err.message}`;
+    if (err.message !== 'load cancelled') statusEl.textContent = `Error: ${err.message}`;
   });
 })();
 
