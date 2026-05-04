@@ -561,7 +561,8 @@ footer em { font-style: normal; color: var(--color-red); }
   font-size: .68rem;
   /* font-family: 'IBM Plex Sans', sans-serif; */
   line-height: 1.1;
-  max-width: 42%;
+  flex: 1 1 0;
+  min-width: 0;
   color: var(--color-ink);
   background: rgba(255,255,255,0.38);
   border: 1px solid var(--border);
@@ -590,9 +591,9 @@ footer em { font-style: normal; color: var(--color-red); }
   line-height: 1.1;
   margin-bottom: 0;
   display: -webkit-box;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 5;
   -webkit-box-orient: vertical;
-  line-clamp: 3;
+  line-clamp: 5;
   overflow: hidden;
 }
 .pair-prompt .pair-prompt-text.audio-caption {
