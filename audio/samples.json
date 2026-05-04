@@ -16,10 +16,10 @@
     "drumset2clotho": "FSL10K-Clotho"
   },
   "method_display": {
-    "ours": "SMORPH<sub><em>e</em></sub> (ours)",
-    "ours_ss0": "SMORPH<sub><em>i</em></sub> (ours)",
+    "ours": "SMORPH<sub><em>explicit</em></sub> (ours)",
+    "ours_ss0": "SMORPH<sub><em>implicit</em></sub> (ours)",
     "crossfade": "Crossfade",
-    "coa_no_ctrl": "CoA (no ctrl)",
+    "coa_no_ctrl": "CoA",
     "sdedit": "SDEdit",
     "flam_flam": "FLAM&#8594;FLAM",
     "sdedit_flam": "SDEdit+FLAM"
