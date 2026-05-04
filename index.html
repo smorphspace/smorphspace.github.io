@@ -1577,7 +1577,7 @@ class SpectroMorph {
   // ctrl signal image
   if (manifest.ctrl_signal_png) {
     const ctrlImg = document.getElementById('morph-ctrl-img');
-    ctrlImg.src = manifest.ctrl_signal_png;
+    ctrlImg.src = manifest.ctrl_signal_png + '?v=' + Date.now();
     ctrlImg.alt = `ctrl: ${manifest.ctrl_kind || 'rms'} signal`;
     ctrlImg.style.display = 'block';
   }
@@ -1721,7 +1721,7 @@ class SpectroMorph {
     document.getElementById('canvas-ctrl-badge').textContent = `ctrl: ${manifest.ctrl_kind || 'rms'}`;
     const ctrlImg = document.getElementById('canvas-ctrl-img');
     if (manifest.ctrl_signal_png) {
-      ctrlImg.src = manifest.ctrl_signal_png;
+      ctrlImg.src = manifest.ctrl_signal_png + '?v=' + Date.now();
       ctrlImg.alt = `ctrl: ${manifest.ctrl_kind || 'rms'} signal`;
       ctrlImg.style.display = 'block';
     } else {
@@ -2194,7 +2194,7 @@ function buildPairCard(pair, methods, methodDisplay, rq, dataset) {
       const img = document.createElement('img');
       img.className = 'ctrl-signal-img';
       img.dataset.ctrl = pairCtrlKind;
-      img.src = pair.ctrl_signal_png;
+      img.src = pair.ctrl_signal_png + '?v=' + Date.now();
       img.alt = `${pairCtrlKind} control signal`;
       ctrlStack.appendChild(img);
     }
