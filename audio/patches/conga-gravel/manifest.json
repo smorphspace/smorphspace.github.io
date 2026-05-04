@@ -34,5 +34,6 @@
     "audio_22.wav",
     "audio_23.wav",
     "audio_24.wav"
-  ]
+  ],
+  "ctrl_signal_png": "audio/patches/conga-gravel/_ctrl_signal.png"
 }

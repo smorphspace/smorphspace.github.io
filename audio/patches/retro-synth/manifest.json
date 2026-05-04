@@ -35,5 +35,6 @@
     "audio_23.wav",
     "audio_24.wav"
   ],
-  "ctrl_kind": "pitch"
+  "ctrl_kind": "pitch",
+  "ctrl_signal_png": "audio/patches/retro-synth/_ctrl_signal.png"
 }
