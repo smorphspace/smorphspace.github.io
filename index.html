@@ -553,7 +553,7 @@ footer em { font-style: normal; color: var(--color-red); }
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-items: flex-end;
+  align-items: flex-start;
   gap: .5rem;
   margin-bottom: 0;
 }
@@ -648,10 +648,11 @@ footer em { font-style: normal; color: var(--color-red); }
   letter-spacing: .04em;
 }
 .ctrl-badge {
-  font-size: .58rem;
+  font-size: .62rem;
   font-style: italic;
+  font-weight: 600;
   color: var(--color-cerulean);
-  border: 1px solid var(--color-cerulean);
+  border: 1.5px solid var(--color-cerulean);
   padding: .05rem .28rem;
   border-radius: 2px;
   white-space: nowrap;
@@ -2154,7 +2155,6 @@ function buildPairCard(pair, methods, methodDisplay, rq, dataset) {
     const badge = document.createElement('span');
     badge.className = 'ctrl-badge';
     badge.textContent = `ctrl: ${pairCtrlKind}`;
-    ctrlStack.appendChild(badge);
     if (pair.ctrl_signal_png) {
       const img = document.createElement('img');
       img.className = 'ctrl-signal-img';
@@ -2163,6 +2163,7 @@ function buildPairCard(pair, methods, methodDisplay, rq, dataset) {
       img.alt = `${pairCtrlKind} control signal`;
       ctrlStack.appendChild(img);
     }
+    ctrlStack.appendChild(badge);
     promptsEl.appendChild(ctrlStack);
   }
   promptsEl.appendChild(makePromptEl('tgt', 'target, α=1', pair.tgt_prompt, tgtAudioFile, pair.tgt_spectro_real || pair.tgt_spectro || null));
