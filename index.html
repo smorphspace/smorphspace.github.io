@@ -1738,8 +1738,7 @@ function getPairShortLabel(pair, pairDisplay = {}) {
 }
 
 function formatExampleHeader(pair, index, pairDisplay = {}) {
-  const shortLabel = getPairShortLabel(pair, pairDisplay);
-  return shortLabel ? `example ${index + 1}: ${shortLabel}` : `example ${index + 1}`;
+  return `example ${index + 1}`;
 }
 
 const RQ_SUMMARY = {
