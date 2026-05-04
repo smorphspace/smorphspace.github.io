@@ -249,20 +249,25 @@ input[type="range"].morph-slider:active::-webkit-slider-thumb { cursor: grabbing
 .play-btn {
   display: inline-flex;
   align-items: center;
-  gap: .38rem;
-  padding: .38rem .85rem;
-  border-radius: var(--card-r);
-  border: 1px solid var(--border);
-  background: transparent;
-  color: var(--text);
+  gap: .45rem;
+  padding: .55rem 1.25rem;
+  border-radius: 999px;
+  border: none;
+  background: var(--color-red);
+  color: #fff;
   font-family: inherit;
-  font-size: .76rem;
+  font-size: .82rem;
+  font-weight: 700;
+  letter-spacing: .03em;
   cursor: pointer;
-  transition: background .1s, border-color .1s, color .1s;
+  box-shadow: 0 2px 8px rgba(232,84,58,.35);
+  transition: background .12s, box-shadow .12s, transform .08s;
 }
-.play-btn:hover { background: var(--link); border-color: var(--link); color: #fff; }
-.play-btn.playing { background: var(--link); border-color: var(--link); color: #fff; }
-.play-btn svg { width: 13px; height: 13px; flex-shrink: 0; }
+.play-btn:hover { background: #d43d22; box-shadow: 0 4px 14px rgba(232,84,58,.5); transform: translateY(-1px); }
+.play-btn:active { transform: translateY(0); box-shadow: 0 1px 4px rgba(232,84,58,.3); }
+.play-btn.playing { background: var(--color-ink); box-shadow: 0 2px 8px rgba(0,0,0,.25); }
+.play-btn.playing:hover { background: #333; box-shadow: 0 4px 14px rgba(0,0,0,.35); }
+.play-btn svg { width: 14px; height: 14px; flex-shrink: 0; }
 .status-text { font-size: .73rem; color: var(--color-purple); }
 
 #kaoss-pad {
@@ -315,9 +320,7 @@ input[type="range"].morph-slider:active::-webkit-slider-thumb { cursor: grabbing
 }
 #canvas-card .status-text { color: var(--color-lavender-lt); }
 #canvas-card .spectro-label { color: var(--color-ash); }
-#canvas-card .play-btn { color: var(--color-paper); border-color: rgba(255,255,255,0.2); }
-#canvas-card .play-btn:hover { background: var(--link); border-color: var(--link); color: #fff; }
-#canvas-card .play-btn.playing { background: var(--link); border-color: var(--link); color: #fff; }
+/* canvas-card play btn inherits base .play-btn (solid red pill) */
 #canvas-card .ctrl-badge { color: var(--color-cerulean); border-color: var(--color-cerulean); }
 
 /* ── morph card dark mode ──────────────────────────── */
@@ -329,9 +332,7 @@ input[type="range"].morph-slider:active::-webkit-slider-thumb { cursor: grabbing
 #morph-card .morph-ep .ep-label { color: var(--color-ash); }
 #morph-card .status-text { color: var(--color-lavender-lt); }
 #morph-card .spectro-label { color: var(--color-ash); }
-#morph-card .play-btn { color: var(--color-paper); border-color: rgba(255,255,255,0.2); }
-#morph-card .play-btn:hover { background: var(--link); border-color: var(--link); color: #fff; }
-#morph-card .play-btn.playing { background: var(--link); border-color: var(--link); color: #fff; }
+/* morph-card play btn inherits base .play-btn (solid red pill) */
 #morph-card .ctrl-badge { color: var(--color-cerulean); border-color: var(--color-cerulean); }
 #morph-card .morph-tick { color: var(--color-ash); }
 
@@ -349,22 +350,34 @@ footer em { font-style: normal; color: var(--color-red); }
 .patch-tabs {
   display: flex;
   flex-wrap: wrap;
-  gap: .35rem;
-  margin-bottom: 1rem;
+  gap: .45rem;
+  margin-bottom: 1.25rem;
 }
 .patch-tab {
-  padding: .3rem .75rem;
-  border: 1px solid var(--border);
-  border-radius: 3px;
+  padding: .4rem .9rem;
+  border: 1.5px solid var(--border);
+  border-radius: 999px;
   background: transparent;
   color: var(--color-charcoal);
   font-family: inherit;
-  font-size: .76rem;
+  font-size: .78rem;
+  font-weight: 500;
   cursor: pointer;
-  transition: color .1s, border-color .1s, background .1s;
+  transition: color .12s, border-color .12s, background .12s, box-shadow .12s, transform .08s;
 }
-.patch-tab:hover { color: var(--link); border-color: var(--link); }
-.patch-tab.active { color: var(--link); border-color: var(--link); background: rgba(108,92,231,.08); font-weight: 600; }
+.patch-tab:hover {
+  color: var(--color-purple);
+  border-color: var(--color-purple);
+  background: rgba(138,99,210,.06);
+  transform: translateY(-1px);
+}
+.patch-tab.active {
+  color: #fff;
+  border-color: var(--color-purple);
+  background: var(--color-purple);
+  box-shadow: 0 2px 10px rgba(138,99,210,.45);
+  font-weight: 700;
+}
 
 /* ── canvas corner layout ──────────────────────────── */
 .canvas-corner-grid {
@@ -685,7 +698,7 @@ footer em { font-style: normal; color: var(--color-red); }
   color: var(--color-purple);
   min-width: 0;
 }
-.pair-method-row .play-btn { flex-shrink: 0; padding: .22rem .6rem; font-size: .7rem; }
+.pair-method-row .play-btn { flex-shrink: 0; padding: .22rem .6rem; font-size: .7rem; border-radius: 4px; box-shadow: none; font-weight: 500; letter-spacing: 0; }
 
 /* ── spectrograms ────────────────────────────────────── */
 .spectro-wrap { margin-top: 10px; }
