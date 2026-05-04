@@ -581,7 +581,7 @@ footer em { font-style: normal; color: var(--color-red); }
 }
 .pair-prompt.src .ep-label { background: var(--color-meadow); }
 .pair-prompt.tgt { text-align: right; }
-.pair-prompt.tgt .ep-label { background: var(--color-red); }
+.pair-prompt.tgt .ep-label { background: var(--color-ember); }
 .pair-prompt .pair-prompt-text {
   font-size: .72rem;
   font-weight: 400;
@@ -664,7 +664,7 @@ footer em { font-style: normal; color: var(--color-red); }
   display: flex;
   flex-direction: column;
   align-items: center;
-  align-self: center;
+  align-self: flex-start;
   gap: .25rem;
   min-width: 140px;
   max-width: 220px;
@@ -679,6 +679,18 @@ footer em { font-style: normal; color: var(--color-red); }
 .pair-slider-wrap { margin-bottom: .04rem; padding: .04rem 0 .05rem; }
 .pair-alpha-row { margin-bottom: .18rem; text-align: center; }
 .pair-alpha { font-weight: 700; }
+.slider-endpoint-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: .2rem;
+}
+.slider-ep-label {
+  font-size: .76rem;
+  font-weight: 700;
+  line-height: 1;
+}
+.slider-ep-label.src { color: var(--color-grass); }
+.slider-ep-label.tgt { color: var(--color-ember); }
 .pair-transport { gap: .6rem; }
 .pair-methods-block { margin-top: 0; }
 
@@ -2215,6 +2227,10 @@ function buildPairCard(pair, methods, methodDisplay, rq, dataset) {
   controls.innerHTML = `
     <div class="morph-slider-wrap pair-slider-wrap">
       <input type="range" class="morph-slider pair-slider" min="0" max="${nAlpha - 1}" step="1" value="0">
+    </div>
+    <div class="slider-endpoint-row">
+      <span class="slider-ep-label src">source</span>
+      <span class="slider-ep-label tgt">target</span>
     </div>
     <div class="pair-alpha-row">
       <span class="status-text pair-alpha">&#945; = ${alphas[0].toFixed(2)}</span>
