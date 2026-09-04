@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SMORPH: Playable Sound Morphing with Diffusion Models</title>
+<title>smorph: Playable Sound Morphing with Diffusion Models</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -854,7 +854,7 @@ footer em { font-style: normal; color: var(--color-red); }
 <!-- ── header ── -->
 <header>
   <div class="header-venue">ismir 2026 &nbsp;·&nbsp; anonymous submission</div>
-  <h1><span>SMORPH</span>: Playable Sound Morphing<br>with Diffusion Models</h1>
+  <h1><span>smorph</span>: Playable Sound Morphing<br>with Diffusion Models</h1>
   <div class="badges">
     <a href="#" class="badge link" title="Paper link (coming soon)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
@@ -866,7 +866,7 @@ footer em { font-style: normal; color: var(--color-red); }
 
 <!-- ── teaser figure (fig 1) ── -->
 <figure class="method-figure teaser-figure">
-  <img src="figs/method_v8.png" alt="SMORPH method diagram">
+  <img src="figs/method_v8.png" alt="smorph method diagram">
   <figcaption class="method-caption"><strong>Our Method.</strong> Figure shows <em>N</em>-prompt morphing with an external structural control signal. Our experiments (see <a class="tab-link" href="#" onclick="document.querySelector('.tab-btn[data-tab=experiments]').click();return false;">paper experiments</a>) focus on source → target morphing (<em>N</em>=2) with a self-derived structural control signal. We use this method to enable interactive 1D (<em>N</em>=2) and 2D (<em>N</em>=4) playable morphing spaces (see <a class="tab-link" href="#" onclick="document.querySelector('.tab-btn[data-tab=demos]').click();return false;">demos</a>).</figcaption>
 </figure>
 
@@ -874,21 +874,19 @@ footer em { font-style: normal; color: var(--color-red); }
 <section class="abstract-section">
   <h2>abstract</h2>
   <p>
-    Sound morphing&mdash;generating intermediate sounds that transition from one sonic identity to
-    another&mdash;is a powerful tool for sound design and musical exploration. A musician may want a
-    snare hit to shift from metallic to wooden, or a melodic phrase to move from brass to strings,
-    while keeping rhythm, pitch, and dynamics stable as only the sound&rsquo;s character changes.
-    Existing diffusion-based morphing approaches entangle temporal structure and timbral identity,
-    offering no explicit mechanism to hold one fixed while transforming the other.
-    We present <strong>SMORPH</strong>, a training-free framework that preserves
-    <em>how a sound behaves over time</em> while transforming <em>what the sound is</em>, enabling
-    three structure-preserving morphing modes: prompt-to-prompt, audio-to-prompt, and audio-to-audio.
-    When precomputed and exposed as <strong>semantic sliders</strong>, these morph trajectories become
-    playable interfaces offering continuous, real-time timbral control and instrumental interaction.
-    Evaluations across music and environmental sound datasets show that explicit structural decomposition
-    improves structural adherence and timbral progression without sacrificing morph quality, and an
-    instrument-design case study demonstrates semantic sliders as an expressive interface for musical
-    exploration and performance.
+    Sound morphing, generating intermediate sounds that transition from one sonic identity to
+    another, can be a powerful tool for musical sound design. Existing diffusion-based morphing
+    approaches entangle temporal structure and timbral identity, offering no mechanism to hold one
+    fixed while transforming the other. We present <strong>smorph</strong>, a training-free guidance
+    framework that preserves <em>how a sound behaves over time</em> while transforming
+    <em>what the sound is</em>, allowing users to morph, for instance from brass to strings at a
+    fixed pitch. We demonstrate across three morphing modes: prompt-to-prompt, audio-to-prompt, and
+    audio-to-audio. Evaluations across diverse datasets show that <strong>smorph</strong> effectively
+    produces smooth morph trajectories while substantially improving temporal-structure and source
+    preservation over baselines, albeit with more conservative target-ward transformation in some
+    settings. In an exploratory case study, musicians found <strong>smorph</strong> trajectories to be
+    expressive and playable, suggesting structural anchoring can serve as a productive constraint for
+    instrumental interaction.
   </p>
 </section>
 
@@ -958,7 +956,7 @@ footer em { font-style: normal; color: var(--color-red); }
   <div class="demo-divider"></div>
   <p class="section-sub">
     Click or drag on the pad to blend four timbral concepts in real time.
-    Each 5&times;5 grid of sounds is pre-generated with SMORPH using a self-derived structural control signal;
+    Each 5&times;5 grid of sounds is pre-generated with <strong>smorph</strong> using a self-derived structural control signal;
     moving the crosshair performs structure-preserving timbral interpolation between corner prompts.
   </p>
 
