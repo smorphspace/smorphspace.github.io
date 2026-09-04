@@ -956,13 +956,16 @@ footer em { font-style: normal; color: var(--color-red); }
   <div class="demo-divider"></div>
   <p class="section-sub">
     Click or drag on the pad to blend four timbral concepts in real time.
+    Each corner is a text prompt or a real audio recording &mdash; in the first patch, one corner is a
+    reference drum loop (audio), the other three are text.
     Each 5&times;5 grid of sounds is pre-generated with <strong>smorph</strong> using a self-derived structural control signal;
-    moving the crosshair performs structure-preserving timbral interpolation between corner prompts.
+    moving the crosshair performs structure-preserving timbral interpolation between the four corners.
   </p>
 
   <div class="patch-tabs" id="patch-tabs">
+    <button class="patch-tab active" data-patch="drumloop-808">drum loop (audio) &middot; tabla &middot; box hits &middot; 808</button>
     <button class="patch-tab" data-patch="snare-glass">dry snare &middot; rocks &middot; fork &middot; water</button>
-    <button class="patch-tab active" data-patch="conga-gravel">conga &middot; footsteps &middot; knocks &middot; coins</button>
+    <button class="patch-tab" data-patch="conga-gravel">conga &middot; footsteps &middot; knocks &middot; coins</button>
     <button class="patch-tab" data-patch="dog-flute">dog &middot; car &middot; flute &middot; wind</button>
     <button class="patch-tab" data-patch="xylophone-synth">xylophone &middot; oscillator &middot; pad &middot; violin</button>
     <button class="patch-tab" data-patch="retro-synth">retro synth &middot; windy singing &middot; marimba &middot; FM</button>
@@ -1773,7 +1776,7 @@ class SpectroMorph {
   });
 
   // load first patch on startup
-  loadPatch('conga-gravel').catch(err => {
+  loadPatch('drumloop-808').catch(err => {
     if (err.message !== 'load cancelled') statusEl.textContent = `Error: ${err.message}`;
   });
 })();
