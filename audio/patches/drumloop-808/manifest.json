@@ -9,6 +9,7 @@
     "d": "808 sub bass"
   },
   "audio_corner": "a",
+  "audio_corner_file": "_drum_src.wav",
   "files": [
     "audio_0.wav",
     "audio_1.wav",

@@ -412,6 +412,33 @@ footer em { font-style: normal; color: var(--color-red); }
 .corner-label.bl { grid-column: 1; grid-row: 3; text-align: right; color: var(--color-grass); }
 .corner-label.br { grid-column: 3; grid-row: 3; text-align: left;  color: var(--color-purple); }
 
+/* audio-reference corner: mini player + spectrogram + RMS-link note.
+   Only the corner backed by a real recording gets this treatment — it grows
+   taller to fit the widget while the three text corners stay compact. */
+.corner-label.has-audio {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  text-align: left;
+  max-width: none;
+  width: 100%;
+  gap: .2rem;
+}
+.corner-audio { position: relative; width: 100%; }
+.corner-audio .ep-spectro-wrap { margin-top: .25rem; }
+.corner-audio .ep-spectro-canvas,
+.corner-audio .ep-spectro-overlay { height: 40px; }
+.corner-audio .ep-play-btn { width: 20px; height: 20px; top: 4px; right: 4px; }
+.corner-audio-note {
+  display: block;
+  margin-top: .18rem;
+  font-size: .5rem;
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1.25;
+  color: var(--accent);
+}
+
 /* ── tab navigation ────────────────────────────────── */
 .tab-nav {
   display: flex;
@@ -1740,12 +1767,49 @@ class SpectroMorph {
     pad.setPosition(defX, defY);
     player.setPosition(defX, defY);
 
-    // corner labels
-    document.getElementById('corner-tl').textContent = prompts.a;
-    document.getElementById('corner-tr').textContent = prompts.b;
-    document.getElementById('corner-bl').textContent = prompts.c;
-    document.getElementById('corner-br').textContent = prompts.d;
-    document.getElementById('canvas-ctrl-badge').textContent = `ctrl: ${manifest.ctrl_kind || 'rms'}`;
+    // corner labels — setting textContent wipes any audio widget injected on a
+    // previous load, so we always re-inject fresh below for the current patch.
+    const cornerEls = {
+      tl: document.getElementById('corner-tl'),
+      tr: document.getElementById('corner-tr'),
+      bl: document.getElementById('corner-bl'),
+      br: document.getElementById('corner-br'),
+    };
+    cornerEls.tl.textContent = prompts.a;
+    cornerEls.tr.textContent = prompts.b;
+    cornerEls.bl.textContent = prompts.c;
+    cornerEls.br.textContent = prompts.d;
+    // drop any leftover audio-corner styling from a previously loaded patch
+    Object.values(cornerEls).forEach(el => el.classList.remove('has-audio'));
+
+    // audio-reference corner: one corner may be a real recording (audio/FLAM
+    // endpoint) rather than a text prompt. Give it a small player + spectrogram
+    // so the clip is audible, and note that the same clip drives the RMS
+    // structural guidance shown in the canvas.
+    const AUDIO_CORNER_MAP = { a: ['tl', 'A'], b: ['tr', 'B'], c: ['bl', 'C'], d: ['br', 'D'] };
+    let ctrlCornerLetter = null;
+    if (manifest.audio_corner && manifest.audio_corner_file
+        && AUDIO_CORNER_MAP[manifest.audio_corner]) {
+      const [cornerKey, cornerName] = AUDIO_CORNER_MAP[manifest.audio_corner];
+      const cornerEl = cornerEls[cornerKey];
+      cornerEl.classList.add('has-audio');
+      const audioWrap = document.createElement('div');
+      audioWrap.className = 'corner-audio';
+      const accentHex = getComputedStyle(document.documentElement)
+        .getPropertyValue('--color-purple').trim() || '#8A63D2';
+      // eager=true renders the real spectrogram at load (no auto-play)
+      new EndpointPlayer(`${basePath}/${manifest.audio_corner_file}`, accentHex, null, false, true).build(audioWrap);
+      const note = document.createElement('span');
+      note.className = 'corner-audio-note';
+      note.textContent = 'also drives the RMS guidance';
+      audioWrap.appendChild(note);
+      cornerEl.appendChild(audioWrap);
+      ctrlCornerLetter = cornerName;
+    }
+
+    const ctrlKind = manifest.ctrl_kind || 'rms';
+    document.getElementById('canvas-ctrl-badge').textContent =
+      ctrlCornerLetter ? `ctrl: ${ctrlKind} · from corner ${ctrlCornerLetter}` : `ctrl: ${ctrlKind}`;
     const ctrlImg = document.getElementById('canvas-ctrl-img');
     if (manifest.ctrl_signal_png) {
       ctrlImg.src = manifest.ctrl_signal_png + '?v=' + Date.now();
@@ -2042,11 +2106,12 @@ class SpectroPlayhead {
  * Attaches to a container element; call .build() to populate it.
  */
 class EndpointPlayer {
-  constructor(file, color, spectroSrc = null, wip = false) {
+  constructor(file, color, spectroSrc = null, wip = false, eager = false) {
     this._file       = file;
     this._color      = color;
     this._spectroSrc = spectroSrc;
     this._wip        = wip;
+    this._eager      = eager;
     this._buffer  = null;
     this._source  = null;
     this._gain    = null;
@@ -2127,6 +2192,22 @@ class EndpointPlayer {
 
     const stopFn = () => { if (this._playing) { this._pause(); } };
     registerAudioStop(stopFn);
+
+    // Eager mode: render the real spectrogram at load (landing-demo corners)
+    // without auto-playing. decodeAudioData works while the AudioContext is
+    // still suspended, so this never starts audio; any failure just leaves the
+    // placeholder in place. Opt-in only — paper-tab players stay lazy.
+    if (this._eager && spectroCanvas) {
+      (async () => {
+        try {
+          const ctx = getPaperACX();
+          const resp = await fetch(this._file);
+          this._buffer = await ctx.decodeAudioData(await resp.arrayBuffer());
+          const stft = _smComputeSTFT(this._buffer, 512, 128);
+          _smRender(spectroCanvas, stft.magnitudes, stft.numBins, stft.numFrames, 400);
+        } catch (_) { /* leave placeholder; no-op on decode/fetch failure */ }
+      })();
+    }
   }
 
   _play() {
