@@ -82,6 +82,59 @@ h1 {
   color: var(--text);
 }
 h1 span { color: var(--accent); }
+.header-overview {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  align-items: start;
+  gap: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+.header-overview .author-block { margin-bottom: 0; }
+.soundcanvas-preview { min-width: 0; margin-top: .5rem; }
+.soundcanvas-preview a { display: block; cursor: zoom-in; }
+.soundcanvas-preview a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+.soundcanvas-preview img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(26,26,24,.08);
+}
+.soundcanvas-preview figcaption {
+  margin-top: .5rem;
+  text-align: center;
+  font-size: .65rem;
+  color: var(--color-charcoal);
+}
+.author-block { margin-bottom: 1.25rem; }
+.author-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .3rem 1rem;
+  list-style: none;
+  margin-bottom: .75rem;
+  font-size: .85rem;
+  font-weight: 500;
+}
+.author-list li { white-space: nowrap; }
+.author-block sup { font-size: .65em; }
+.author-affiliations,
+.author-contact,
+.author-note {
+  font-size: .7rem;
+  color: var(--color-charcoal);
+}
+.author-contact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .25rem 1rem;
+  margin-top: .6rem;
+}
+.author-contact a { overflow-wrap: anywhere; }
+.author-note { margin-top: .35rem; }
 .badges {
   display: flex;
   flex-wrap: wrap;
@@ -102,35 +155,100 @@ h1 span { color: var(--accent); }
 
 /* ── abstract ──────────────────────────────────────── */
 .abstract-section {
-  border-left: 3px solid var(--accent);
-  padding: 0 0 0 1.4rem;
-  margin-bottom: 3.5rem;
-}
-.abstract-section h2 {
-  font-size: .72rem;
-  font-style: italic;
-  color: var(--color-purple);
-  margin-bottom: .7rem;
+  margin-bottom: 1.5rem;
 }
 .abstract-section p {
-  font-size: .88rem;
+  font-size: .75rem;
   color: var(--color-charcoal);
-  line-height: 1.6;
+  line-height: 1.5;
 }
 .abstract-section strong { color: var(--text); font-weight: 700; }
-.method-figure {
-  margin: 1.2rem 0 0;
+.abstract-section > p {
+  font-size: .85rem;
+  line-height: 1.6;
 }
-/* teaser: same figure hoisted directly under the title, above the abstract */
-.method-figure.teaser-figure {
+.abstract-details { margin-top: .85rem; }
+.abstract-details summary {
+  width: fit-content;
+  font-size: .72rem;
+  color: var(--color-purple);
+  cursor: pointer;
+}
+.abstract-details summary:hover { color: var(--color-cerulean); }
+.abstract-details summary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+.abstract-details p { margin-top: 1rem; }
+.method-figure {
   margin: 0 0 3rem;
 }
 .method-figure img {
   max-width: 100%;
   border-radius: var(--card-r);
   display: block;
-  border: 1px solid var(--color-ink);
 }
+.figure-preview {
+  display: block;
+  width: 100%;
+  padding: clamp(.75rem, 2vw, 1.5rem);
+  border: none;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 4px 20px rgba(26,26,24,.06);
+  color: var(--color-charcoal);
+  font: inherit;
+  cursor: zoom-in;
+}
+.figure-preview img { width: 100%; }
+.figure-preview-hint {
+  display: block;
+  margin-top: .75rem;
+  font-size: .65rem;
+  text-align: right;
+}
+.figure-preview:focus-visible,
+.figure-close:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+.figure-dialog {
+  width: calc(100vw - 2rem);
+  max-width: 1800px;
+  max-height: calc(100dvh - 2rem);
+  margin: auto;
+  padding: 1rem;
+  border: none;
+  border-radius: 10px;
+  background: #fff;
+  color: var(--color-ink);
+}
+.figure-dialog::backdrop { background: rgba(26,26,24,.65); }
+.figure-dialog-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  font-size: .8rem;
+}
+.figure-close {
+  border: none;
+  border-radius: 4px;
+  padding: .5rem .75rem;
+  background: var(--color-paper);
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+.figure-dialog-image { overflow: auto; }
+.figure-dialog-image img {
+  display: block;
+  width: 100%;
+  min-width: 1000px;
+}
+.figure-dialog-hint { margin-top: .75rem; font-size: .7rem; }
+html.figure-dialog-open { overflow: hidden; }
 .method-caption {
   font-size: .75rem;
   color: var(--color-charcoal);
@@ -864,6 +982,7 @@ footer em { font-style: normal; color: var(--color-red); }
   text-align: center;
 }
 @media (max-width: 720px) {
+  .header-overview { grid-template-columns: minmax(0, 1fr); }
   .pair-prompts {
     flex-direction: column;
     align-items: stretch;
@@ -880,26 +999,55 @@ footer em { font-style: normal; color: var(--color-red); }
 
 <!-- ── header ── -->
 <header>
-  <div class="header-venue">ismir 2026 &nbsp;·&nbsp; anonymous submission</div>
+  <div class="header-venue">ISMIR 2026</div>
   <h1><span>smorph</span>: Playable Sound Morphing<br>with Diffusion Models</h1>
+  <div class="header-overview">
+  <div class="author-block">
+    <ul class="author-list" aria-label="Authors">
+      <li>Annie Chu<sup>*1</sup></li>
+      <li>Hugo Flores García<sup>*2</sup></li>
+      <li>Johannes Imort<sup>2</sup></li>
+      <li>Oriol Nieto<sup>2</sup></li>
+      <li>Bryan Pardo<sup>1</sup></li>
+      <li>Jordan Rudess<sup>3</sup></li>
+      <li>Prem Seetharaman<sup>2</sup></li>
+      <li>Justin Salamon<sup>2</sup></li>
+    </ul>
+    <div class="author-affiliations">
+      <p><sup>1</sup> Northwestern University, Evanston, IL, USA</p>
+      <p><sup>2</sup> Adobe Research, San Francisco, CA, USA</p>
+      <p><sup>3</sup> Wizdom Music, New York, NY, USA</p>
+    </div>
+    <div class="author-contact">
+      <a href="mailto:anniechu@u.northwestern.edu">anniechu@u.northwestern.edu</a>
+      <a href="mailto:hflores@adobe.com">hflores@adobe.com</a>
+    </div>
+    <p class="author-note">* denotes equal contribution</p>
+  </div>
+  <figure class="soundcanvas-preview">
+    <a href="figs/soundcanvas.png" target="_blank" rel="noopener" aria-label="View SoundCanvas image full size in a new tab">
+      <img src="figs/soundcanvas.png" alt="SoundCanvas interface with four text or audio prompts around a two-dimensional morphing pad and RMS and pitch controls" width="1316" height="938">
+    </a>
+    <figcaption>SoundCanvas (examples below)</figcaption>
+  </figure>
+  </div>
   <div class="badges">
     <a href="#" class="badge link" title="Paper link (coming soon)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
       paper (coming soon)
     </a>
-    <span class="badge">anonymous authors</span>
   </div>
 </header>
 
-<!-- ── teaser figure (fig 1) ── -->
-<figure class="method-figure teaser-figure">
-  <img src="figs/method_v8.png" alt="smorph method diagram">
-  <figcaption class="method-caption"><strong>Our Method.</strong> Figure shows <em>N</em>-prompt morphing with an external structural control signal. Our experiments (see <a class="tab-link" href="#" onclick="document.querySelector('.tab-btn[data-tab=experiments]').click();return false;">paper experiments</a>) focus on source → target morphing (<em>N</em>=2) with a self-derived structural control signal. We use this method to enable interactive 1D (<em>N</em>=2) and 2D (<em>N</em>=4) playable morphing spaces (see <a class="tab-link" href="#" onclick="document.querySelector('.tab-btn[data-tab=demos]').click();return false;">demos</a>).</figcaption>
-</figure>
-
 <!-- ── abstract ── -->
 <section class="abstract-section">
-  <h2>abstract</h2>
+  <p>
+    <strong>TL;DR</strong> We introduce <strong>smorph</strong>, a training-free guidance framework
+    for diffusion-based sound morphing that preserves temporal structure (e.g. RMS, pitch contours) while transforming timbral
+    identity. It supports text and audio conditioning and enables interactive 1D and 2D morphing spaces. 
+  </p>
+  <details class="abstract-details">
+    <summary>Full abstract</summary>
   <p>
     Sound morphing, generating intermediate sounds that transition from one sonic identity to
     another, can be a powerful tool for musical sound design. Existing diffusion-based morphing
@@ -915,7 +1063,27 @@ footer em { font-style: normal; color: var(--color-red); }
     expressive and playable, suggesting structural anchoring can serve as a productive constraint for
     instrumental interaction.
   </p>
+  </details>
 </section>
+
+<!-- ── method figure (fig 1) ── -->
+<figure class="method-figure">
+  <button class="figure-preview" type="button" aria-haspopup="dialog" aria-controls="method-figure-dialog" aria-label="Enlarge smorph method diagram">
+    <img src="figs/method_v8.png" alt="smorph method diagram">
+    <span class="figure-preview-hint" aria-hidden="true">click to enlarge</span>
+  </button>
+  <figcaption class="method-caption"><strong>Our Method.</strong> Figure shows <em>N</em>-prompt morphing with an external structural control signal. Our experiments (see <a class="tab-link" href="#" onclick="document.querySelector('.tab-btn[data-tab=experiments]').click();return false;">paper experiments</a>) focus on source → target morphing (<em>N</em>=2) with a self-derived structural control signal. We use this method to enable interactive 1D (<em>N</em>=2) and 2D (<em>N</em>=4) playable morphing spaces (see <a class="tab-link" href="#" onclick="document.querySelector('.tab-btn[data-tab=demos]').click();return false;">demos</a>).</figcaption>
+</figure>
+<dialog class="figure-dialog" id="method-figure-dialog" aria-labelledby="method-figure-title" aria-describedby="method-figure-hint">
+  <div class="figure-dialog-header">
+    <strong id="method-figure-title">smorph method diagram</strong>
+    <button class="figure-close" type="button" autofocus>Close ×</button>
+  </div>
+  <div class="figure-dialog-image" tabindex="0" role="region" aria-label="Enlarged method diagram, scroll to explore">
+    <img src="figs/method_v8.png" alt="smorph method diagram">
+  </div>
+  <!-- <p class="figure-dialog-hint" id="method-figure-hint">Scroll to explore on smaller screens. Press Esc to close.</p> -->
+</dialog>
 
 <!-- ── tab nav ── -->
 <nav class="tab-nav" id="main-tab-nav">
@@ -979,7 +1147,7 @@ footer em { font-style: normal; color: var(--color-red); }
 
 <!-- ── demo 2: sound canvas ── -->
 <section class="demo-section">
-  <h2>sound canvas: 4-prompt morphs</h2>
+  <h2>soundcanvas: 4-prompt morphs</h2>
   <div class="demo-divider"></div>
   <p class="section-sub">
     Click or drag on the pad to blend four timbral concepts in real time.
@@ -1048,7 +1216,7 @@ footer em { font-style: normal; color: var(--color-red); }
 
 <footer>
   <div class="page">
-    <em>smorph</em> &nbsp;·&nbsp; anonymous submission &nbsp;·&nbsp; ismir 2026
+    <em>smorph</em> &nbsp;·&nbsp; ISMIR 2026
   </div>
 </footer>
 
@@ -1057,6 +1225,24 @@ footer em { font-style: normal; color: var(--color-red); }
      ════════════════════════════════════════════════════ -->
 <script>
 'use strict';
+
+const figureDialog = document.getElementById('method-figure-dialog');
+document.querySelector('.figure-preview').addEventListener('click', () => {
+  figureDialog.showModal();
+  document.documentElement.classList.add('figure-dialog-open');
+});
+figureDialog.querySelector('.figure-close').addEventListener('click', () => figureDialog.close());
+figureDialog.addEventListener('click', event => {
+  const bounds = figureDialog.getBoundingClientRect();
+  if (event.target === figureDialog &&
+      (event.clientX < bounds.left || event.clientX > bounds.right ||
+       event.clientY < bounds.top || event.clientY > bounds.bottom)) {
+    figureDialog.close();
+  }
+});
+figureDialog.addEventListener('close', () => {
+  document.documentElement.classList.remove('figure-dialog-open');
+});
 
 /* ── KaossPad ─────────────────────────────────────────────────── */
 const PAD_BG      = '#1A1A18';
