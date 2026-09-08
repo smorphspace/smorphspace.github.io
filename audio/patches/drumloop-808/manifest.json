@@ -1,10 +1,10 @@
 {
-  "name": "drum loop (audio) / tabla / cardboard box hits / 808 sub bass",
+  "name": "drum loop (audio) / cartoon sproing / cardboard box hits / 808 sub bass",
   "grid_x": 5,
   "grid_y": 5,
   "prompts": {
     "a": "drum loop (audio)",
-    "b": "tabla",
+    "b": "cartoon sproing",
     "c": "cardboard box hits",
     "d": "808 sub bass"
   },
@@ -43,5 +43,6 @@
   "audio_corner_caption": "drum loop",
   "method": "sdedit_ref_canvas",
   "center_index": 20,
-  "reach": 0.75
+  "reach": 0.75,
+  "audio_corner_prompt_b_model": "cartoon spring boing"
 }
