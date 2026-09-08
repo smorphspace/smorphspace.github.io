@@ -439,13 +439,28 @@ input[type="range"].morph-slider:active::-webkit-slider-thumb { cursor: grabbing
 }
 
 /* ── canvas card dark mode ─────────────────────────── */
-#canvas-card {
+.canvas-card {
   background: var(--color-ink);
 }
-#canvas-card .status-text { color: var(--color-lavender-lt); }
-#canvas-card .spectro-label { color: var(--color-ash); }
+.canvas-card .status-text { color: var(--color-lavender-lt); }
+.canvas-card .spectro-label { color: var(--color-ash); }
 /* canvas-card play btn inherits base .play-btn (solid red pill) */
-#canvas-card .ctrl-badge { color: var(--color-cerulean); border-color: var(--color-cerulean); }
+.canvas-card .ctrl-badge { color: var(--color-cerulean); border-color: var(--color-cerulean); }
+
+/* ── SDEdit start-step grid (audio-to-prompt section) ─ */
+.sdedit-grid {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--card-r);
+  color: var(--color-charcoal);
+  font-family: 'IBM Plex Mono', 'Fira Code', monospace;
+  font-size: .72rem;
+  line-height: 1.55;
+  padding: 1rem 1.1rem;
+  margin: 0 0 1.5rem;
+  overflow-x: auto;
+  white-space: pre;
+}
 
 /* ── morph card dark mode ──────────────────────────── */
 #morph-card {
@@ -1150,16 +1165,13 @@ footer em { font-style: normal; color: var(--color-red); }
   <h2>soundcanvas: 4-prompt morphs</h2>
   <div class="demo-divider"></div>
   <p class="section-sub">
-    Click or drag on the pad to blend four timbral concepts in real time.
-    Each corner is a text prompt or a real audio recording &mdash; in the first patch, one corner is a
-    reference drum loop (audio), the other three are text.
+    Click or drag on the pad to blend four text-prompt timbres in real time.
     Each 5&times;5 grid of sounds is pre-generated with <strong>smorph</strong> using a self-derived structural control signal;
     moving the crosshair performs structure-preserving timbral interpolation between the four corners.
   </p>
 
   <div class="patch-tabs" id="patch-tabs">
-    <button class="patch-tab active" data-patch="drumloop-808">drum loop (audio) &middot; tabla &middot; box hits &middot; 808</button>
-    <button class="patch-tab" data-patch="snare-glass">dry snare &middot; rocks &middot; fork &middot; water</button>
+    <button class="patch-tab active" data-patch="snare-glass">dry snare &middot; rocks &middot; fork &middot; water</button>
     <button class="patch-tab" data-patch="conga-gravel">conga &middot; footsteps &middot; knocks &middot; coins</button>
     <button class="patch-tab" data-patch="dog-flute">dog &middot; car &middot; flute &middot; wind</button>
     <button class="patch-tab" data-patch="xylophone-synth">xylophone &middot; oscillator &middot; pad &middot; violin</button>
@@ -1167,40 +1179,107 @@ footer em { font-style: normal; color: var(--color-red); }
     <button class="patch-tab" data-patch="bass-guitar">upright bass &middot; guitar &middot; ceramic &middot; 808</button>
   </div>
 
-  <div class="card" id="canvas-card">
-    <div id="canvas-loading" class="loading-overlay">
+  <div class="card canvas-card" id="canvas-card">
+    <div id="canvas-loading" class="loading-overlay js-loading">
       <div class="spinner"></div>
-      <div class="progress-bar-wrap"><div class="progress-bar" id="canvas-progress"></div></div>
-      <div class="status-text" id="canvas-status">loading audio&hellip;</div>
+      <div class="progress-bar-wrap"><div class="progress-bar js-progress" id="canvas-progress"></div></div>
+      <div class="status-text js-status" id="canvas-status">loading audio&hellip;</div>
     </div>
 
-    <div id="canvas-stage" style="display:none">
+    <div id="canvas-stage" class="js-stage" style="display:none">
       <div class="transport-row" style="margin-bottom:.75rem;margin-top:0">
-        <button class="play-btn" id="canvas-play-btn">
-          <svg id="canvas-play-icon" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        <button class="play-btn js-play-btn" id="canvas-play-btn">
+          <svg id="canvas-play-icon" class="js-play-icon" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
           play
         </button>
-        <span class="status-text" id="canvas-pos-display">position (0.50, 0.50)</span>
+        <span class="status-text js-pos" id="canvas-pos-display">position (0.50, 0.50)</span>
         <div class="ctrl-stack" id="canvas-ctrl-stack">
-          <span class="ctrl-badge" id="canvas-ctrl-badge">ctrl: rms</span>
-          <img class="ctrl-signal-img" id="canvas-ctrl-img" src="" alt="" style="display:none">
+          <span class="ctrl-badge js-ctrl-badge" id="canvas-ctrl-badge">ctrl: rms</span>
+          <img class="ctrl-signal-img js-ctrl-img" id="canvas-ctrl-img" src="" alt="" style="display:none">
         </div>
       </div>
 
       <div class="spectro-wrap" style="margin-bottom:1.25rem">
-        <canvas id="canvas-spectro" class="spectro-canvas"></canvas>
-        <canvas id="canvas-spectro-overlay" class="spectro-overlay"></canvas>
+        <canvas id="canvas-spectro" class="spectro-canvas js-spectro"></canvas>
+        <canvas id="canvas-spectro-overlay" class="spectro-overlay js-spectro-overlay"></canvas>
         <div class="spectro-label">spectrogram (2D blend)</div>
       </div>
 
       <div class="canvas-corner-grid">
-        <span class="corner-label tl" id="corner-tl"></span>
-        <span class="corner-label tr" id="corner-tr"></span>
+        <span class="corner-label tl js-corner-tl" id="corner-tl"></span>
+        <span class="corner-label tr js-corner-tr" id="corner-tr"></span>
         <div class="canvas-cell">
-          <canvas id="kaoss-pad"></canvas>
+          <canvas id="kaoss-pad" class="js-pad"></canvas>
         </div>
-        <span class="corner-label bl" id="corner-bl"></span>
-        <span class="corner-label br" id="corner-br"></span>
+        <span class="corner-label bl js-corner-bl" id="corner-bl"></span>
+        <span class="corner-label br js-corner-br" id="corner-br"></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="demo-section">
+  <h2>soundcanvas: audio-to-prompt</h2>
+  <div class="demo-divider"></div>
+  <p class="section-sub">
+    One corner can be a real recording instead of a text prompt. This is <em>audio-to-prompt</em>
+    morphing &mdash; editing a recording toward text-described targets while holding its temporal
+    structure fixed. The source, a drum loop, anchors corner&nbsp;A, where it is initialized with
+    <strong>SDEdit</strong>: its latent is lightly forward-noised and denoised back, so that corner
+    reproduces the recording near-verbatim. Across the grid we vary the per-cell SDEdit start step
+    (below) &mdash; the closer to corner&nbsp;A, the later denoising begins and the less noise is added,
+    so more of the source survives; at the far corners the source latent is fully noised away and the
+    cell is generated purely from its text prompt (<em>tabla</em>, <em>cardboard box hits</em>,
+    <em>808 sub bass</em>). Because the start step trades source preservation against transformation to
+    the target, the grid sweeps continuously from the recording itself to pure prompt. Throughout, the
+    source's RMS envelope is applied as a shared structural control, fixed across every denoising step,
+    so every cell &mdash; including the pure-prompt corners &mdash; inherits the drum's onset structure.
+    Timbre transforms toward each prompt while <em>how the sound behaves over time</em> stays anchored
+    to the source.
+  </p>
+
+  <pre class="sdedit-grid">per-cell SDEdit start step  (of 24 denoising steps)
+
+  20  15  11   6   1    &larr; corner A &middot; source recording, near-verbatim
+  15  13   9   5   1
+  11   9   7   3   0
+   6   5   3   0   0
+   1   1   0   0   0    &larr; far corner &middot; pure text prompt</pre>
+
+  <div class="card canvas-card" id="acanvas-card">
+    <div class="loading-overlay js-loading">
+      <div class="spinner"></div>
+      <div class="progress-bar-wrap"><div class="progress-bar js-progress"></div></div>
+      <div class="status-text js-status">loading audio&hellip;</div>
+    </div>
+
+    <div class="js-stage" style="display:none">
+      <div class="transport-row" style="margin-bottom:.75rem;margin-top:0">
+        <button class="play-btn js-play-btn">
+          <svg class="js-play-icon" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          play
+        </button>
+        <span class="status-text js-pos">position (0.50, 0.50)</span>
+        <div class="ctrl-stack">
+          <span class="ctrl-badge js-ctrl-badge">ctrl: rms</span>
+          <img class="ctrl-signal-img js-ctrl-img" src="" alt="" style="display:none">
+        </div>
+      </div>
+
+      <div class="spectro-wrap" style="margin-bottom:1.25rem">
+        <canvas class="spectro-canvas js-spectro"></canvas>
+        <canvas class="spectro-overlay js-spectro-overlay"></canvas>
+        <div class="spectro-label">spectrogram (2D blend)</div>
+      </div>
+
+      <div class="canvas-corner-grid">
+        <span class="corner-label tl js-corner-tl"></span>
+        <span class="corner-label tr js-corner-tr"></span>
+        <div class="canvas-cell">
+          <canvas class="js-pad" id="kaoss-pad-2"></canvas>
+        </div>
+        <span class="corner-label bl js-corner-bl"></span>
+        <span class="corner-label br js-corner-br"></span>
       </div>
     </div>
   </div>
@@ -1874,14 +1953,14 @@ class SpectroMorph {
 /* ══════════════════════════════════════════════════════════════
    SOUND CANVAS DEMO — multi-patch
    ══════════════════════════════════════════════════════════════ */
-(function initCanvasDemo() {
-  const progressBar = document.getElementById('canvas-progress');
-  const statusEl    = document.getElementById('canvas-status');
-  const loadingEl   = document.getElementById('canvas-loading');
-  const stageEl     = document.getElementById('canvas-stage');
-  const playBtn     = document.getElementById('canvas-play-btn');
-  const playIcon    = document.getElementById('canvas-play-icon');
-  const posDisplay  = document.getElementById('canvas-pos-display');
+function setupCanvasPlayer(root, { defaultSlug, tabsEl }) {
+  const progressBar = root.querySelector('.js-progress');
+  const statusEl    = root.querySelector('.js-status');
+  const loadingEl   = root.querySelector('.js-loading');
+  const stageEl     = root.querySelector('.js-stage');
+  const playBtn     = root.querySelector('.js-play-btn');
+  const playIcon    = root.querySelector('.js-play-icon');
+  const posDisplay  = root.querySelector('.js-pos');
 
   const player      = new CanvasPlayer();
   let   canvasSpectro = null;
@@ -1933,12 +2012,12 @@ class SpectroMorph {
     loadedPatch = slug;
 
     // init or reinit spectro
-    const spectroEl = document.getElementById('canvas-spectro');
+    const spectroEl = root.querySelector('.js-spectro');
     canvasSpectro = new SpectroMorph(spectroEl, { maxWidth: 600 });
     canvasSpectro.loadPatchGrid(player._buffers, grid_x, grid_y);
 
     // init or reinit pad
-    const padEl = document.getElementById('kaoss-pad');
+    const padEl = root.querySelector('.js-pad');
     if (pad) pad.destroy();
     pad = new KaossPad(padEl, {
       onMove(x, y) {
@@ -1956,10 +2035,10 @@ class SpectroMorph {
     // corner labels — setting textContent wipes any audio widget injected on a
     // previous load, so we always re-inject fresh below for the current patch.
     const cornerEls = {
-      tl: document.getElementById('corner-tl'),
-      tr: document.getElementById('corner-tr'),
-      bl: document.getElementById('corner-bl'),
-      br: document.getElementById('corner-br'),
+      tl: root.querySelector('.js-corner-tl'),
+      tr: root.querySelector('.js-corner-tr'),
+      bl: root.querySelector('.js-corner-bl'),
+      br: root.querySelector('.js-corner-br'),
     };
     cornerEls.tl.textContent = prompts.a;
     cornerEls.tr.textContent = prompts.b;
@@ -1994,9 +2073,9 @@ class SpectroMorph {
     }
 
     const ctrlKind = manifest.ctrl_kind || 'rms';
-    document.getElementById('canvas-ctrl-badge').textContent =
+    root.querySelector('.js-ctrl-badge').textContent =
       ctrlCornerLetter ? `ctrl: ${ctrlKind} · from corner ${ctrlCornerLetter}` : `ctrl: ${ctrlKind}`;
-    const ctrlImg = document.getElementById('canvas-ctrl-img');
+    const ctrlImg = root.querySelector('.js-ctrl-img');
     if (manifest.ctrl_signal_png) {
       ctrlImg.src = manifest.ctrl_signal_png + '?v=' + Date.now();
       ctrlImg.alt = `ctrl: ${manifest.ctrl_kind || 'rms'} signal`;
@@ -2006,7 +2085,7 @@ class SpectroMorph {
     }
 
     // spectro overlay
-    canvasOverlay = makeSpectroOverlay(document.getElementById('canvas-spectro-overlay'), () => player);
+    canvasOverlay = makeSpectroOverlay(root.querySelector('.js-spectro-overlay'), () => player);
 
     // show stage
     loadingEl.style.display = 'none';
@@ -2014,22 +2093,36 @@ class SpectroMorph {
     showPlayIcon(playBtn, playIcon, null, false);
   }
 
-  // patch tab switching
-  document.querySelectorAll('.patch-tab').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.patch-tab').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      loadPatch(btn.dataset.patch).catch(err => {
-        if (err.message !== 'load cancelled') statusEl.textContent = `Error: ${err.message}`;
+  // patch tab switching (only when this player is driven by a tab strip)
+  if (tabsEl) {
+    tabsEl.querySelectorAll('.patch-tab').forEach(btn => {
+      btn.addEventListener('click', () => {
+        tabsEl.querySelectorAll('.patch-tab').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        loadPatch(btn.dataset.patch).catch(err => {
+          if (err.message !== 'load cancelled') statusEl.textContent = `Error: ${err.message}`;
+        });
       });
     });
-  });
+  }
 
-  // load first patch on startup
-  loadPatch('drumloop-808').catch(err => {
+  // load default patch on startup
+  loadPatch(defaultSlug).catch(err => {
     if (err.message !== 'load cancelled') statusEl.textContent = `Error: ${err.message}`;
   });
-})();
+}
+
+// prompt-to-prompt: tab-driven canvas defaults to snare-glass
+setupCanvasPlayer(document.getElementById('canvas-card'), {
+  defaultSlug: 'snare-glass',
+  tabsEl: document.getElementById('patch-tabs'),
+});
+
+// audio-to-prompt: dedicated canvas always loads the drum-loop patch (no tabs)
+setupCanvasPlayer(document.getElementById('acanvas-card'), {
+  defaultSlug: 'drumloop-808',
+  tabsEl: null,
+});
 
 /* ══════════════════════════════════════════════════════════════
    TAB SWITCHING
