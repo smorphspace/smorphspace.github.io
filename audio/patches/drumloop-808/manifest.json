@@ -39,5 +39,9 @@
   ],
   "ctrl_kind": "rms",
   "seed": 42,
-  "ctrl_signal_png": "audio/patches/drumloop-808/_ctrl_signal.png"
+  "ctrl_signal_png": "audio/patches/drumloop-808/_ctrl_signal.png",
+  "audio_corner_caption": "drum loop",
+  "method": "sdedit_ref_canvas",
+  "center_index": 20,
+  "reach": 0.75
 }

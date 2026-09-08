@@ -1968,8 +1968,8 @@ class SpectroMorph {
     // drop any leftover audio-corner styling from a previously loaded patch
     Object.values(cornerEls).forEach(el => el.classList.remove('has-audio'));
 
-    // audio-reference corner: one corner may be a real recording (audio/FLAM
-    // endpoint) rather than a text prompt. Give it a small player + spectrogram
+    // audio-reference corner: one corner may be a real recording (an SDEdit
+    // reference) rather than a text prompt. Give it a small player + spectrogram
     // so the clip is audible, and note that the same clip drives the RMS
     // structural guidance shown in the canvas.
     const AUDIO_CORNER_MAP = { a: ['tl', 'A'], b: ['tr', 'B'], c: ['bl', 'C'], d: ['br', 'D'] };
