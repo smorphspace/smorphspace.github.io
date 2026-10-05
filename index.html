@@ -595,6 +595,58 @@ footer em { font-style: normal; color: var(--color-red); }
 .tab-btn:hover { color: var(--color-ink); }
 .tab-btn.active { color: var(--color-red); border-bottom-color: var(--color-red); }
 
+/* ── video demos ───────────────────────────────────── */
+.video-frame {
+  width: 100%;
+  background: var(--color-ink);
+}
+.video-frame video {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  background: var(--color-ink);
+}
+.video-frame.ratio-3x2 { max-width: 720px; }
+.video-frame.ratio-3x2 video { aspect-ratio: 3 / 2; }
+.video-song-link {
+  margin-left: .5rem;
+  font-size: .75rem;
+  font-weight: 400;
+}
+.demo-section .video-tagline {
+  margin-top: .1rem;
+  font-size: .9rem;
+  font-weight: 600;
+  color: var(--accent);
+}
+.video-chapters {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: .4rem;
+  margin: 0 0 1rem;
+  padding: 0;
+}
+.video-chapter {
+  display: flex;
+  align-items: baseline;
+  gap: .45rem;
+  padding: .3rem .65rem;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--color-charcoal);
+  font-family: inherit;
+  font-size: .75rem;
+  cursor: pointer;
+  transition: color .1s, border-color .1s;
+}
+.video-chapter.highlight { font-weight: 700; color: var(--color-ink); }
+.video-chapter time { color: var(--muted); font-variant-numeric: tabular-nums; }
+.video-chapter:hover { color: var(--color-cerulean); border-color: var(--color-cerulean); }
+.video-chapter.active { color: var(--color-red); border-color: var(--color-red); }
+.video-chapter.active time { color: inherit; }
+
 /* ── rq sub-navigation ─────────────────────────────── */
 .rq-nav {
   display: flex;
@@ -1104,6 +1156,7 @@ footer em { font-style: normal; color: var(--color-red); }
 <nav class="tab-nav" id="main-tab-nav">
   <button class="tab-btn active" data-tab="demos">demos</button>
   <button class="tab-btn" data-tab="experiments">paper experiments</button>
+  <button class="tab-btn" data-tab="videos">video demos</button>
 </nav>
 
 <div class="tab-panel" id="tab-demos">
@@ -1290,6 +1343,54 @@ footer em { font-style: normal; color: var(--color-red); }
 <div class="tab-panel" id="tab-experiments" style="display:none">
   <!-- built by initExperimentsTab() -->
 </div>
+
+<div class="tab-panel" id="tab-videos" style="display:none">
+
+<section class="demo-section">
+  <h2>original smorph song</h2>
+  <p class="video-tagline">making a song out of smorph patches!</p>
+  <div class="demo-divider"></div>
+  <div class="video-frame ratio-3x2">
+    <video controls playsinline preload="none" width="720" height="480"
+           poster="vids/web/smorph-poster.jpg" aria-label="smorph demo video">
+      <source src="vids/web/smorph.mp4" type="video/mp4">
+    </video>
+  </div>
+</section>
+
+<section class="demo-section">
+  <h2>latch - disclosure (ft. sam smith) <a class="video-song-link" href="https://www.youtube.com/watch?v=93ASUImTedo" target="_blank" rel="noopener">original</a></h2>
+  <p class="video-tagline">exploring variations for some stabs</p>
+  <div class="demo-divider"></div>
+  <ol class="video-chapters" data-video="latch-video" aria-label="latch chapters">
+    <li><button type="button" class="video-chapter" data-t="0"><time>0:00</time>intro</button></li>
+    <li><button type="button" class="video-chapter" data-t="8"><time>0:08</time>latch stabs, patch 1</button></li>
+    <li><button type="button" class="video-chapter" data-t="53"><time>0:53</time>exploring the 5×5 morph bank</button></li>
+    <li><button type="button" class="video-chapter" data-t="79"><time>1:19</time>exploring paths</button></li>
+    <li><button type="button" class="video-chapter" data-t="100"><time>1:40</time>latch stabs, patch 2</button></li>
+    <li><button type="button" class="video-chapter highlight" data-t="165"><time>2:45</time>patch playthroughs!</button></li>
+  </ol>
+  <div class="video-frame">
+    <video id="latch-video" controls playsinline preload="none" width="1920" height="1080"
+           poster="vids/web/latch-poster.jpg" aria-label="latch demo video">
+      <source src="vids/web/latch.mp4" type="video/mp4">
+    </video>
+  </div>
+</section>
+
+<section class="demo-section">
+  <h2>la tortura - shakira (ft. alejandro sanz)<a class="video-song-link" href="https://www.youtube.com/watch?v=QXx5Yf2IhRY" target="_blank" rel="noopener">original</a></h2>
+  <p class="video-tagline">re-exploring the lead and some pads with smorph</p>
+  <div class="demo-divider"></div>
+  <div class="video-frame">
+    <video controls playsinline preload="none" width="1920" height="1080"
+           poster="vids/web/shakira-poster.jpg" aria-label="shakira demo video">
+      <source src="vids/web/shakira.mp4" type="video/mp4">
+    </video>
+  </div>
+</section>
+
+</div><!-- #tab-videos -->
 
 </div><!-- .page -->
 
@@ -2133,6 +2234,7 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
     document.querySelectorAll('.tab-panel').forEach(p => p.style.display = 'none');
     btn.classList.add('active');
     document.getElementById('tab-' + btn.dataset.tab).style.display = 'block';
+    stopAllExcept(null);
   });
 });
 
@@ -2168,6 +2270,49 @@ const RQ_SUMMARY = {
 const _audioRegistry = new Set();
 function registerAudioStop(fn) { _audioRegistry.add(fn); }
 function stopAllExcept(fn) { _audioRegistry.forEach(f => { if (f !== fn) f(); }); }
+
+/* ══════════════════════════════════════════════════════════════
+   VIDEO DEMOS TAB
+   ══════════════════════════════════════════════════════════════ */
+document.querySelectorAll('#tab-videos video').forEach(video => {
+  const stop = () => { if (!video.paused) video.pause(); };
+  registerAudioStop(stop);
+  video.addEventListener('play', () => stopAllExcept(stop));
+});
+
+document.querySelectorAll('.video-chapters').forEach(list => {
+  const video = document.getElementById(list.dataset.video);
+  const buttons = [...list.querySelectorAll('.video-chapter')];
+  const starts = buttons.map(b => parseFloat(b.dataset.t));
+
+  const seekAndPlay = t => {
+    video.currentTime = t;
+    video.play().catch(() => {});
+  };
+
+  buttons.forEach((btn, i) => btn.addEventListener('click', () => {
+    if (video.readyState >= HTMLMediaElement.HAVE_METADATA) { seekAndPlay(starts[i]); return; }
+    // preload="none": metadata isn't loaded yet, so seeking now would be dropped;
+    // play() starts the load and we seek as soon as metadata arrives
+    video.addEventListener('loadedmetadata', () => seekAndPlay(starts[i]), { once: true });
+    video.play().catch(() => {});
+  }));
+
+  let current = -1;
+  const highlight = () => {
+    let idx = -1;
+    starts.forEach((t, i) => { if (video.currentTime >= t) idx = i; });
+    if (video.currentTime === 0 && video.paused) idx = -1;
+    if (idx === current) return;
+    current = idx;
+    buttons.forEach((b, i) => {
+      b.classList.toggle('active', i === idx);
+      if (i === idx) b.setAttribute('aria-current', 'true'); else b.removeAttribute('aria-current');
+    });
+  };
+  video.addEventListener('timeupdate', highlight);
+  video.addEventListener('seeked', highlight);
+});
 
 const SVG_PLAY  = `<svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><polygon points="5 3 19 12 5 21 5 3"/></svg>`;
 const SVG_PAUSE = `<svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>`;
